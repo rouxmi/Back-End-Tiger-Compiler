@@ -2,12 +2,12 @@ grammar gram;
 
 program : expr;
 
-expr : STRING-CONSTANT
-    |INTEGER-CONSTANT
+expr : STRINGCONSTANT
+    |INTEGERCONSTANT
     |'nil'
     |lvalue
     |'-'expr
-    |expr BINARY-OPERATOR expr
+    |expr BINARYOPERATOR expr
     |lvalue ':=' expr
     |ID '(' (expr-list)? ')'
     |'(' (expr-seq)? ')'
@@ -21,7 +21,7 @@ expr : STRING-CONSTANT
     |'let' declaration-list 'in' (expr-seq)? 'end'
     |commentaire
 
-commentaire : '/*' (STRING-CONSTANT|ESPACE)* '*/'
+commentaire : '/*' (STRINGCONSTANT|ESPACE)* '*/'
 
 expr-seq : expr
     |expr-seq ';' expr
@@ -65,8 +65,10 @@ function-declaration : 'function' id '(' (type-fields)? ')' '=' expr
 
 //token
 
-INTEGER-CONSTANT : ('0'..'9')+;
-STRING-CONSTANT : 
+INTEGERCONSTANT : ('0'..'9')+;
+STRINGCONSTANT : ('"')('a'..'z'|'A'..'Z'|' '|'\n'|'\t'|'\"'|'\\'|'\^c'|'\ddd'|'\..\')*('"');
+id :('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+BINARYOPERATOR : ('+'|'-'|'*'|'/'|'='|'<>'|'<'|'>'|'<='|'>='|'|'|'&');
 
 
 
