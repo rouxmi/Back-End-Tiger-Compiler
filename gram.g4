@@ -63,10 +63,11 @@ variable-declaration : 'var' id ':=' expr
 function-declaration : 'function' id '(' (type-fields)? ')' '=' expr
     |'function' id '(' (type-fields)? ')' ':' type-id '=' expr
 
+
 //token
 
 INTEGERCONSTANT : ('0'..'9')+;
-STRINGCONSTANT : ('"')('a'..'z'|'A'..'Z'|' '|'\n'|'\t'|'\"'|'\\'|'\^c'|'\ddd'|'\..\')*('"');
+STRINGCONSTANT : ('"')('a'..'z'|'A'..'Z'|' '|'!'|'?'|'-'|'_'|'.'|':'|';'|',')*('"');
 id :('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
 BINARYOPERATOR : ('+'|'-'|'*'|'/'|'='|'<>'|'<'|'>'|'<='|'>='|'|'|'&');
 
