@@ -2,26 +2,26 @@ grammar gram;
 
 program : expr;
 
-expr : string
-    |integer
+expr : STRINGCONSTANT
+    |INTEGERCONSTANT
     |'nil'
     |lvalue
     |'-'expr
-    |expr OPERATOR expr
+    |expr BINARYOPERATOR expr
     |lvalue ':=' expr
-    |id '(' exprlist? ')'
+    |ID '(' exprlist? ')'
     |'(' exprseq? ')'
     |typeid '{' fieldlist? '}'
     |typeid '[' expr ']' 'of' expr
     |'if' expr 'then' expr
     |'if' expr 'then' expr 'else' expr
     |'while' expr 'do' expr
-    |'for' id ':=' expr 'to' expr 'do' expr
+    |'for' ID ':=' expr 'to' expr 'do' expr
     |'break'
     |'let' declarationlist 'in' (exprseq)? 'end'
     |commentaire;
 
-commentaire : '/*' (LETTER|ESPACE)* '*/';
+commentaire : '/*' (STRINGCONSTANT|ESPACE)* '*/' ;
 
 exprseq : expr
     |expr ';' exprseq;
@@ -29,11 +29,11 @@ exprseq : expr
 exprlist : expr
     |expr ',' exprlist;
 
-fieldlist : id '=' expr
-    |id '=' expr ',' fieldlist;
+fieldlist : ID '=' expr
+    |ID '=' expr ',' fieldlist;
 
-lvalue : id
-    |lvalue '.' id
+lvalue : ID
+    |lvalue '.' ID
     |lvalue '[' expr ']';
 
 declarationlist : declaration
@@ -52,30 +52,25 @@ type : typeid
 typefields : typefield
     |typefield ',' typefields;
 
-typefield : id ':' typeid;
+typefield : ID ':' typeid;
 
-typeid : id;
+typeid : ID;
 
-variabledeclaration : 'var' id ':=' expr
-    | 'var' id ':' typeid ':=' expr;
-
-
-functiondeclaration : 'function' id '(' (typefields)? ')' '=' expr
-    |'function' id '(' (typefields)? ')' ':' typeid '=' expr;
+variabledeclaration : 'var' ID ':=' expr
+    | 'var' ID ':' typeid ':=' expr;
 
 
+functiondeclaration : 'function' ID '(' (typefields)? ')' '=' expr
+    |'function' ID '(' (typefields)? ')' ':' type '=' expr;
 
-integer : DIGIT+;
 
-string : LETTER+;
-
-id : LETTER ( LETTER | DIGIT | '_' )*;
 
 //token
 
-LETTER :('a'..'z')|('A'..'Z');
-
-DIGIT : ('0'..'9');
+INTEGERCONSTANT : ('0'..'9')+;
+STRINGCONSTANT : ('"')('a'..'z'|'A'..'Z'|' '|'!'|'?'|'-'|'_'|'.'|':'|';'|',')*('"');
+ID :('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|'_')*;
+BINARYOPERATOR : ('+'|'-'|'*'|'/'|'='|'<>'|'<'|'>'|'<='|'>='|'|'|'&');
 
 ESPACE : ' '|'  ';
 
