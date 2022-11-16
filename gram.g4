@@ -2,73 +2,84 @@ grammar gram;
 
 program : expr;
 
-expr : STRING-CONSTANT
-    |INTEGER-CONSTANT
+expr : string
+    |integer
     |'nil'
     |lvalue
     |'-'expr
-    |expr BINARY-OPERATOR expr
+    |expr OPERATOR expr
     |lvalue ':=' expr
-    |ID '(' (expr-list)? ')'
-    |'(' (expr-seq)? ')'
-    |type-id '{' (field-list)? '}'
-    |type-id '[' expr ']' 'of' expr
+    |id '(' exprlist? ')'
+    |'(' exprseq? ')'
+    |typeid '{' fieldlist? '}'
+    |typeid '[' expr ']' 'of' expr
     |'if' expr 'then' expr
     |'if' expr 'then' expr 'else' expr
     |'while' expr 'do' expr
     |'for' id ':=' expr 'to' expr 'do' expr
     |'break'
-    |'let' declaration-list 'in' (expr-seq)? 'end'
-    |commentaire
+    |'let' declarationlist 'in' (exprseq)? 'end'
+    |commentaire;
 
-commentaire : '/*' (STRING-CONSTANT|ESPACE)* '*/'
+commentaire : '/*' (LETTER|ESPACE)* '*/';
 
-expr-seq : expr
-    |expr-seq ';' expr
+exprseq : expr
+    |expr ';' exprseq;
 
-expr-list : expr
-    |expr-list ',' expr
+exprlist : expr
+    |expr ',' exprlist;
 
-field-list : id '=' expr
-    |field-list ',' id '=' expr
+fieldlist : id '=' expr
+    |id '=' expr ',' fieldlist;
 
 lvalue : id
     |lvalue '.' id
-    |lvalue '[' expr ']'
+    |lvalue '[' expr ']';
 
-declaration-list : declaration
-    |declaration-list declaration
+declarationlist : declaration
+    |declaration declarationlist;
 
-declaration : type-declaration
-    |variable-declaration
-    |function-declaration
+declaration : typedeclaration
+    |variabledeclaration
+    |functiondeclaration;
 
-type-declaration : 'type' type-id = type
+typedeclaration : 'type' typeid '=' type;
 
-type : type-id 
-    |'{' (type-fields)? '}'
-    |'array of' type-id
+type : typeid 
+    |'{' (typefields)? '}'
+    |'array of' typeid;
 
-type-fields : type-field
-    |type-fields ',' type-field
+typefields : typefield
+    |typefield ',' typefields;
 
-type-field : id ':' type-id
+typefield : id ':' typeid;
 
-type-id : id
+typeid : id;
 
-variable-declaration : 'var' id ':=' expr
-    | 'var' id ':' type-id ':=' expr
+variabledeclaration : 'var' id ':=' expr
+    | 'var' id ':' typeid ':=' expr;
 
 
-function-declaration : 'function' id '(' (type-fields)? ')' '=' expr
-    |'function' id '(' (type-fields)? ')' ':' type-id '=' expr
+functiondeclaration : 'function' id '(' (typefields)? ')' '=' expr
+    |'function' id '(' (typefields)? ')' ':' typeid '=' expr;
+
+
+
+integer : DIGIT+;
+
+string : LETTER+;
+
+id : LETTER ( LETTER | DIGIT | '_' )*;
 
 //token
 
-INTEGER-CONSTANT : ('0'..'9')+;
-STRING-CONSTANT : 
+LETTER :('a'..'z')|('A'..'Z');
 
+DIGIT : ('0'..'9');
 
+ESPACE : ' '|'  ';
+
+OPERATOR : '+' | '-' | '*' | '/' | '=' | '<>' | '>' | '<' | '>=' | '<=' | '&' | '|';
 
 
 
