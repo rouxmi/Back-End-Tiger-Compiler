@@ -7,38 +7,41 @@ package parser;
 
 program : (expr);
 
-expr : STRINGCONSTANT exprim
-    |INTEGERCONSTANT exprim
-    |'nil' exprim
-    |lvalue exprim
-    |'-'expr exprim
-    |lvalue ':=' expr exprim
-    |ID '(' exprlist? ')' exprim
-    |'(' exprseq? ')' exprim
-    |typeid '{' fieldlist? '}' exprim
-    |typeid '[' expr ']' 'of' expr exprim
-    |'if' expr 'then' expr exprim
-    |'if' expr 'then' expr 'else' expr exprim
-    |'while' expr 'do' expr exprim
-    |'for' ID ':=' expr 'to' expr 'do' expr exprim
-    |'break' exprim
-    |'let' declarationlist 'in' (exprseq)? 'end' exprim
-    |commentaire exprim
+expr :expr0
+    |lvalue ':=' expr
+    |'if' expr 'then' expr
+    |'if' expr 'then' expr 'else' expr
+    |'while' expr 'do' expr
+    |'for' ID ':=' expr 'to' expr 'do' expr
+    |'break'
+    |'let' declarationlist 'in' (exprseq)? 'end'
+    |commentaire
     ;
 
-exprim: '|' expr1 exprim | expr1 exprim |
+expr0: expr1 '|' expr0 | expr1
     ;
 
-expr1 : '&' expr2| expr2
+expr1 : expr2 '&' expr1 | expr2
     ;
 
-expr2: ('=' | '<>' | '>' | '<' | '>=' | '<=') expr3 | expr3
+expr2: expr3 ('=' | '<>' | '>' | '<' | '>=' | '<=') expr2 | expr3
     ;
 
-expr3: ('+'|'-') expr4 | expr4
+expr3: expr4 ('+'|'-') expr3 | expr4
     ;
 
-expr4: ('*'|'/') expr | expr
+expr4: expr5 ('*'|'/') expr4 | expr5
+    ;
+
+expr5: lvalue 
+    | STRINGCONSTANT 
+    | INTEGERCONSTANT 
+    | 'nil' 
+    | '-' expr5 
+    | ID '(' exprlist? ')' 
+    | typeid '[' expr ']' 'of' expr 
+    | typeid '{' fieldlist? '}' 
+    | '(' exprseq? ')'
     ;
 
 
@@ -74,16 +77,15 @@ type : typeid
 typefields : typefield
     |typefield ',' typefields;
 
-typefield : ID ':' typeid;
+typefield : ID ':' (typeid|typepredefined);
 
 typepredefined: ('int'|'string')
     ;
 
-typeid : (ID|typepredefined);
+typeid : ID;
 
 variabledeclaration : 'var' ID ':=' expr
-    | 'var' ID ':' typeid ':=' expr
-    ;
+    | 'var' ID ':' typeid ':=' expr;
 
 
 functiondeclaration : 'function' ID ('(' typefields ')')? '=' expr
