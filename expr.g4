@@ -25,7 +25,7 @@ rulelse : 'else' expr
 expr0: expr1 expr0bis
     ;
 
- expr0bis: '|' expr0 
+expr0bis: '|' expr0 
     |
     ;
 
@@ -91,9 +91,12 @@ fieldlistbis: ',' fieldlist
     |
     ;
 
-lvalue : ID
-    |lvalue '.' ID
-    |lvalue '[' expr ']'
+lvalue : ID lvaluebis
+    ;
+    
+lvaluebis :'.' ID lvaluebis
+    |'[' expr ']' lvaluebis
+    |
     ;
 
 declaration : typedeclaration

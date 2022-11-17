@@ -3,5 +3,5 @@ gram:
 
 	javac -cp ./lib/antlr-4.9.2-complete.jar:./src ./src/Main.java -d ./bin
 
-	java -cp ./lib/antlr-4.9.2-complete.jar:./bin Main ./examples/sommeErrLex.exp
+	java -cp ./lib/antlr-4.9.2-complete.jar:./bin Main ./examples/ExemplePriorite.exp
 
