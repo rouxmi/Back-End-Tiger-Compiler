@@ -7,25 +7,40 @@ package parser;
 
 program : (expr);
 
-expr : STRINGCONSTANT
-    |INTEGERCONSTANT
-    |'nil'
-    |lvalue
-    |'-'expr
-    |expr ('+'| '-' | '*' | '/' | '=' | '<>' | '>' | '<' | '>=' | '<=' | '&' | '|') expr
-    |lvalue ':=' expr
-    |ID '(' exprlist? ')'
-    |'(' exprseq? ')'
-    |typeid '{' fieldlist? '}'
-    |typeid '[' expr ']' 'of' expr
-    |'if' expr 'then' expr
-    |'if' expr 'then' expr 'else' expr
-    |'while' expr 'do' expr
-    |'for' ID ':=' expr 'to' expr 'do' expr
-    |'break'
-    |'let' declarationlist 'in' (exprseq)? 'end'
-    |commentaire
+expr : STRINGCONSTANT exprim
+    |INTEGERCONSTANT exprim
+    |'nil' exprim
+    |lvalue exprim
+    |'-'expr exprim
+    |lvalue ':=' expr exprim
+    |ID '(' exprlist? ')' exprim
+    |'(' exprseq? ')' exprim
+    |typeid '{' fieldlist? '}' exprim
+    |typeid '[' expr ']' 'of' expr exprim
+    |'if' expr 'then' expr exprim
+    |'if' expr 'then' expr 'else' expr exprim
+    |'while' expr 'do' expr exprim
+    |'for' ID ':=' expr 'to' expr 'do' expr exprim
+    |'break' exprim
+    |'let' declarationlist 'in' (exprseq)? 'end' exprim
+    |commentaire exprim
     ;
+
+exprim: '|' expr1 exprim | expr1 exprim |
+    ;
+
+expr1 : expr2 '&' expr1 | expr2
+    ;
+
+expr2: expr3 ('=' | '<>' | '>' | '<' | '>=' | '<=') expr2 | expr3
+    ;
+
+expr3: expr4 ('+'|'-') expr3 | expr4
+    ;
+
+expr4: expr ('*'|'/') expr4 | expr
+    ;
+
 
 commentaire : '/*' (STRINGCONSTANT)* '*/' ;
 
