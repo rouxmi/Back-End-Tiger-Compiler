@@ -1,9 +1,0 @@
-let
-    function compare(x:int, c:char) =
-        if x = c then
-            x = x + 1
-        else
-            x = 3
-in
-    compare(3,"c")
-end
