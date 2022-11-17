@@ -59,15 +59,16 @@ type : typeid
 typefields : typefield
     |typefield ',' typefields;
 
-typefield : ID ':' (typeid|typepredefined);
+typefield : ID ':' typeid;
 
 typepredefined: ('int'|'string')
     ;
 
-typeid : ID;
+typeid : (ID|typepredefined);
 
 variabledeclaration : 'var' ID ':=' expr
-    | 'var' ID ':' typeid ':=' expr;
+    | 'var' ID ':' typeid ':=' expr
+    ;
 
 
 functiondeclaration : 'function' ID ('(' typefields ')')? '=' expr

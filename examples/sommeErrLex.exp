@@ -1,6 +1,6 @@
 let
-    function somme (x : int) : int =
-        if i = 0 then
+    function somme (x : int) =
+        if x = 0 then
             0
         ellse
             x + deux (x - 1)
