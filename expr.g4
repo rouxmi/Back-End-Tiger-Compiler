@@ -93,7 +93,7 @@ fieldlistbis: ',' fieldlist
 
 lvalue : ID lvaluebis
     ;
-    
+
 lvaluebis :'.' ID lvaluebis
     |'[' expr ']' lvaluebis
     |
@@ -123,6 +123,7 @@ typepredefined: ('int'|'string')
     ;
 
 typeid : ID
+    |typepredefined
     ;
 
 variabledeclaration : 'var' ID variabledeclarationbis
