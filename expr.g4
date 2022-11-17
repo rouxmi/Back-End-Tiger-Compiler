@@ -9,28 +9,52 @@ program : (expr);
 
 expr :expr0
     |lvalue ':=' expr
-    |'if' expr 'then' expr
-    |'if' expr 'then' expr 'else' expr
+    |'if' expr 'then' expr rulelse
     |'while' expr 'do' expr
     |'for' ID ':=' expr 'to' expr 'do' expr
     |'break'
-    |'let' declarationlist 'in' (exprseq)? 'end'
+    |'let' declaration+ 'in' (exprseq)? 'end'
     |commentaire
+    |print
     ;
 
-expr0: expr1 '|' expr0 | expr1
+rulelse : 'else' expr 
+    |
     ;
 
-expr1 : expr2 '&' expr1 | expr2
+expr0: expr1 expr0bis
     ;
 
-expr2: expr3 ('=' | '<>' | '>' | '<' | '>=' | '<=') expr2 | expr3
+ expr0bis: '|' expr0 
+    |
     ;
 
-expr3: expr4 ('+'|'-') expr3 | expr4
+expr1 : expr2  expr1bis
     ;
 
-expr4: expr5 ('*'|'/') expr4 | expr5
+expr1bis : '&' expr1 
+    |
+    ;
+
+expr2: expr3  expr2bis
+    ;
+
+expr2bis : ('=' | '<>' | '>' | '<' | '>=' | '<=') expr2 
+    |
+    ;
+
+expr3: expr4 expr3bis
+    ;
+
+expr3bis : ('+'|'-') expr3 
+    |
+    ;
+
+expr4: expr5 expr4bis
+    ;
+
+expr4bis: ('*'|'/') expr4 
+    |
     ;
 
 expr5: lvalue 
@@ -47,22 +71,30 @@ expr5: lvalue
 
 commentaire : '/*' (STRINGCONSTANT)* '*/' ;
 
-exprseq : expr
-    |expr ';' exprseq;
+exprseq : expr exprseqbis;
 
-exprlist : expr
-    |expr ',' exprlist;
+exprseqbis : ';' exprseq 
+    |
+    ;
 
-fieldlist : ID '=' expr
-    |ID '=' expr ',' fieldlist;
+exprlist : expr exprlistbis
+    ;
+
+exprlistbis: ',' exprlist 
+    |
+    ;
+
+fieldlist : ID '=' expr fieldlistbis
+    ;
+
+fieldlistbis: ',' fieldlist 
+    |
+    ;
 
 lvalue : ID
     |lvalue '.' ID
     |lvalue '[' expr ']'
     ;
-
-declarationlist : declaration
-    |declaration declarationlist;
 
 declaration : typedeclaration
     |variabledeclaration
@@ -72,25 +104,37 @@ typedeclaration : 'type' typeid '=' type;
 
 type : typeid 
     |'{' (typefields)? '}'
-    |'array of' typeid;
+    |'array of' typeid
+    ;
 
-typefields : typefield
-    |typefield ',' typefields;
+typefields : typefield typefieldsbis
+    ;
+
+typefieldsbis: ',' typefields 
+    |
+    ;
 
 typefield : ID ':' (typeid|typepredefined);
 
 typepredefined: ('int'|'string')
     ;
 
-typeid : ID;
-
-variabledeclaration : 'var' ID ':=' expr
-    | 'var' ID ':' typeid ':=' expr;
-
-
-functiondeclaration : 'function' ID ('(' typefields ')')? '=' expr
-    |'function' ID ('(' typefields ')')? ':' typeid '=' expr
+typeid : ID
     ;
+
+variabledeclaration : 'var' ID variabledeclarationbis
+    ;
+
+variabledeclarationbis: ':'typeid ':=' expr 
+    | ':=' expr
+    ;
+
+functiondeclaration : 'function' ID ('(' typefields ')')? functiondeclarationbis
+    ;
+
+functiondeclarationbis : '=' expr 
+    | ':' typeid '=' expr
+    ; 
 
 print: 'print' '(' INTEGERCONSTANT ')' ;
 
