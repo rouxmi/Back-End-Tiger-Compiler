@@ -1,0 +1,9 @@
+let
+    function maxWith5 (x : int) : int =
+        if x > 5 then
+            x
+        else
+            5
+in
+    max(4)
+end
