@@ -29,16 +29,16 @@ expr : STRINGCONSTANT exprim
 exprim: '|' expr1 exprim | expr1 exprim |
     ;
 
-expr1 : expr2 '&' expr1 | expr2
+expr1 : '&' expr2| expr2
     ;
 
-expr2: expr3 ('=' | '<>' | '>' | '<' | '>=' | '<=') expr2 | expr3
+expr2: ('=' | '<>' | '>' | '<' | '>=' | '<=') expr3 | expr3
     ;
 
-expr3: expr4 ('+'|'-') expr3 | expr4
+expr3: ('+'|'-') expr4 | expr4
     ;
 
-expr4: expr ('*'|'/') expr4 | expr
+expr4: ('*'|'/') expr | expr
     ;
 
 
