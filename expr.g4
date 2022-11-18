@@ -15,6 +15,7 @@ expr :expr0
     |'let' declaration+ 'in' (exprseq)? 'end'
     |commentaire
     |print
+    |types
     ;
 
 rulelse : 'else' expr 
@@ -144,7 +145,7 @@ variabledeclarationbis: ':'typeid ':=' expr
     | ':=' expr
     ;
 
-functiondeclaration : 'function' ID ('(' typefields ')')? functiondeclarationbis
+functiondeclaration : 'function' ID '(' (typefields)? ')' functiondeclarationbis
     ;
 
 functiondeclarationbis : '=' expr 
