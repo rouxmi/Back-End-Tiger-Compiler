@@ -7,8 +7,7 @@ package parser;
 
 program : (expr);
 
-expr :expr0
-    |lvalue ':=' expr
+expr :expr0 
     |'if' expr 'then' expr rulelse
     |'while' expr 'do' expr
     |'for' ID ':=' expr 'to' expr 'do' expr
@@ -57,17 +56,23 @@ expr4bis: ('*'|'/') expr4
     |
     ;
 
-expr5: lvalue 
+expr5: idcall
     | STRINGCONSTANT 
     | INTEGERCONSTANT 
     | 'nil' 
-    | '-' expr5 
-    | ID '(' exprlist? ')' 
-    | typeid '[' expr ']' 'of' expr 
-    | typeid '{' fieldlist? '}' 
+    | exprnegation
+    | typedeclaration
     | '(' exprseq? ')'
     ;
 
+function:'(' exprlist? ')' ;
+
+types:typeid ('[' expr ']' 'of' expr 
+    |'{' fieldlist? '}')
+    ;
+
+exprnegation: '-' expr5
+    ;
 
 commentaire : '/*' (STRINGCONSTANT)* '*/' ;
 
@@ -80,24 +85,30 @@ exprseqbis : ';' exprseq
 exprlist : expr exprlistbis
     ;
 
-exprlistbis: ',' exprlist 
+exprlistbis: ',' expr exprlistbis 
     |
     ;
 
-fieldlist : ID '=' expr fieldlistbis
+fieldlist : field fieldlistbis
     ;
 
-fieldlistbis: ',' fieldlist 
+field: ID '=' expr
+    ;
+
+fieldlistbis: ',' field fieldlistbis 
     |
     ;
 
-lvalue : ID lvaluebis
+idcall: ID (lvaluebis|function)
     ;
 
 lvaluebis :'.' ID lvaluebis
     |'[' expr ']' lvaluebis
     |
     ;
+
+//lvalue: ID lvaluebis
+    //;
 
 declaration : typedeclaration
     |variabledeclaration
@@ -117,7 +128,7 @@ typefieldsbis: ',' typefields
     |
     ;
 
-typefield : ID ':' (typeid|typepredefined);
+typefield : ID ':' typeid;
 
 typepredefined: ('int'|'string')
     ;
