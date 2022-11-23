@@ -1,4 +1,4 @@
-let
+let /* The eight queens solver from Appel */
     var N := 8
     type intArray = array of int
     var row := intArray [ N ] of 0
@@ -9,7 +9,7 @@ let
     function printboard() =
     (for i := 0 to N-1
         do (for j := 0 to N-1
-            do print(2);
+            do print(if col[i]=j then " O" else " .");
             print(1));
     print(1))
     

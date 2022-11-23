@@ -5,7 +5,8 @@ package parser;
 }
 
 
-program : (expr);
+program : (expr)
+    ;
 
 expr :expr0 
     |'if' expr 'then' expr rulelse
@@ -13,9 +14,7 @@ expr :expr0
     |'for' ID ':=' expr 'to' expr 'do' expr
     |'break'
     |'let' declaration+ 'in' (exprseq)? 'end'
-    |commentaire
     |print
-    |types
     ;
 
 rulelse : 'else' expr 
@@ -68,16 +67,16 @@ expr5: idcall
 
 function:'(' exprlist? ')' ;
 
-types:typeid ('[' expr ']' 'of' expr 
-    |'{' fieldlist? '}')
+types: '{' fieldlist? '}'
     ;
 
 exprnegation: '-' expr5
     ;
 
-commentaire : '/*' (STRINGCONSTANT)* '*/' ;
 
-exprseq : expr exprseqbis;
+
+exprseq : expr exprseqbis
+    ;
 
 exprseqbis : ';' exprseq 
     |
@@ -100,20 +99,26 @@ fieldlistbis: ',' field fieldlistbis
     |
     ;
 
-idcall: ID (lvaluebis|function)
+idcall: ID (lvaluebis|function|types|crochet)
     ;
 
-lvaluebis :'.' ID lvaluebis
-    |'[' expr ']' lvaluebis
+crochet:'[' expr ']' ('of' expr|lvalueter)
+    ;
+
+lvaluebis: '.' ID lvalueter
     |
     ;
 
-//lvalue: ID lvaluebis
-    //;
+lvalueter :'.' ID lvalueter
+    |'[' expr ']' lvalueter
+    |
+    ;
+
 
 declaration : typedeclaration
     |variabledeclaration
-    |functiondeclaration;
+    |functiondeclaration
+    ;
 
 typedeclaration : 'type' typeid '=' type;
 
@@ -152,14 +157,21 @@ functiondeclarationbis : '=' expr
     | ':' typeid '=' expr
     ; 
 
-print: 'print' '(' INTEGERCONSTANT ')' ;
+print: 'print' '(' expr ')' ;
 
 //token
 
-INTEGERCONSTANT : ('0'..'9')+;
-STRINGCONSTANT : ('"')('a'..'z'|'A'..'Z'|' '|'!'|'?'|'-'|'_'|'.'|':'|';'|',')*('"');
-ID : ('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|'_')*;
+INTEGERCONSTANT : ('0'..'9')+
+    ;
+STRINGCONSTANT : ('"')('a'..'z'|'A'..'Z'|' '|'!'|'?'|'-'|'_'|'.'|':'|';'|',')*('"')
+    ;
+ID : ('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+    ;
 
-BOPERATOR : ( '+'  | '-' | '*' | '/' | '=' | '<>' | '>' | '<' | '>=' | '<=' | '&' | '|');
+BOPERATOR : ( '+'  | '-' | '*' | '/' | '=' | '<>' | '>' | '<' | '>=' | '<=' | '&' | '|')
+    ;
 
-WS : ('\n'|' '|'    ')+ ->skip;
+WS : ('\n'|' '|'    '|'\t')+ ->skip
+    ;
+COMMENT:    '/*' .*? '*/' -> skip
+    ;
