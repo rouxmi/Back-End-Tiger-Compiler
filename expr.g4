@@ -15,46 +15,31 @@ expr :expr0
     |'break'
     |'let' declaration+ 'in' (exprseq)? 'end'
     |print
+    |types
     ;
 
 rulelse : 'else' expr 
     |
     ;
 
-expr0: expr1 expr0bis
+expr0: expr1 ('|' expr1 )*
     ;
 
-expr0bis: '|' expr0 
-    |
+expr1 : expr2  ('&' expr2 )*
     ;
 
-expr1 : expr2  expr1bis
+
+expr2: expr3  (('=' | '<>' | '>' | '<' | '>=' | '<=') expr3 )*
     ;
 
-expr1bis : '&' expr1 
-    |
+
+expr3: expr4 (('+'|'-') expr4 )*
     ;
 
-expr2: expr3  expr2bis
+
+expr4: expr5 (('*'|'/') expr5)*
     ;
 
-expr2bis : ('=' | '<>' | '>' | '<' | '>=' | '<=') expr2 
-    |
-    ;
-
-expr3: expr4 expr3bis
-    ;
-
-expr3bis : ('+'|'-') expr3 
-    |
-    ;
-
-expr4: expr5 expr4bis
-    ;
-
-expr4bis: ('*'|'/') expr4 
-    |
-    ;
 
 expr5: idcall
     | STRINGCONSTANT 
@@ -67,13 +52,12 @@ expr5: idcall
 
 function:'(' exprlist? ')' ;
 
-types: '{' fieldlist? '}'
+types: typeid ('[' expr ']' 'of' expr 
+    |'{' fieldlist? '}')
     ;
 
 exprnegation: '-' expr5
     ;
-
-
 
 exprseq : expr exprseqbis
     ;
@@ -99,18 +83,11 @@ fieldlistbis: ',' field fieldlistbis
     |
     ;
 
-idcall: ID (lvaluebis|function|types|crochet)
+idcall: ID (lvaluebis|function)
     ;
 
-crochet:'[' expr ']' ('of' expr|lvalueter)
-    ;
-
-lvaluebis: '.' ID lvalueter
-    |
-    ;
-
-lvalueter :'.' ID lvalueter
-    |'[' expr ']' lvalueter
+lvaluebis :'.' ID lvaluebis
+    |'[' expr ']' lvaluebis
     |
     ;
 
