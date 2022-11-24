@@ -4,23 +4,11 @@ grammar expr;
 package parser;
 }
 
-
+// déclaration du programme
 program : (expr)
     ;
 
-expr :expr0 
-    |'if' expr 'then' expr rulelse
-    |'while' expr 'do' expr
-    |'for' ID ':=' expr 'to' expr 'do' expr
-    |'break'
-    |'let' declaration+ 'in' (exprseq)? 'end'
-    |print
-    |types
-    ;
-
-rulelse : 'else' expr 
-    |
-    ;
+//prioriré de calcul
 
 expr0: expr1 ('|' expr1 )*
     ;
@@ -40,6 +28,7 @@ expr3: expr4 (('+'|'-') expr4 )*
 expr4: expr5 (('*'|'/') expr5)*
     ;
 
+//Expressions
 
 expr5: idcall
     | STRINGCONSTANT 
@@ -50,11 +39,41 @@ expr5: idcall
     | '(' exprseq? ')'
     ;
 
+expr :expr0 
+    |'if' expr 'then' expr rulelse
+    |'while' expr 'do' expr
+    |'for' ID ':=' expr 'to' expr 'do' expr
+    |'break'
+    |'let' declaration+ 'in' (exprseq)? 'end'
+    |print
+    |types
+    ;
+
+//Définitions règles
+
+print: 'print' '(' expr ')' ;
+
+rulelse : 'else' expr 
+    |
+    ;
+
+declaration : typedeclaration
+    |variabledeclaration
+    |functiondeclaration
+    ;
+
+//fonctions
+
 function:'(' exprlist? ')' ;
 
-types: typeid ('[' expr ']' 'of' expr 
-    |'{' fieldlist? '}')
+functiondeclaration : 'function' ID '(' (typefields)? ')' functiondeclarationbis
     ;
+
+functiondeclarationbis : '=' expr 
+    | ':' typeid '=' expr
+    ; 
+
+// Expressions sequence/Liste
 
 exprnegation: '-' expr5
     ;
@@ -73,6 +92,8 @@ exprlistbis: ',' expr exprlistbis
     |
     ;
 
+//fields    
+
 fieldlist : field fieldlistbis
     ;
 
@@ -83,6 +104,8 @@ fieldlistbis: ',' field fieldlistbis
     |
     ;
 
+//Id/Value
+
 idcall: ID (lvaluebis|function)
     ;
 
@@ -92,9 +115,11 @@ lvaluebis :'.' ID lvaluebis
     ;
 
 
-declaration : typedeclaration
-    |variabledeclaration
-    |functiondeclaration
+
+//Types    
+
+types: typeid ('[' expr ']' 'of' expr 
+    |'{' fieldlist? '}')
     ;
 
 typedeclaration : 'type' typeid '=' type;
@@ -120,6 +145,8 @@ typeid : ID
     |typepredefined
     ;
 
+//Variables
+
 variabledeclaration : 'var' ID variabledeclarationbis
     ;
 
@@ -127,14 +154,6 @@ variabledeclarationbis: ':'typeid ':=' expr
     | ':=' expr
     ;
 
-functiondeclaration : 'function' ID '(' (typefields)? ')' functiondeclarationbis
-    ;
-
-functiondeclarationbis : '=' expr 
-    | ':' typeid '=' expr
-    ; 
-
-print: 'print' '(' expr ')' ;
 
 //token
 
