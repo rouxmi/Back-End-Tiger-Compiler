@@ -1,4 +1,3 @@
-
 import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,8 +10,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 
-import parser.*;
-import parser.exprParser.ProgramContext;
+import lexer.Lexertiger;
+import parser.Parsertiger;
+import parser.Parsertiger.ProgramContext;
 
 public class Main {
 
@@ -29,9 +29,9 @@ public class Main {
 
             //chargement du fichier et construction du parser
             CharStream input = CharStreams.fromFileName(testFile);
-            exprLexer lexer = new exprLexer(input); 
+            Lexertiger lexer = new Lexertiger(input); 
             CommonTokenStream stream = new CommonTokenStream(lexer);
-            exprParser parser = new exprParser(stream);
+            Parsertiger parser = new Parsertiger(stream);
 
             ProgramContext program = parser.program();
 
@@ -40,7 +40,7 @@ public class Main {
             JPanel panel = new JPanel();
             TreeViewer viewer = new TreeViewer(Arrays.asList(
                     parser.getRuleNames()),program);
-            viewer.setScale(1.5); // Scale a little
+            viewer.setScale(0.80); // Scale a little
             panel.add(viewer);
             frame.add(panel);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
