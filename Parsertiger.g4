@@ -19,7 +19,7 @@ expr1 : expr2  (ET expr2 )*
     ;
 
 
-expr2: expr3  ((EGAL | DIF | INF | SUP | INFEG | SUPEG ) expr3 )*
+expr2: expr3  ((EGAL | DIF | INF | SUP | INFEG | SUPEG ) expr3 )?
     ;
 
 
@@ -32,47 +32,48 @@ expr4: expr5 ((MUL|DIV) expr5)*
 
 //Expressions
 
-expr5: idcall
-    | STRINGCONSTANT 
-    | INTEGERCONSTANT 
-    | NIL
-    | exprnegation
-    | typedeclaration
-    | PAOUV exprseq? PAFER
+expr5: idcall #Idcal
+    | STRINGCONSTANT #Strin
+    | INTEGERCONSTANT #In
+    | NIL #Nil
+    | exprnegation #Neg
+    | typedeclaration #TypDec
+    | PAOUV exprseq? PAFER #ExprSeq
     ;
 
-expr :expr0 
-    |IF expr THEN expr rulelse
-    |WHILE expr DO expr
-    |FOR ID DPTEG expr TO expr DO expr
-    |BREAK
-    |LET declaration+ IN (exprseq)? END
-    |print
-    |types
+expr :expr0 #ExprC
+    |IF expr THEN expr rulelse #IfThen
+    |WHILE expr DO expr #While
+    |FOR ID DPTEG expr TO expr DO expr #For
+    |BREAK #Break
+    |LET declaration+ IN (exprseq)? END #Let
+    |print #Prt
+    |types #Typ
     ;
 
 //Définitions règles
 
 print: PRINT PAOUV expr PAFER ;
 
-rulelse : ELSE expr 
-    |
+rulelse : ELSE expr #Else
+    |       #Vide
     ;
 
-declaration : typedeclaration
-    |variabledeclaration
-    |functiondeclaration
+declaration : typedeclaration #TypeDec
+    |variabledeclaration    #VarDec
+    |functiondeclaration    #FuncDec
     ;
 
 //fonctions
 
-function: PAOUV exprlist? PAFER ;
+function: PAOUV exprlist? PAFER  #functio
+    ;
 
 functiondeclaration : FCT ID PAOUV (typefields)? PAFER functiondeclarationbis
     ;
 
-functiondeclarationbis : EGAL expr 
-    | DPT typeid EGAL expr
+functiondeclarationbis : EGAL expr #egal
+    | DPT typeid EGAL expr  #typegal
     ; 
 
 // Expressions sequence/Liste
@@ -83,15 +84,15 @@ exprnegation: NEG expr5
 exprseq : expr exprseqbis
     ;
 
-exprseqbis : POINTV exprseq 
-    |
+exprseqbis : POINTV exprseq #pointexpr
+    |   #nul1
     ;
 
 exprlist : expr exprlistbis
     ;
 
-exprlistbis: VIRG expr exprlistbis 
-    |
+exprlistbis: VIRG expr exprlistbis  #exprlisbis
+    |   #nul2
     ;
 
 //fields    
@@ -102,8 +103,8 @@ fieldlist : field fieldlistbis
 field: ID EGAL expr
     ;
 
-fieldlistbis: VIRG field fieldlistbis 
-    |
+fieldlistbis: VIRG field fieldlistbis  #fieldlisbis
+    |   #nul3
     ;
 
 //Id/Value
@@ -111,9 +112,9 @@ fieldlistbis: VIRG field fieldlistbis
 idcall: ID (lvaluebis|function)
     ;
 
-lvaluebis :POINT ID lvaluebis
-    |CAOUV expr CAFER lvaluebis
-    |
+lvaluebis :POINT ID lvaluebis #pointid
+    |CAOUV expr CAFER lvaluebis #croexpr
+    | #nul4
     ;
 
 
@@ -126,16 +127,16 @@ types: typeid (CAOUV expr CAFER OF expr
 
 typedeclaration : TYPE typeid EGAL type;
 
-type : typeid 
-    |CROUV (typefields)? CRFER
-    |ARROF typeid
+type : typeid #typetypeid
+    |CROUV (typefields)? CRFER #typecro
+    |ARROF typeid #arrof
     ;
 
 typefields : typefield typefieldsbis
     ;
 
-typefieldsbis: VIRG typefields 
-    |
+typefieldsbis: VIRG typefields #virgtypefield
+    |   #nul5
     ;
 
 typefield : ID DPT typeid;
@@ -143,8 +144,8 @@ typefield : ID DPT typeid;
 typepredefined: (INT|STR)
     ;
 
-typeid : ID
-    |typepredefined
+typeid : ID #typeidid
+    |typepredefined #predefined
     ;
 
 //Variables
@@ -152,8 +153,8 @@ typeid : ID
 variabledeclaration : VAR ID variabledeclarationbis
     ;
 
-variabledeclarationbis: DPT typeid DPTEG expr 
-    | DPTEG expr
+variabledeclarationbis: DPT typeid DPTEG expr  #vardec1
+    | DPTEG expr #vardec2
     ;
 
 

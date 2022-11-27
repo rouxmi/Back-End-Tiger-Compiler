@@ -13,6 +13,8 @@ import org.antlr.v4.runtime.RecognitionException;
 import lexer.Lexertiger;
 import parser.Parsertiger;
 import parser.Parsertiger.ProgramContext;
+import ast.*;
+import graphViz.GraphVizVisitor;
 
 public class Main {
 
@@ -36,7 +38,7 @@ public class Main {
             ProgramContext program = parser.program();
 
             // code d'affichage de l'arbre syntaxique
-            JFrame frame = new JFrame("Antlr AST");
+            JFrame frame = new JFrame("Arbre Lexical CHAOS");
             JPanel panel = new JPanel();
             TreeViewer viewer = new TreeViewer(Arrays.asList(
                     parser.getRuleNames()),program);
@@ -46,6 +48,16 @@ public class Main {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);
+
+            // Visiteur de création de l'AST + création de l'AST
+            AstCreator creator = new AstCreator();
+            Ast ast = program.accept(creator);
+
+            // Visiteur de représentation graphique + appel
+            GraphVizVisitor graphViz = new GraphVizVisitor();
+            ast.accept(graphViz);
+        
+            graphViz.dumpGraph("./out/tree.dot");
 
 
         } 
