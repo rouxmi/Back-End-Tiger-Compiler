@@ -1,0 +1,67 @@
+package ast;
+
+public interface AstVisitor<T> {
+
+    public T visit(Program affect);
+	public T visit(Expr0 affect);
+	public T visit(Expr1 affect);
+	public T visit(Expr2 affect);
+	public T visit(Expr3 affect);
+	public T visit(Expr4 affect);
+	public T visit(Idcal affect);
+	public T visit(Strin affect);
+	public T visit(In affect);
+	public T visit(Nil affect);
+	public T visit(Neg affect);
+	public T visit(TypDec affect);
+	public T visit(ExprSeq affect);
+	public T visit(ExprC affect);
+	public T visit(IfThen affect);
+	public T visit(While affect);
+	public T visit(For affect);
+	public T visit(Break affect);
+	public T visit(Let affect);
+	public T visit(Prt affect);
+	public T visit(Typ affect);
+	public T visit(Print affect);
+	public T visit(Else affect);
+	public T visit(Vide affect);
+	public T visit(TypeDec affect);
+	public T visit(VarDec affect);
+	public T visit(FuncDec affect);
+	public T visit(Functio affect);
+	public T visit(Functiondeclaration affect);
+	public T visit(Egal affect);
+	public T visit(Typegal affect);
+	public T visit(Exprnegation affect);
+	public T visit(Exprseq affect);
+	public T visit(Pointexpr affect);
+	public T visit(Nul1 affect);
+	public T visit(Exprlist affect);
+	public T visit(Exprlisbis affect);
+	public T visit(Nul2 affect);
+	public T visit(Fieldlist affect);
+	public T visit(Field affect);
+	public T visit(Nul3 affect);
+	public T visit(Fieldlisbis affect);
+	public T visit(Idcall affect);
+	public T visit(Pointid affect);
+	public T visit(Croexpr affect);
+	public T visit(Nul4 affect);
+	public T visit(Types affect);
+	public T visit(Typedeclaration affect);
+	public T visit(Typetypeid affect);
+	public T visit(Typecro affect);
+	public T visit(Arrof affect);
+	public T visit(Typefields affect);
+	public T visit(Virgtypefield affect);
+	public T visit(Nul5 affect);
+	public T visit(Typefield affect);
+	public T visit(Typepredefined affect);
+	public T visit(Typeidid affect);
+	public T visit(Predefined affect);
+	public T visit(Variabledeclaration affect);
+	public T visit(Vardec1 affect);
+	public T visit(Vardec2 affect);
+
+}
