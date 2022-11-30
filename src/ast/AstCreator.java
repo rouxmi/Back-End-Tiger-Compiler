@@ -11,7 +11,11 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitProgram(Parsertiger.ProgramContext ctx) {return ctx.getChild(0).accept(this);
+	@Override public Ast visitProgram(Parsertiger.ProgramContext ctx) { 
+
+		Ast expr = ctx.getChild(0).accept(this);
+
+		return new Program(expr);
 		
 	}
 	/**
@@ -20,7 +24,23 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExpr0(Parsertiger.Expr0Context ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExpr0(Parsertiger.Expr0Context ctx) { 
+		
+		Ast noeudTemporaire = ctx.getChild(0).accept(this);
+
+
+        for (int i=0;2*i<ctx.getChildCount()-1;i++){
+            
+            
+            Ast right = ctx.getChild(2*(i+1)).accept(this);
+
+            
+            noeudTemporaire = new Expr0(noeudTemporaire,right);
+
+            }
+
+        return noeudTemporaire;
+
 	}
 	/**
 	 * {@inheritDoc}
@@ -28,7 +48,22 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExpr1(Parsertiger.Expr1Context ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExpr1(Parsertiger.Expr1Context ctx) { 
+		
+		Ast noeudTemporaire = ctx.getChild(0).accept(this);
+
+
+        for (int i=0;2*i<ctx.getChildCount()-1;i++){
+            
+            
+            Ast right = ctx.getChild(2*(i+1)).accept(this);
+
+            
+            noeudTemporaire = new Expr1(noeudTemporaire,right);
+
+            }
+
+        return noeudTemporaire;
 	}
 	/**
 	 * {@inheritDoc}
@@ -36,7 +71,22 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExpr2(Parsertiger.Expr2Context ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExpr2(Parsertiger.Expr2Context ctx) { 
+		
+		Ast noeudTemporaire = ctx.getChild(0).accept(this);
+
+
+        for (int i=0;2*i<ctx.getChildCount()-1;i++){
+            
+            
+            Ast right = ctx.getChild(2*(i+1)).accept(this);
+
+            
+            noeudTemporaire = new Expr2(noeudTemporaire,right);
+
+            }
+
+        return noeudTemporaire;
 	}
 	/**
 	 * {@inheritDoc}
