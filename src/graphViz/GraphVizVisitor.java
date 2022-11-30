@@ -254,8 +254,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addNode(nodeIdentifier, "Exprseq");
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
-        String exprseqbis = affect.exprseqbis.accept(this);
-        this.addTransition(nodeIdentifier, exprseqbis);
+        if(affect.exprseqbis != null){
+            String exprseqbis = affect.exprseqbis.accept(this);
+            this.addTransition(nodeIdentifier, exprseqbis);
+        }
         return nodeIdentifier;
     }
 
@@ -265,8 +267,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addNode(nodeIdentifier, "Exprlist");
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
-        String exprlistbis = affect.exprlistbis.accept(this);
-        this.addTransition(nodeIdentifier, exprlistbis);
+        if(affect.exprlistbis != null){
+            String exprlistbis = affect.exprlistbis.accept(this);
+            this.addTransition(nodeIdentifier, exprlistbis);
+        }
         return nodeIdentifier;
     }
 
@@ -287,8 +291,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addNode(nodeIdentifier, "Fieldlist");
         String field = affect.field.accept(this);
         this.addTransition(nodeIdentifier, field);
-        String fieldlistbis = affect.fieldlistbis.accept(this);
-        this.addTransition(nodeIdentifier, fieldlistbis);
+        if(affect.fieldlistbis != null){
+            String fieldlistbis = affect.fieldlistbis.accept(this);
+            this.addTransition(nodeIdentifier, fieldlistbis);
+        }
         return nodeIdentifier;
     }
 
@@ -330,8 +336,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "Pointid");
         this.addTransition(nodeIdentifier, affect.id);
-        String lvaluebis = affect.lvaluebis.accept(this);
-        this.addTransition(nodeIdentifier, lvaluebis);
+        if(affect.lvaluebis != null){
+            String lvaluebis = affect.lvaluebis.accept(this);
+            this.addTransition(nodeIdentifier, lvaluebis);
+        }
         return nodeIdentifier;
     }
 
@@ -341,8 +349,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addNode(nodeIdentifier, "Croexpr");
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
-        String lvaluebis = affect.lvaluebis.accept(this);
-        this.addTransition(nodeIdentifier, lvaluebis);
+        if(affect.lvaluebis != null){
+            String lvaluebis = affect.lvaluebis.accept(this);
+            this.addTransition(nodeIdentifier, lvaluebis);
+        }
         return nodeIdentifier;
     }
 
@@ -363,8 +373,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addNode(nodeIdentifier, "Typefields");
         String typefield = affect.typefield.accept(this);
         this.addTransition(nodeIdentifier, typefield);
-        String typefieldsbis = affect.typefieldsbis.accept(this);
-        this.addTransition(nodeIdentifier, typefieldsbis);
+        if(affect.typefieldsbis != null){
+            String typefieldsbis = affect.typefieldsbis.accept(this);
+            this.addTransition(nodeIdentifier, typefieldsbis);
+        }
         return nodeIdentifier;
     }
 
@@ -435,6 +447,15 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(IfThen affect) {
         String nodeIdentifier = this.nextState();
+        this.addNode(nodeIdentifier, "ifThen");
+        String left = affect.left.accept(this);
+        String center = affect.center.accept(this);
+        this.addTransition(nodeIdentifier, left);
+        this.addTransition(nodeIdentifier, center);
+        if(affect.right != null){
+            String right = affect.right.accept(this);
+            this.addTransition(nodeIdentifier, right);
+        }
         return nodeIdentifier;
     }
 
