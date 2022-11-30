@@ -68,7 +68,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
             
         FileOutputStream output = new FileOutputStream(filepath);
 
-        String buffer = this.nodeBuffer + this.linkBuffer ;
+        String buffer = this.nodeBuffer + this.linkBuffer + "}";
         byte[] strToBytes = buffer.getBytes();
 
         output.write(strToBytes);
@@ -318,8 +318,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "Idcall");
         this.addTransition(nodeIdentifier, affect.id);
-        String right = affect.right.accept(this);
-        this.addTransition(nodeIdentifier, right);
+        if (affect.right != null){
+            String right = affect.right.accept(this);
+            this.addTransition(nodeIdentifier, right);
+        }
         return nodeIdentifier;
     }
 

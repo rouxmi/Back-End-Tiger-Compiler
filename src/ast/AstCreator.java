@@ -2,7 +2,6 @@ package ast;
 
 import parser.ParsertigerBaseVisitor;
 
-import org.antlr.runtime.tree.ParseTree;
 
 import parser.Parsertiger;
 
