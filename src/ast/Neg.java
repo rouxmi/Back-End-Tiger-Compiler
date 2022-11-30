@@ -1,5 +1,5 @@
 package ast;
 
-public class Neg {
+public class Neg  {
 
 }

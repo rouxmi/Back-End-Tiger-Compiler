@@ -6,10 +6,16 @@ public interface AstVisitor<T> {
 	public T visit(Expr0 affect);
 	public T visit(Expr1 affect);
 	public T visit(Expr2 affect);
+	public T visit(Dif affect);
 	public T visit(Expr3 affect);
+	public T visit(Inf affect);
+	public T visit(Sup affect);
+	public T visit(Infeg affect);
+	public T visit(Supeg affect);
 	public T visit(Plus affect);
 	public T visit(Minus affect);
-	public T visit(Idcal affect);
+	public T visit(Mul affect);
+	public T visit(Div affect);
 	public T visit(Strin affect);
 	public T visit(In affect);
 	public T visit(Nil affect);
@@ -37,18 +43,14 @@ public interface AstVisitor<T> {
 	public T visit(Exprnegation affect);
 	public T visit(Exprseq affect);
 	public T visit(Pointexpr affect);
-	public T visit(Nul1 affect);
 	public T visit(Exprlist affect);
 	public T visit(Exprlisbis affect);
-	public T visit(Nul2 affect);
 	public T visit(Fieldlist affect);
 	public T visit(Field affect);
-	public T visit(Nul3 affect);
 	public T visit(Fieldlisbis affect);
 	public T visit(Idcall affect);
 	public T visit(Pointid affect);
 	public T visit(Croexpr affect);
-	public T visit(Nul4 affect);
 	public T visit(Types affect);
 	public T visit(Typedeclaration affect);
 	public T visit(Typetypeid affect);
@@ -56,13 +58,10 @@ public interface AstVisitor<T> {
 	public T visit(Arrof affect);
 	public T visit(Typefields affect);
 	public T visit(Virgtypefield affect);
-	public T visit(Nul5 affect);
 	public T visit(Typefield affect);
 	public T visit(Typepredefined affect);
 	public T visit(Typeidid affect);
-	public T visit(Predefined affect);
 	public T visit(Variabledeclaration affect);
 	public T visit(Vardec1 affect);
 	public T visit(Vardec2 affect);
-
 }

@@ -78,7 +78,7 @@ functiondeclarationbis : EGAL expr #egal
 
 // Expressions sequence/Liste
 
-exprnegation: NEG expr5
+exprnegation: NEG expr5 
     ;
 
 exprseq : expr exprseqbis

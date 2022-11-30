@@ -16,8 +16,4 @@ public class Minus implements Ast{
         this.right = right;
     }
 
-
-
-
-
 }
