@@ -193,8 +193,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
             String state = ast.accept(this);
             this.addTransition(nodeIdentifier, state);
         }
-        String rightState = affect.right.accept(this);
-        this.addTransition(nodeIdentifier, rightState);
+        if(affect.right != null){
+            String state = affect.right.accept(this);
+            this.addTransition(nodeIdentifier, state);
+        }
         return nodeIdentifier;
     }
 
@@ -202,10 +204,12 @@ public class GraphVizVisitor implements AstVisitor<String> {
     public String visit(Functiondeclaration affect) {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "function");
-        String typefields = affect.typefields.accept(this);
         String functiondeclaration = affect.functiondeclaration.accept(this);
         this.addTransition(nodeIdentifier, affect.id);
-        this.addTransition(nodeIdentifier, typefields);
+        if(affect.typefields != null){
+            String typefields = affect.typefields.accept(this);
+            this.addTransition(nodeIdentifier, typefields);
+        }
         this.addTransition(nodeIdentifier, functiondeclaration);
         return nodeIdentifier;
     }
@@ -624,8 +628,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addNode(nodeIdentifier, "types");
         String typeid = affect.typeid.accept(this);
         this.addTransition(nodeIdentifier, typeid);
-        String fieldlist = affect.fieldlist.accept(this);
-        this.addTransition(nodeIdentifier, fieldlist);
+        if(affect.fieldlist != null){
+            String fieldlist = affect.fieldlist.accept(this);
+            this.addTransition(nodeIdentifier, fieldlist);
+        }
         return nodeIdentifier;
     }
     
