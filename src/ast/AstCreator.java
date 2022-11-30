@@ -281,7 +281,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitFor(Parsertiger.ForContext ctx) { 
-		String id = ctx.getChild(1).accept(this).toString();
+		String id = ctx.getChild(1).getText();
 		Ast min =ctx.getChild(3).accept(this);
 		Ast max= ctx.getChild(5).accept(this);
 		Ast regle =ctx.getChild(7).accept(this);
@@ -295,7 +295,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 */
 	@Override public Ast visitBreak(Parsertiger.BreakContext ctx) { 
 		
-		return new Break(ctx.getChild(0).accept(this).toString());
+		return new Break(ctx.getChild(0).getText());
 	}
 	/**
 	 * {@inheritDoc}
@@ -306,20 +306,20 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	@Override public Ast visitLet(Parsertiger.LetContext ctx) { 
 		Ast var=null;
 		int valeurin=0;
-		for (int i=0;i<ctx.getChildCount()-1;i++){
-			if(ctx.getChild(i).toString()=="in"){
+		for (int i=0;i<ctx.getChildCount();i++){
+			if(ctx.getChild(i).getText().equals("in")){
 				valeurin=i;
-				if(ctx.getChild(i+1).toString()!="end"){
-					var= ctx.getChild(i+1).accept(this);
-
-				}
 			}
+		}
+
+		if(ctx.getChildCount()-1-valeurin==2){
+			var= ctx.getChild(valeurin+1).accept(this);
+
 		}
 		Let lefts = new Let(var);
 		for(int i=0;i<valeurin;i++){
 			lefts.add_Ast(ctx.getChild(i).accept(this));
 		}
-		
 		return lefts;
 	}
 	/**
@@ -347,9 +347,9 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitPrint(Parsertiger.PrintContext ctx) {
-		String print= ctx.getChild(0).toString();
+
 		Ast fils = ctx.getChild(2).accept(this);
-		return new Print(print, fils);
+		return new Print(fils);
 	}
 	/**
 	 * {@inheritDoc}
@@ -426,8 +426,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitEgal(Parsertiger.EgalContext ctx) { 
-		String eg = ctx.getChild(2).getText();
-		Ast expr = ctx.getChild(3).accept(this);
+		String eg = ctx.getChild(0).getText();
+		Ast expr = ctx.getChild(1).accept(this);
 		return new Egal(eg, expr);
 	}
 	/**
@@ -437,11 +437,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitTypegal(Parsertiger.TypegalContext ctx) {
-		String dp = ctx.getChild(0).getText();
 		Ast typeid = ctx.getChild(1).accept(this);
 		String eg = ctx.getChild(2).getText();
 		Ast expr = ctx.getChild(3).accept(this);
-		return new Typegal(dp, typeid, eg, expr);
+		return new Typegal(typeid, eg, expr);
 	}
 	/**
 	 * {@inheritDoc}
@@ -482,9 +481,12 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitExprlist(Parsertiger.ExprlistContext ctx) { 
-		Ast expr = ctx.getChild(0).accept(this);
-		Ast exprlistbis = ctx.getChild(1).accept(this);
-		return new Exprlist(expr, exprlistbis);
+		if (ctx.getChild(3)!=null){
+			Ast expr = ctx.getChild(0).accept(this);
+			Ast exprlistbis = ctx.getChild(1).accept(this);
+			return new Exprlist(expr, exprlistbis);
+		}
+		else return ctx.getChild(1).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -504,9 +506,12 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitFieldlist(Parsertiger.FieldlistContext ctx) { 
-		Ast field = ctx.getChild(0).accept(this);
-		Ast fieldlistbis = ctx.getChild(1).accept(this);
-		return new Fieldlist(field, fieldlistbis);
+		if (ctx.getChild(3)!=null){
+			Ast field = ctx.getChild(0).accept(this);
+			Ast fieldlistbis = ctx.getChild(1).accept(this);
+			return new Fieldlist(field, fieldlistbis);
+		}
+		else return ctx.getChild(1).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -538,8 +543,13 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 */
 	@Override public Ast visitIdcall(Parsertiger.IdcallContext ctx) {
 		String id= ctx.getChild(0).getText();
-		Ast fils= ctx.getChild(1).accept(this);
-		return new Idcall(id, fils);
+		if(ctx.getChild(1).getChild(0)!=null){
+			Ast fils= ctx.getChild(1).accept(this);
+			return new Idcall(id, fils);
+		}
+		else {
+			return new Idcall2(id);
+		}
 	}
 	/**
 	 * {@inheritDoc}
@@ -559,9 +569,13 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */ 
 	@Override public Ast visitCroexpr(Parsertiger.CroexprContext ctx) { 
-		Ast expr= ctx.getChild(1).accept(this);
-		Ast lvaluebis = ctx.getChild(3).accept(this);
-		return new Croexpr(expr, lvaluebis);
+		if (ctx.getChild(3)!=null){
+			Ast expr= ctx.getChild(1).accept(this);
+			Ast lvaluebis = ctx.getChild(3).accept(this);
+			return new Croexpr(expr, lvaluebis);
+		}
+		else return ctx.getChild(1).accept(this);
+		
 	}
 	/**
 	 * {@inheritDoc}
@@ -574,7 +588,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 		Ast typeid = ctx.getChild(0).accept(this);
 		if(cmp==6){
 			Ast expr1 = ctx.getChild(2).accept(this);
-			String of = ctx.getChild(3).getText();
+			String of = ctx.getChild(4).getText();
 			Ast expr2 = ctx.getChild(5).accept(this);
 			return new Typeswithof(of,typeid, expr1, expr2);
 		}else if (cmp==4){
@@ -717,8 +731,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitVardec2(Parsertiger.Vardec2Context ctx) { 
-		Ast expr = ctx.getChild(1).accept(this);
-		return new Vardec2(expr);
+		return ctx.getChild(1).accept(this);
 	}
 	/**
 	 * {@inheritDoc}

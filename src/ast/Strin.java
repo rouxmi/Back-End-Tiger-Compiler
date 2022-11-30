@@ -7,6 +7,6 @@ public class Strin  implements Ast{
     public String strin;
 
     public Strin(String strin){
-        this.strin=strin;
+        this.strin=strin.replace(String.valueOf('"'),String.valueOf("\\"+'"'));
     }
 }

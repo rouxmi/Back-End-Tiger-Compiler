@@ -35,7 +35,8 @@ import ast.Exprlist ;
  import ast.Field ;
  import ast.Fieldlisbis ;
  import ast.Idcall ;
- import ast.Pointid ;
+import ast.Idcall2;
+import ast.Pointid ;
  import ast.Croexpr ;
 import ast.Dif;
 import ast.Div;
@@ -48,7 +49,6 @@ import ast.Typeswithof;
 import ast.Typeidid ;
  import ast.Variabledeclaration ;
  import ast.Vardec1 ;
- import ast.Vardec2 ;
  import ast.AstVisitor;
  import ast.Ast;
 
@@ -190,8 +190,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "let");
         for(Ast ast : affect.lefts){
-            String state = ast.accept(this);
-            this.addTransition(nodeIdentifier, state);
+            if(ast!=null){
+                String state = ast.accept(this);
+                this.addTransition(nodeIdentifier, state);
+            }
         }
         if(affect.right != null){
             String state = affect.right.accept(this);
@@ -219,7 +221,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "=");
         String expr = affect.expr.accept(this);
-        this.addTransition(nodeIdentifier, affect.eg);
+        this.addTransition(nodeIdentifier, '"'+affect.eg+'"');
         this.addTransition(nodeIdentifier, expr);
         
         return nodeIdentifier;
@@ -229,10 +231,9 @@ public class GraphVizVisitor implements AstVisitor<String> {
     public String visit(Typegal affect) {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "TypeEgal");
-        this.addTransition(nodeIdentifier, affect.dp);
         String typeid = affect.typeid.accept(this);
         this.addTransition(nodeIdentifier, typeid);
-        this.addTransition(nodeIdentifier, affect.eg);
+        this.addTransition(nodeIdentifier, '"'+affect.eg+'"');
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
         return nodeIdentifier;
@@ -425,14 +426,6 @@ public class GraphVizVisitor implements AstVisitor<String> {
         return nodeIdentifier;
     }
 
-    @Override
-    public String visit(Vardec2 affect) {
-        String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Vardec2");
-        String expr = affect.expr.accept(this);
-        this.addTransition(nodeIdentifier, expr);
-        return nodeIdentifier;
-    }
 
     @Override
     public String visit(Program affect) {
@@ -464,9 +457,6 @@ public class GraphVizVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         String nodeIdentifier1 = affect.fils.accept(this);
         this.addNode(nodeIdentifier, "print");
-        String nodeIdentifier2 = this.nextState();
-        this.addNode(nodeIdentifier2, affect.print);
-        this.addTransition(nodeIdentifier, nodeIdentifier2);
         this.addTransition(nodeIdentifier, nodeIdentifier1);
         return nodeIdentifier;
     }
@@ -655,6 +645,13 @@ public class GraphVizVisitor implements AstVisitor<String> {
             String fieldlist = affect.fieldlist.accept(this);
             this.addTransition(nodeIdentifier, fieldlist);
         }
+        return nodeIdentifier;
+    }
+
+    @Override
+    public String visit(Idcall2 affect) {
+        String nodeIdentifier = this.nextState();
+        this.addNode(nodeIdentifier, affect.id);
         return nodeIdentifier;
     }
     

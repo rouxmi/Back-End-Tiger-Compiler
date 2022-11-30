@@ -1,13 +1,13 @@
 package ast;
 
-public class Print implements Ast {
+public class Idcall2 implements Ast{
     public <T> T accept(AstVisitor<T> visitor){
         return visitor.visit(this);
     }
 
-    public Ast fils;
+    public String id;
 
-    public Print( Ast fils){
-        this.fils=fils;
+    public Idcall2(String id){
+        this.id=id;
     }
 }
