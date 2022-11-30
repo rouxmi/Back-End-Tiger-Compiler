@@ -86,7 +86,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 
             switch (operation) {
                 case "=":
-                    noeudTemporaire = new Egal(noeudTemporaire,right);
+                    noeudTemporaire = new Egal2(noeudTemporaire,right);
                     break;
                 case "!=":
                     noeudTemporaire = new Dif(noeudTemporaire,right);
@@ -217,7 +217,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitNeg(Parsertiger.NegContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitNeg(Parsertiger.NegContext ctx) { 
+		return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -233,7 +234,14 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExprSeq(Parsertiger.ExprSeqContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExprSeq(Parsertiger.ExprSeqContext ctx) { 
+		int nbrfils =ctx.getChildCount();
+		if(nbrfils==3){
+			return ctx.getChild(1).accept(this);
+		}
+		else{
+			return null;
+		}	
 	}
 	/**
 	 * {@inheritDoc}
@@ -241,7 +249,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExprC(Parsertiger.ExprCContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExprC(Parsertiger.ExprCContext ctx) { 
+		return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -249,7 +258,11 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitIfThen(Parsertiger.IfThenContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitIfThen(Parsertiger.IfThenContext ctx) { 
+		Ast left= ctx.getChild(1).accept(this);
+		Ast center= ctx.getChild(3).accept(this);
+		Ast right= ctx.getChild(4).accept(this);
+		return new IfThen(left, center, right);
 	}
 	/**
 	 * {@inheritDoc}
@@ -257,7 +270,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitWhile(Parsertiger.WhileContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitWhile(Parsertiger.WhileContext ctx) { 
+		Ast left= ctx.getChild(1).accept(this);
+		Ast right= ctx.getChild(3).accept(this);
+		return new While(left, right);
 	}
 	/**
 	 * {@inheritDoc}
@@ -265,7 +281,12 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitFor(Parsertiger.ForContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitFor(Parsertiger.ForContext ctx) { 
+		String id = ctx.getChild(1).accept(this).toString();
+		Ast min =ctx.getChild(3).accept(this);
+		Ast max= ctx.getChild(5).accept(this);
+		Ast regle =ctx.getChild(7).accept(this);
+		return new For(id, min, max, regle);
 	}
 	/**
 	 * {@inheritDoc}
@@ -273,7 +294,9 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitBreak(Parsertiger.BreakContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitBreak(Parsertiger.BreakContext ctx) { 
+		
+		return new Break(ctx.getChild(0).accept(this).toString());
 	}
 	/**
 	 * {@inheritDoc}
@@ -281,7 +304,24 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitLet(Parsertiger.LetContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitLet(Parsertiger.LetContext ctx) { 
+		Ast var=null;
+		int valeurin=0;
+		for (int i=0;i<ctx.getChildCount()-1;i++){
+			if(ctx.getChild(i).toString()=="in"){
+				valeurin=i;
+				if(ctx.getChild(i+1).toString()!="end"){
+					var= ctx.getChild(i+1).accept(this);
+
+				}
+			}
+		}
+		Let lefts = new Let(var);
+		for(int i=0;i<valeurin;i++){
+			lefts.add_Ast(ctx.getChild(i).accept(this));
+		}
+		
+		return lefts;
 	}
 	/**
 	 * {@inheritDoc}
@@ -289,7 +329,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitPrt(Parsertiger.PrtContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitPrt(Parsertiger.PrtContext ctx) { 
+		return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -297,7 +338,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitTyp(Parsertiger.TypContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitTyp(Parsertiger.TypContext ctx) { 
+		return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -305,7 +347,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitPrint(Parsertiger.PrintContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitPrint(Parsertiger.PrintContext ctx) {
+		String print= ctx.getChild(0).toString();
+		Ast fils = ctx.getChild(2).accept(this);
+		return new Print(print, fils);
 	}
 	/**
 	 * {@inheritDoc}
@@ -313,7 +358,18 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitElse(Parsertiger.ElseContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitElse(Parsertiger.ElseContext ctx) { 
+		return ctx.getChild(1).accept(this);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public Ast visitTypeDec(Parsertiger.TypeDecContext ctx) { 
+		return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -321,7 +377,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitVide(Parsertiger.VideContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitVarDec(Parsertiger.VarDecContext ctx) { 
+		return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -329,7 +386,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitTypeDec(Parsertiger.TypeDecContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitFuncDec(Parsertiger.FuncDecContext ctx) { 
+		return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -337,7 +395,11 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitVarDec(Parsertiger.VarDecContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitFunctio(Parsertiger.FunctioContext ctx) {
+		int cmp= ctx.getChildCount();
+		if(cmp==3){
+			return ctx.getChild(1).accept(this);
+		}else return null;
 	}
 	/**
 	 * {@inheritDoc}
@@ -345,7 +407,18 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitFuncDec(Parsertiger.FuncDecContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitFunctiondeclaration(Parsertiger.FunctiondeclarationContext ctx) { 
+		String id = ctx.getChild(1).getText();
+		int cmp = ctx.getChildCount();
+		if(cmp==6){
+			Ast typefields = ctx.getChild(3).accept(this);
+			Ast functiondeclaration = ctx.getChild(5).accept(this);
+			return new Functiondeclaration(id, typefields, functiondeclaration);
+		}
+		else{
+			Ast functiondeclaration = ctx.getChild(4).accept(this);
+			return new FdecWithoutfields(id, functiondeclaration);
+		}
 	}
 	/**
 	 * {@inheritDoc}
@@ -353,7 +426,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitFunctio(Parsertiger.FunctioContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitEgal(Parsertiger.EgalContext ctx) { 
+		String eg = ctx.getChild(2).getText();
+		Ast expr = ctx.getChild(3).accept(this);
+		return new Egal(eg, expr);
 	}
 	/**
 	 * {@inheritDoc}
@@ -361,7 +437,12 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitFunctiondeclaration(Parsertiger.FunctiondeclarationContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitTypegal(Parsertiger.TypegalContext ctx) {
+		String dp = ctx.getChild(0).getText();
+		Ast typeid = ctx.getChild(1).accept(this);
+		String eg = ctx.getChild(2).getText();
+		Ast expr = ctx.getChild(3).accept(this);
+		return new Typegal(dp, typeid, eg, expr);
 	}
 	/**
 	 * {@inheritDoc}
@@ -369,7 +450,11 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitEgal(Parsertiger.EgalContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExprnegation(Parsertiger.ExprnegationContext ctx) { 
+		String neg = ctx.getChild(0).getText();
+		Ast expr = ctx.getChild(1).accept(this);
+		return new Exprnegation(neg, expr);
+		
 	}
 	/**
 	 * {@inheritDoc}
@@ -377,7 +462,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitTypegal(Parsertiger.TypegalContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExprseq(Parsertiger.ExprseqContext ctx) { 
+		Ast expr = ctx.getChild(0).accept(this);
+		Ast exprseqbis = ctx.getChild(1).accept(this);
+		return new Exprseq(expr, exprseqbis); 
 	}
 	/**
 	 * {@inheritDoc}
@@ -385,7 +473,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExprnegation(Parsertiger.ExprnegationContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitPointexpr(Parsertiger.PointexprContext ctx) { 
+		return ctx.getChild(1).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -393,7 +482,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExprseq(Parsertiger.ExprseqContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExprlist(Parsertiger.ExprlistContext ctx) { 
+		Ast expr = ctx.getChild(0).accept(this);
+		Ast exprlistbis = ctx.getChild(1).accept(this);
+		return new Exprlist(expr, exprlistbis);
 	}
 	/**
 	 * {@inheritDoc}
@@ -401,7 +493,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitPointexpr(Parsertiger.PointexprContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitExprlisbis(Parsertiger.ExprlisbisContext ctx) { 
+		Ast expr = ctx.getChild(1).accept(this);
+		Ast exprlistbis = ctx.getChild(2).accept(this);
+		return new Exprlisbis(expr, exprlistbis);
 	}
 	/**
 	 * {@inheritDoc}
@@ -409,7 +504,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitNul1(Parsertiger.Nul1Context ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitFieldlist(Parsertiger.FieldlistContext ctx) { 
+		Ast field = ctx.getChild(0).accept(this);
+		Ast fieldlistbis = ctx.getChild(1).accept(this);
+		return new Fieldlist(field, fieldlistbis);
 	}
 	/**
 	 * {@inheritDoc}
@@ -417,7 +515,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExprlist(Parsertiger.ExprlistContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitField(Parsertiger.FieldContext ctx) { 
+		String id = ctx.getChild(0).getText();
+		Ast expr = ctx.getChild(2).accept(this);
+		return new Field(expr, id);
 	}
 	/**
 	 * {@inheritDoc}
@@ -425,47 +526,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExprlisbis(Parsertiger.ExprlisbisContext ctx) { return ctx.getChild(0).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitNul2(Parsertiger.Nul2Context ctx) { return ctx.getChild(0).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitFieldlist(Parsertiger.FieldlistContext ctx) { return ctx.getChild(0).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitField(Parsertiger.FieldContext ctx) { return ctx.getChild(0).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitNul3(Parsertiger.Nul3Context ctx) { return ctx.getChild(0).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitFieldlisbis(Parsertiger.FieldlisbisContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitFieldlisbis(Parsertiger.FieldlisbisContext ctx) { 
+		Ast field = ctx.getChild(1).accept(this);
+		Ast fieldlisbis = ctx.getChild(2).accept(this);
+		return new Fieldlisbis(field, fieldlisbis);
 	}
 	/**
 	 * {@inheritDoc}
@@ -474,10 +538,9 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitIdcall(Parsertiger.IdcallContext ctx) {
-		 Ast id= ctx.getChild(0).accept(this);
-		 String id1= id.toString();
-		 Ast fils= ctx.getChild(1).accept(this);
-		 return new Idcall(id1, fils);
+		String id= ctx.getChild(0).getText();
+		Ast fils= ctx.getChild(1).accept(this);
+		return new Idcall(id, fils);
 	}
 	/**
 	 * {@inheritDoc}
@@ -485,7 +548,21 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitPointid(Parsertiger.PointidContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitPointid(Parsertiger.PointidContext ctx) { 
+		String id = ctx.getChild(1).getText();
+		Ast lvaluebis = ctx.getChild(2).accept(this);
+		return new Pointid(id, lvaluebis);
+	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */ 
+	@Override public Ast visitCroexpr(Parsertiger.CroexprContext ctx) { 
+		Ast expr= ctx.getChild(1).accept(this);
+		Ast lvaluebis = ctx.getChild(3).accept(this);
+		return new Croexpr(expr, lvaluebis);
 	}
 	/**
 	 * {@inheritDoc}
@@ -493,7 +570,20 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitCroexpr(Parsertiger.CroexprContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitTypes(Parsertiger.TypesContext ctx) { 
+		int cmp = ctx.getChildCount();
+		Ast typeid = ctx.getChild(0).accept(this);
+		if(cmp==6){
+			Ast expr1 = ctx.getChild(2).accept(this);
+			String of = ctx.getChild(3).getText();
+			Ast expr2 = ctx.getChild(5).accept(this);
+			return new Typeswithof(of,typeid, expr1, expr2);
+		}else if (cmp==4){
+			Ast fieldlist = ctx.getChild(2).accept(this);
+			return new Typeswithfieldlist(typeid, fieldlist);
+		}else{
+			return typeid;
+		}
 	}
 	/**
 	 * {@inheritDoc}
@@ -501,7 +591,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitNul4(Parsertiger.Nul4Context ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitTypedeclaration(Parsertiger.TypedeclarationContext ctx) { 
+		Ast typeid = ctx.getChild(1).accept(this);
+		Ast type = ctx.getChild(3).accept(this);
+		return new Typedeclaration(typeid, type);
 	}
 	/**
 	 * {@inheritDoc}
@@ -509,7 +602,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitTypes(Parsertiger.TypesContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitTypetypeid(Parsertiger.TypetypeidContext ctx) { 
+		return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -517,7 +611,14 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitTypedeclaration(Parsertiger.TypedeclarationContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitTypecro(Parsertiger.TypecroContext ctx) { 
+		int cmp= ctx.getChildCount();
+		if(cmp==3){
+			return ctx.getChild(1).accept(this);
+		}
+		else{
+			return null;
+		}
 	}
 	/**
 	 * {@inheritDoc}
@@ -525,7 +626,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitTypetypeid(Parsertiger.TypetypeidContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitArrof(Parsertiger.ArrofContext ctx) { 
+		return ctx.getChild(1).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -533,23 +635,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitTypecro(Parsertiger.TypecroContext ctx) { return ctx.getChild(0).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitArrof(Parsertiger.ArrofContext ctx) { return ctx.getChild(0).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitTypefields(Parsertiger.TypefieldsContext ctx) { return ctx.getChild(0).accept(this);
+	@Override public Ast visitTypefields(Parsertiger.TypefieldsContext ctx) { 
+		Ast typefield = ctx.getChild(0).accept(this);
+		Ast typefieldsbis = ctx.getChild(1).accept(this);
+		return new Typefields(typefield, typefieldsbis);
 	}
 	/**
 	 * {@inheritDoc}
@@ -559,14 +648,6 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 */
 	@Override public Ast visitVirgtypefield(Parsertiger.VirgtypefieldContext ctx) {
 		return ctx.getChild(1).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitNul5(Parsertiger.Nul5Context ctx) { return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}

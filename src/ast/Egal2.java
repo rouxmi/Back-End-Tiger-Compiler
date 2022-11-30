@@ -1,17 +1,22 @@
 package ast;
 
-public class IfThen implements Ast{
+public class Egal2 implements Ast{
+
+    // Utile 
     public <T> T accept(AstVisitor<T> visitor){
         return visitor.visit(this);
     }
 
     public Ast left;
-    public Ast center;
     public Ast right;
-    
-    public IfThen(Ast left, Ast center, Ast right){
-        this.left=left;
-        this.center=center;
+
+
+    public Egal2(Ast left, Ast right) {
+        this.left = left;
         this.right = right;
     }
+    
+
+
+
 }
