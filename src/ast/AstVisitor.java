@@ -7,7 +7,8 @@ public interface AstVisitor<T> {
 	public T visit(Expr1 affect);
 	public T visit(Expr2 affect);
 	public T visit(Expr3 affect);
-	public T visit(Expr4 affect);
+	public T visit(Plus affect);
+	public T visit(Minus affect);
 	public T visit(Idcal affect);
 	public T visit(Strin affect);
 	public T visit(In affect);

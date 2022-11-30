@@ -1,8 +1,8 @@
 package ast;
 
-public class Expr4 implements Ast{
+public class Minus implements Ast{
 
-    // Utile
+    // Utile 
     public <T> T accept(AstVisitor<T> visitor){
         return visitor.visit(this);
     }
@@ -11,9 +11,13 @@ public class Expr4 implements Ast{
     public Ast right;
 
 
-    public Expr4(Ast left, Ast right) {
+    public Minus(Ast left, Ast right) {
         this.left = left;
         this.right = right;
     }
+
+
+
+
 
 }
