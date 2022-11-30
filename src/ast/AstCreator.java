@@ -88,7 +88,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
                 case "=":
                     noeudTemporaire = new Egal2(noeudTemporaire,right);
                     break;
-                case "!=":
+                case "<>":
                     noeudTemporaire = new Dif(noeudTemporaire,right);
                     break;
 				case "<":
@@ -696,8 +696,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitVariabledeclaration(Parsertiger.VariabledeclarationContext ctx) { 
-		Ast id = ctx.getChild(1).accept(this);
-		Ast bis = ctx.getChild(3).accept(this);
+		String id = ctx.getChild(1).toString();
+		Ast bis = ctx.getChild(2).accept(this);
 		return new Variabledeclaration(id,bis);
 	}
 	/**
@@ -707,10 +707,9 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitVardec1(Parsertiger.Vardec1Context ctx) { 
-		Ast dp = ctx.getChild(0).accept(this);
 		Ast typeid = ctx.getChild(1).accept(this);
 		Ast expr = ctx.getChild(3).accept(this);
-		return new Vardec1(dp, typeid, expr);
+		return new Vardec1(typeid, expr);
 	}
 	/**
 	 * {@inheritDoc}

@@ -5,12 +5,12 @@ public class Variabledeclaration implements Ast{
         return visitor.visit(this);
     }
 
-    public Ast id;
+    public String id;
     public Ast bis;
     
 
 
-    public Variabledeclaration(Ast id, Ast bis){
+    public Variabledeclaration(String id, Ast bis){
         this.id = id;
         this.bis = bis;
     }

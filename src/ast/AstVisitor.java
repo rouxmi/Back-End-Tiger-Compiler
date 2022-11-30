@@ -5,9 +5,7 @@ public interface AstVisitor<T> {
     public T visit(Program affect);
 	public T visit(Expr0 affect);
 	public T visit(Expr1 affect);
-	public T visit(Expr2 affect);
 	public T visit(Dif affect);
-	public T visit(Expr3 affect);
 	public T visit(Inf affect);
 	public T visit(Sup affect);
 	public T visit(Infeg affect);
@@ -19,7 +17,6 @@ public interface AstVisitor<T> {
 	public T visit(Strin affect);
 	public T visit(In affect);
 	public T visit(Nil affect);
-	public T visit(ExprSeq affect);
 	public T visit(IfThen affect);
 	public T visit(While affect);
 	public T visit(For affect);

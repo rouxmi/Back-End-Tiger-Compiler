@@ -7,12 +7,9 @@ public class Vardec1 implements Ast{
 
     public Ast expr;
     public Ast typeid;
-    public Ast dp;
 
-
-    public Vardec1(Ast dp, Ast typeid, Ast expr) {
+    public Vardec1(Ast typeid, Ast expr) {
         this.expr = expr;
         this.typeid = typeid;
-        this.dp = dp;
     }
 }
