@@ -102,6 +102,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 				case ">=":
                     noeudTemporaire = new Supeg(noeudTemporaire,right);
                     break;
+				case ":=":
+					noeudTemporaire = new Dptegal(noeudTemporaire, right);
                 default:
                     break;
             }
@@ -461,9 +463,11 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitExprseq(Parsertiger.ExprseqContext ctx) { 
-		Ast expr = ctx.getChild(0).accept(this);
-		Ast exprseqbis = ctx.getChild(1).accept(this);
-		return new Exprseq(expr, exprseqbis); 
+		if (ctx.getChild(1).getChild(0)!=null){
+			Ast expr = ctx.getChild(0).accept(this);
+			Ast exprseqbis = ctx.getChild(1).accept(this);
+			return new Exprseq(expr, exprseqbis);
+		} else return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -481,7 +485,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitExprlist(Parsertiger.ExprlistContext ctx) { 
-		if (ctx.getChild(3)!=null){
+		if (ctx.getChild(1).getChild(0)!=null){
 			Ast expr = ctx.getChild(0).accept(this);
 			Ast exprlistbis = ctx.getChild(1).accept(this);
 			return new Exprlist(expr, exprlistbis);
@@ -495,9 +499,13 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitExprlisbis(Parsertiger.ExprlisbisContext ctx) { 
-		Ast expr = ctx.getChild(1).accept(this);
-		Ast exprlistbis = ctx.getChild(2).accept(this);
-		return new Exprlisbis(expr, exprlistbis);
+		if (ctx.getChild(2).getChild(0)!=null){
+			Ast expr= ctx.getChild(1).accept(this);
+			Ast exprlisbis = ctx.getChild(2).accept(this);
+			return new Exprlisbis(expr, exprlisbis);
+		}
+		else{return ctx.getChild(2).accept(this);}
+
 	}
 	/**
 	 * {@inheritDoc}
@@ -506,7 +514,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitFieldlist(Parsertiger.FieldlistContext ctx) { 
-		if (ctx.getChild(3)!=null){
+		if (ctx.getChild(3).getChild(0)!=null){
 			Ast field = ctx.getChild(0).accept(this);
 			Ast fieldlistbis = ctx.getChild(1).accept(this);
 			return new Fieldlist(field, fieldlistbis);
@@ -531,9 +539,13 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitFieldlisbis(Parsertiger.FieldlisbisContext ctx) { 
-		Ast field = ctx.getChild(1).accept(this);
-		Ast fieldlisbis = ctx.getChild(2).accept(this);
-		return new Fieldlisbis(field, fieldlisbis);
+		if (ctx.getChild(2).getChild(0)!=null){
+			Ast field = ctx.getChild(1).accept(this);
+			Ast fieldlisbis = ctx.getChild(2).accept(this);
+			return new Fieldlisbis(field, fieldlisbis);
+		}
+		else{return ctx.getChild(2).accept(this);}
+		
 	}
 	/**
 	 * {@inheritDoc}
@@ -569,12 +581,13 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */ 
 	@Override public Ast visitCroexpr(Parsertiger.CroexprContext ctx) { 	
-		if (ctx.getChild(3)!=null){
+		if (ctx.getChild(3).getChild(0)!=null){
 			Ast expr= ctx.getChild(1).accept(this);
 			Ast lvaluebis = ctx.getChild(3).accept(this);
 			return new Croexpr(expr, lvaluebis);
 		}
-		else return ctx.getChild(1).accept(this);
+		else {
+			return ctx.getChild(1).accept(this);}
 		
 	}
 	/**
@@ -649,9 +662,11 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitTypefields(Parsertiger.TypefieldsContext ctx) { 
-		Ast typefield = ctx.getChild(0).accept(this);
-		Ast typefieldsbis = ctx.getChild(1).accept(this);
-		return new Typefields(typefield, typefieldsbis);
+		if (ctx.getChild(1).getChild(0)!=null){
+			Ast typefield = ctx.getChild(0).accept(this);
+			Ast typefieldsbis = ctx.getChild(1).accept(this);
+			return new Typefields(typefield, typefieldsbis);
+		}else return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}

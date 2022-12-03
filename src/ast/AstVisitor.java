@@ -48,4 +48,5 @@ public interface AstVisitor<T> {
 	public T visit(Typeidid affect);
 	public T visit(Variabledeclaration affect);
 	public T visit(Vardec1 affect);
+	public T visit(Dptegal affect);
 }

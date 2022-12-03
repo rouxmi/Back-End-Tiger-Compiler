@@ -19,7 +19,7 @@ expr1 : expr2  (ET expr2 )*
     ;
 
 
-expr2: expr3  ((EGAL | DIF | INF | SUP | INFEG | SUPEG ) expr3 )?
+expr2: expr3  ((EGAL | DIF | INF | SUP | INFEG | SUPEG | DPTEG) expr3 )?
     ;
 
 
