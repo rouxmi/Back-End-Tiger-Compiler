@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Hashtable;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,7 +16,6 @@ import parser.Parsertiger;
 import parser.Parsertiger.ProgramContext;
 import ast.*;
 import graphViz.GraphVizVisitor;
-import tds.Symbole;
 
 public class Main {
 
@@ -63,6 +61,10 @@ public class Main {
             ast.accept(graphViz);
         
             graphViz.dumpGraph("./out/tree.dot");
+
+
+            TdsVisitor tdscreator = new TdsVisitor();
+            ast.accept(tdscreator);
 
 
         } 
