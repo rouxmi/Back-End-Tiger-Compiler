@@ -14,11 +14,10 @@ let /* The eight queens solver from Appel */
     print(1))
     
     
-in try(0)
-end
 
 
-function try(c:int) =
+
+    function try(c:int) =
         if c=N then printboard()
         else for r := 0 to N-1
             do if row[r]=0 & diag1[r+c]=0 & diag2[r+7-c]=0
@@ -28,4 +27,5 @@ function try(c:int) =
                 row[r] := 0; diag1[r+c] := 0;
                 diag2[r+7-c] := 0)
 
-
+in try(0)
+end
