@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.Hashtable;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -15,6 +17,7 @@ import parser.Parsertiger;
 import parser.Parsertiger.ProgramContext;
 import ast.*;
 import graphViz.GraphVizVisitor;
+import tds.Symbole;
 
 public class Main {
 
@@ -48,6 +51,8 @@ public class Main {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);
+
+            
 
             // Visiteur de création de l'AST + création de l'AST
             AstCreator creator = new AstCreator();
