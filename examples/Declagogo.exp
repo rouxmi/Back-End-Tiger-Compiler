@@ -1,0 +1,15 @@
+let
+var N := 8
+type intArray = array of int
+var row := intArray [ N ] of 0
+var col := intArray [ N ] of 0
+var diag1 := intArray [ N+N-1 ] of 0
+var diag2 := intArray [ N+N-1 ] of 0
+
+function try(c:int) = 0
+
+function try2(): int = 0
+
+function try3(c:int): int = 0
+
+in end
