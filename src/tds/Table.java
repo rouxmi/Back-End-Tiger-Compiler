@@ -32,9 +32,6 @@ public class Table {
             the_var.setTableID(this.id);
             if (the_var.getDeplacement() == 0) {
                 the_var.setDeplacement(var_depl);
-                if (the_var.getType().equals("real")) {
-                    var_depl++;
-                }
                 var_depl++;
             }
         }
@@ -74,9 +71,6 @@ public class Table {
             var.setTableID(this.id);
             if (var.getDeplacement() == 0 && var.isLocal()) { // Si own, on a deja la variable ailleurs pas besoin de la mettre dans la pile
                 var.setDeplacement(var_depl);
-                if (var.getType().equals("real")) {
-                    var_depl++;
-                }
                 var_depl++;
             
             }
@@ -89,9 +83,6 @@ public class Table {
             var.setTableID(this.id);
             if (var.getDeplacement() == 0 && var.isLocal()) { // Si own, on a deja la variable ailleurs pas besoin de la mettre dans la pile
                 var.setDeplacement(var_depl);
-                if (var.getType().equals("real")) {
-                    arr_depl++;
-                }
                 arr_depl++;
             
             }
@@ -104,9 +95,6 @@ public class Table {
             var.setTableID(this.id);
             if (var.getDeplacement() == 0 && var.isLocal()) {
                 var.setDeplacement(arg_depl);
-                if (var.getType().equals("real")) {
-                    arg_depl--;
-                }
                 arg_depl--;
             }
         }
