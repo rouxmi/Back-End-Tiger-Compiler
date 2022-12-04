@@ -14,6 +14,7 @@ import org.antlr.v4.runtime.RecognitionException;
 import lexer.Lexertiger;
 import parser.Parsertiger;
 import parser.Parsertiger.ProgramContext;
+import tds.TdsVisitor;
 import ast.*;
 import graphViz.GraphVizVisitor;
 
@@ -65,6 +66,7 @@ public class Main {
 
             TdsVisitor tdscreator = new TdsVisitor();
             ast.accept(tdscreator);
+            tdscreator.afficher();
 
 
         } 

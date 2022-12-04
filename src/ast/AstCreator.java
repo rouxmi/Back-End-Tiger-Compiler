@@ -653,7 +653,8 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitArrof(Parsertiger.ArrofContext ctx) { 
-		return ctx.getChild(1).accept(this);
+		Ast type = ctx.getChild(1).accept(this);
+		return new Arrof(type);
 	}
 	/**
 	 * {@inheritDoc}

@@ -1,4 +1,4 @@
-package ast;
+package tds;
 
 public class Array{
     public String identifiant;

@@ -1,4 +1,4 @@
-package ast;
+package tds;
 
 public class Argument{
     public String type;

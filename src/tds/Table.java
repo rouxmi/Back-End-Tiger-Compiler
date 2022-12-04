@@ -1,5 +1,4 @@
-package ast;
-import org.antlr.runtime.tree.CommonTree;
+package tds;
 import java.util.ArrayList;
 
 public class Table {
@@ -50,7 +49,7 @@ public class Table {
 				"| ID du pere="+this.idpere+"\u001B[0m"+"\n"+"\u001B[31m" +"| Variables:"+"\u001B[0m"+"\n";
 		//on ajoute les variables à l'affichage
         val += "\u001B[34m"+"| " + String.format("%-5s", "LOCAL") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-7s", "Type") + " | " 
-        + String.format("%-5s", "Array") + " | " + String.format("%-15s", "Value") + " | " + String.format("%-8s", "OwnIndex") + " | " + String.format("%-5s", "Depl") + "\u001B[0m" + "\n";
+         + String.format("%-8s", "tableID") + " | " + String.format("%-5s", "Deplacement") + "\u001B[0m" + "\n";
 		for(int k=0;k<this.variables.size();k++){
 			//System.out.println("");
 			val=val+this.variables.get(k).toString()+"\n";

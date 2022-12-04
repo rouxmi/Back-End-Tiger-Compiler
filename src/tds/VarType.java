@@ -1,24 +1,28 @@
-package ast;
-import java.util.ArrayList;
+package tds;
 
-public class ProcFonc{
+public class VarType{
     public String identifiant;
     public String nature;
     public String type;
     public int deplacement;
     public int tableID;
     public boolean isLocal;
-    public ArrayList<Argument> arguments = new ArrayList<Argument>();
 
-    public ProcFonc(String identifiant, String type, ArrayList<Argument> args ){
-        this.identifiant=identifiant;
-        this.type=type;
-        this.arguments.addAll(args);
-        this.isLocal=true;
+
+
+    public VarType(String identifiant, String type){
+        this.identifiant= identifiant;
+        this.type = type;
         this.deplacement=0;
-        this.nature = "procedure/fonction";
+        this.isLocal=true;
+        this.nature = "variable/type";
         this.tableID= -2;
+
     }
+    public String toString(){
+        return "| "+ String.format("%-5s", this.isLocal) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-7s", this.type) 
+        + " | "  + String.format("%-8s", this.tableID) + " | " + String.format("%-5s", this.deplacement);
+	}
 
     public String getIdentifiant(){
         return this.identifiant;
@@ -53,13 +57,6 @@ public class ProcFonc{
     }
     public void setTableID(int tableID){
         this.tableID=tableID;
-    }
-
-    public ArrayList<Argument> getArguments(){
-        return this.arguments;
-    }
-    public void setArguments(Argument arg){
-        this.arguments.add(arg);
     }
 
     public boolean isLocal(){
