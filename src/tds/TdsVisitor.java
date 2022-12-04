@@ -1,6 +1,7 @@
 package tds;
 
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import ast.Program ;
@@ -62,16 +63,31 @@ public class TdsVisitor implements AstVisitor<String> {
     private boolean varDec;
     private String varid;
     private boolean typedec;
+    private boolean funcdec;
+    private boolean typefuncdec;
+    private String funcid;
+    private String functype;
+    private ArrayList<VarType> args;
+    private boolean argsfunc;
 
 
     public TdsVisitor() {
         this.state=0;
         tds = new Table(-1);
         tdsStack.push(tds);
+        funcdec=false;
+        varDec=false;
+        argsfunc=false;
+        typedec=false;
+        typefuncdec=false;
     }
 
     public void afficher() {
-        tds.afficher();
+        while (!tdsStack.empty()){
+            this.tds=tdsStack.pop();
+            System.out.print(tds.getId());
+        }
+        this.tds.afficher();
     }
     
     public void addFils() {
@@ -79,6 +95,10 @@ public class TdsVisitor implements AstVisitor<String> {
         tdsStack.push(tdsFils);
         tds.addFils(tdsFils);
         tds = tdsFils;
+    }
+
+    public void addProcFonc(ProcFonc procfonc){
+            tds.addProcFonc(procfonc);
     }
 
     private String nextState(){
@@ -191,11 +211,32 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Functiondeclaration affect) {
         String nodeIdentifier = this.nextState();
-        affect.functiondeclaration.accept(this);
-        
+        funcid = affect.id;
+        funcdec=true;
+        argsfunc=false;
+        typefuncdec=false;
+        args=new ArrayList<VarType>();
         if(affect.typefields != null){
+            argsfunc=true;
             affect.typefields.accept(this);
         }
+        ProcFonc func;
+        if (argsfunc){
+            func = new ProcFonc(funcid, functype, args);
+        }
+        else{
+            func = new ProcFonc(funcid, functype , null);
+        }
+
+        this.addProcFonc(func);
+        this.addFils();
+        for (VarType var:args){
+            this.addVarType(var);
+        }
+        funcdec=false;
+        affect.functiondeclaration.accept(this);
+        
+        this.closeFils();
         return nodeIdentifier;
     }
 
@@ -210,8 +251,9 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typegal affect) {
         String nodeIdentifier = this.nextState();
+        typefuncdec=true;
         affect.typeid.accept(this);
-        
+        typefuncdec=false;
         affect.expr.accept(this);
         return nodeIdentifier;
     }
@@ -356,6 +398,8 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Typefield affect) {
         String nodeIdentifier = this.nextState();
         
+        varid=affect.id;
+        varDec=true;
 
         affect.type.accept(this);
 
@@ -365,6 +409,18 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typepredefined affect) {
         String nodeIdentifier = this.nextState();
+        typedec=true;
+        if (varDec && !funcdec){
+            VarType var = new VarType(varid, affect.type);
+            this.addVarType(var);
+            varDec=false;
+        }
+        if (funcdec){
+            args.add(new VarType(varid, affect.type));
+        }
+        if (typefuncdec){
+            functype=affect.type;
+        }
         return nodeIdentifier;
     }
 
@@ -372,10 +428,16 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Typeidid affect) {
         String nodeIdentifier = this.nextState();
         typedec=true;
-        if (varDec){
+        if (varDec && !funcdec){
             VarType var = new VarType(varid, affect.id);
             this.addVarType(var);
             varDec=false;
+        }
+        if (funcdec){
+            args.add(new VarType(varid, affect.id));
+        }
+        if (typefuncdec){
+            functype=affect.id;
         }
         return nodeIdentifier;
     }
