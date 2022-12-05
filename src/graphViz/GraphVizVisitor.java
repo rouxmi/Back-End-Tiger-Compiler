@@ -155,14 +155,19 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(While affect) {
         String nodeIdentifier = this.nextState();
+        String nodeIdentifier1 = this.nextState();
+        String nodeIdentifier2 = this.nextState();
 
+        this.addNode(nodeIdentifier1, "Condition Block");
+        this.addNode(nodeIdentifier2, "Do Block");
         String leftState = affect.left.accept(this);
         String rightState = affect.right.accept(this);
 
         this.addNode(nodeIdentifier, "while");
-        
-        this.addTransition(nodeIdentifier, leftState);
-        this.addTransition(nodeIdentifier, rightState);
+        this.addTransition(nodeIdentifier, nodeIdentifier1);
+        this.addTransition(nodeIdentifier, nodeIdentifier2);
+        this.addTransition(nodeIdentifier1, leftState);
+        this.addTransition(nodeIdentifier2, rightState);
 
         return nodeIdentifier;
     }
@@ -170,6 +175,11 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(For affect) {
         String nodeIdentifier = this.nextState();
+        String nodeIdentifier1 = this.nextState();
+        String nodeIdentifier2 = this.nextState();
+        String nodeIdentifier3 = this.nextState();
+        String nodeIdentifier4 = this.nextState();
+        String nodeIdentifier5 = this.nextState();
 
         String min = affect.min.accept(this);
         String max = affect.max.accept(this);
@@ -177,12 +187,20 @@ public class GraphVizVisitor implements AstVisitor<String> {
 
         this.addNode(nodeIdentifier, "for");
         
-        String nodeIdentifier1 = this.nextState();
+        
+        this.addNode(nodeIdentifier5, "Var");
+        this.addTransition(nodeIdentifier, nodeIdentifier5);
         this.addNodeTerm(nodeIdentifier1, affect.id);
-        this.addTransition(nodeIdentifier, nodeIdentifier1);
-        this.addTransition(nodeIdentifier, min);
-        this.addTransition(nodeIdentifier, max);
-        this.addTransition(nodeIdentifier, regle);
+        this.addTransition(nodeIdentifier5, nodeIdentifier1);
+        this.addNode(nodeIdentifier2, "Borne Min");
+        this.addTransition(nodeIdentifier, nodeIdentifier2);
+        this.addTransition(nodeIdentifier2, min);
+        this.addNode(nodeIdentifier3, "Borne Max");
+        this.addTransition(nodeIdentifier, nodeIdentifier3);
+        this.addTransition(nodeIdentifier3, max);
+        this.addNode(nodeIdentifier4, "Do Block");
+        this.addTransition(nodeIdentifier, nodeIdentifier4);
+        this.addTransition(nodeIdentifier4, regle);
 
         return nodeIdentifier;
     }
@@ -196,17 +214,28 @@ public class GraphVizVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(Let affect) {
+        boolean dec=false;
         String nodeIdentifier = this.nextState();
+        String nodeIdentifier1=nodeIdentifier;
         this.addNode(nodeIdentifier, "let");
         for(Ast ast : affect.lefts){
             if(ast!=null){
+                if (!dec){
+                    nodeIdentifier1 = this.nextState();
+                    this.addNode(nodeIdentifier1,"Let Block");
+                    this.addTransition(nodeIdentifier, nodeIdentifier1);
+                    dec=true;
+                }
                 String state = ast.accept(this);
-                this.addTransition(nodeIdentifier, state);
+                this.addTransition(nodeIdentifier1, state);
             }
         }
         if(affect.right != null){
+            String nodeIdentifier2 = this.nextState();
+            this.addNode(nodeIdentifier2,"In Block");
+            this.addTransition(nodeIdentifier, nodeIdentifier2);
             String state = affect.right.accept(this);
-            this.addTransition(nodeIdentifier, state);
+            this.addTransition(nodeIdentifier2, state);
         }
         return nodeIdentifier;
     }
@@ -464,14 +493,23 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(IfThen affect) {
         String nodeIdentifier = this.nextState();
+        String nodeIdentifier1 = this.nextState();
+        String nodeIdentifier2 = this.nextState();
         this.addNode(nodeIdentifier, "ifThen");
+        this.addNode(nodeIdentifier1, "If Block");
+        this.addNode(nodeIdentifier2, "Then Block");
         String left = affect.left.accept(this);
         String center = affect.center.accept(this);
-        this.addTransition(nodeIdentifier, left);
-        this.addTransition(nodeIdentifier, center);
+        this.addTransition(nodeIdentifier, nodeIdentifier1);
+        this.addTransition(nodeIdentifier, nodeIdentifier2);
+        this.addTransition(nodeIdentifier1, left);
+        this.addTransition(nodeIdentifier2, center);
         if(affect.right != null){
+            String nodeIdentifier3 = this.nextState();
+            this.addNode(nodeIdentifier3,"Else Block");
             String right = affect.right.accept(this);
-            this.addTransition(nodeIdentifier, right);
+            this.addTransition(nodeIdentifier, nodeIdentifier3);
+            this.addTransition(nodeIdentifier3, right);
         }
         return nodeIdentifier;
     }
