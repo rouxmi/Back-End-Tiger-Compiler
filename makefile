@@ -5,7 +5,7 @@ gram:
 
 	javac -cp ./lib/antlr-4.9.2-complete.jar:./src ./src/Main.java -d ./bin
 
-	java -cp ./lib/antlr-4.9.2-complete.jar:./bin Main ./examples/8reine.exp
+	java -cp ./lib/antlr-4.9.2-complete.jar:./bin Main ./examples/8reines.exp
 
 	dot -Tsvg ./out/tree.dot -o ./out/tree.svg
 

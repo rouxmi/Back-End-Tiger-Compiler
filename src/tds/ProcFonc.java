@@ -13,10 +13,17 @@ public class ProcFonc{
     public ProcFonc(String identifiant, String type, ArrayList<VarType> args ){
         this.identifiant=identifiant;
         this.type=type;
-        this.arguments.addAll(args);
+        if (args!=null){
+            this.arguments.addAll(args);
+        }
         this.isLocal=true;
         this.deplacement=0;
-        this.nature = "procedure/fonction";
+        if (args==null){
+            this.nature = "procedure";
+        }
+        else{
+            this.nature = "fonction";
+        }
         this.tableID= -2;
     }
 
@@ -38,9 +45,15 @@ public class ProcFonc{
             catch (Exception e) {
             }
         }
-        return "| " + String.format("%-5s", this.isLocal) + " | "+ String.format("%-13s", this.identifiant) + " | " + String.format("%-7s", this.type) + " | " 
-        + String.format("%-7s", this.arguments.size()) + " | " + String.format("%-20s", the_types);
-	}
+        if (this.nature=="fonction"){
+            return "| " + String.format("%-10s", this.nature) + " | "+ String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) + " | " 
+            + String.format("%-7s", this.arguments.size()) + " | " + String.format("%-20s", the_types);
+        }
+        else{return "| " + String.format("%-10s", this.nature) + " | "+ String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) + " | " 
+        + String.format("%-7s", this.arguments.size()) ;
+
+        }
+    }
 
     public String getIdentifiant(){
         return this.identifiant;

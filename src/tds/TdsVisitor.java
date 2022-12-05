@@ -66,32 +66,38 @@ public class TdsVisitor implements AstVisitor<String> {
     private boolean funcdec;
     private boolean typefuncdec;
     private String funcid;
+    private boolean Dec;
+    private String decvalue;
     private String functype;
     private ArrayList<VarType> args;
-    private boolean argsfunc;
+    private String Typetype; 
+    private ArrayList<String> elementtype;
+    private boolean elementtypedec;
+    private String tailletype;
+    private int cmptailletype;
+    private boolean tailledec;
 
 
     public TdsVisitor() {
         this.state=0;
-        tds = new Table(-1);
+        tds = new Table(-1,"programme");
         tdsStack.push(tds);
         funcdec=false;
         varDec=false;
-        argsfunc=false;
         typedec=false;
         typefuncdec=false;
+        tailletype=null;
     }
 
     public void afficher() {
         while (!tdsStack.empty()){
             this.tds=tdsStack.pop();
-            System.out.print(tds.getId());
         }
         this.tds.afficher();
     }
     
-    public void addFils() {
-        Table tdsFils = new Table(tds.getId());
+    public void addFils(String nompere) {
+        Table tdsFils = new Table(tds.getId(),nompere);
         tdsStack.push(tdsFils);
         tds.addFils(tdsFils);
         tds = tdsFils;
@@ -142,9 +148,13 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Strin affect) {
         String nodeIdentifier = this.nextState();
         if (varDec && !typedec){
-            VarType var = new VarType(varid, "String");
+            VarType var = new VarType(varid, "String", "Var");
             this.addVarType(var);
             varDec=false;
+        }
+        if (tailledec){
+            tailletype+=affect.strin;
+            
         }
         return nodeIdentifier;
     }
@@ -152,10 +162,13 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(In affect) {
         String nodeIdentifier = this.nextState();
-        if (varDec){
-            VarType var = new VarType(varid, "Int");
+        if (varDec && !tailledec){
+            VarType var = new VarType(varid, "Int", "Var");
             this.addVarType(var);
             varDec=false;
+        }
+        if (tailledec){
+            tailletype+=String.valueOf(affect.in);
         }
         return nodeIdentifier;
     }
@@ -213,23 +226,14 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         funcid = affect.id;
         funcdec=true;
-        argsfunc=false;
         typefuncdec=false;
         args=new ArrayList<VarType>();
         if(affect.typefields != null){
-            argsfunc=true;
             affect.typefields.accept(this);
         }
-        ProcFonc func;
-        if (argsfunc){
-            func = new ProcFonc(funcid, functype, args);
-        }
-        else{
-            func = new ProcFonc(funcid, functype , null);
-        }
-
+        ProcFonc func = new ProcFonc(funcid, functype, args);
         this.addProcFonc(func);
-        this.addFils();
+        this.addFils(funcid);
         for (VarType var:args){
             this.addVarType(var);
         }
@@ -337,7 +341,9 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Idcall affect) {
         String nodeIdentifier = this.nextState();
-
+        if (tailledec){
+            tailletype=affect.id;
+        }
         
 
         if (affect.right != null){
@@ -374,11 +380,26 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typedeclaration affect) {
         String nodeIdentifier = this.nextState();
-
+        typedec=true;
         affect.typeid.accept(this);
-
+        typedec=false;
+        Dec=true;
+        Typetype="Type";
+        cmptailletype=0;
+        elementtype= new ArrayList<String>();
         affect.type.accept(this);
-
+        Dec=false;
+        if (cmptailletype>0){
+            tailletype=String.valueOf(cmptailletype);
+        }
+        if (Typetype.equals("Type") || Typetype.equals("Array of")){
+            VarType var = new VarType(varid, Typetype, "Type",elementtype);
+            this.addVarType(var);
+        }else{
+            VarType var = new VarType(varid, Typetype, "Type",elementtype,tailletype);
+            this.addVarType(var);
+        }
+        tailletype=null;
         return nodeIdentifier;
     }
 
@@ -398,8 +419,16 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Typefield affect) {
         String nodeIdentifier = this.nextState();
         
-        varid=affect.id;
+        
         varDec=true;
+        if (Dec){
+            Typetype="TypeList";
+            decvalue=varid+"."+affect.id;
+            elementtypedec=true;
+            cmptailletype++;
+        }else{
+            varid=affect.id;
+        }
 
         affect.type.accept(this);
 
@@ -409,17 +438,44 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typepredefined affect) {
         String nodeIdentifier = this.nextState();
-        typedec=true;
-        if (varDec && !funcdec){
-            VarType var = new VarType(varid, affect.type);
+        if (varDec  && !funcdec && !Dec ){
+            VarType var ;
+            if (tailletype==null){
+                var = new VarType(varid, affect.type, "Var");
+            }else{
+
+                var = new VarType(varid, affect.type, "Var",tailletype);
+                tailletype=null;
+            }
             this.addVarType(var);
             varDec=false;
         }
-        if (funcdec){
-            args.add(new VarType(varid, affect.type));
+        if (varDec  && !funcdec && Dec){
+            VarType var ;
+            if (tailletype==null){
+                var = new VarType(decvalue, affect.type, "Var");
+            }else{
+                var = new VarType(decvalue, affect.type, "Var",tailletype);
+                tailletype=null;
+            }
+            this.addVarType(var);
+            varDec=false;
         }
-        if (typefuncdec){
+        if (funcdec && !tailledec && !elementtypedec){
+            args.add(new VarType(varid, affect.type, "Var"));
+        }
+        if (typefuncdec && !tailledec && !elementtypedec){
             functype=affect.type;
+        }
+        if (Dec && !tailledec && !elementtypedec){
+            elementtype.add(affect.type+",");
+        }
+        if (elementtypedec && !tailledec){
+            elementtype.add(affect.type+",");
+            elementtypedec=false;
+        }
+        if (tailledec){
+            tailletype+=affect.type;
         }
         return nodeIdentifier;
     }
@@ -427,17 +483,49 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeidid affect) {
         String nodeIdentifier = this.nextState();
-        typedec=true;
-        if (varDec && !funcdec){
-            VarType var = new VarType(varid, affect.id);
+        if (varDec && !Dec && !funcdec  ){
+            VarType var ;
+            if (tailletype==null){
+                var = new VarType(varid, affect.id, "Var");
+            }else{
+
+                var = new VarType(varid, affect.id, "Var",tailletype);
+                tailletype=null;
+            }
             this.addVarType(var);
             varDec=false;
         }
-        if (funcdec){
-            args.add(new VarType(varid, affect.id));
+        if (varDec && !funcdec && Dec  ){
+            VarType var ;
+            if (tailletype==null){
+                var = new VarType(decvalue, affect.id, "Var");
+            }else{
+                var = new VarType(decvalue, affect.id, "Var",tailletype);
+                tailletype=null;
+            }
+            this.addVarType(var);
+            varDec=false;
+            //System.out.println(Dec+" ,"+typedec+" ,"+elementtypedec+" ,"+varDec+","+funcdec+","+typefuncdec+","+elementtypedec+","+tailledec+"\n");
+            //System.out.print(decvalue+"\n");
         }
-        if (typefuncdec){
+        if (funcdec && !elementtypedec && !tailledec){
+            args.add(new VarType(varid, affect.id, "Var"));
+        }
+        if (typefuncdec && !elementtypedec && !tailledec){
             functype=affect.id;
+        }
+        if (typedec && !elementtypedec && !tailledec){
+            varid=affect.id;
+        }
+        if (Dec && !elementtypedec && !tailledec){
+            elementtype.add(affect.id+",");
+        }
+        if (elementtypedec && !tailledec){
+            elementtype.add(affect.id+",");
+            elementtypedec=false;
+        }
+        if (tailledec){
+            tailletype+=affect.id;
         }
         return nodeIdentifier;
     }
@@ -550,6 +638,9 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         affect.left.accept(this);
+        if (tailledec){
+            tailletype+="+";
+        }
         affect.right.accept(this);
 
         return nodeIdentifier;
@@ -560,6 +651,9 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         affect.left.accept(this);
+        if (tailledec){
+            tailletype+="-";
+        }
         affect.right.accept(this);
 
         return nodeIdentifier;
@@ -570,6 +664,9 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         affect.left.accept(this);
+        if (tailledec){
+            tailletype+="*";
+        }
         affect.right.accept(this);
 
 
@@ -582,6 +679,9 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         affect.left.accept(this);
+        if (tailledec){
+            tailletype+="/";
+        }
         affect.right.accept(this);
 
 
@@ -591,7 +691,16 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(FdecWithoutfields affect) {
         String nodeIdentifier = this.nextState();
+        funcid = affect.id;
+        funcdec=true;
+        typefuncdec=false;
+        ProcFonc func = new ProcFonc(funcid, functype , null);
+        this.addProcFonc(func);
+        this.addFils(funcid);
+
         affect.functiondeclaration.accept(this);
+        
+        this.closeFils();
         return nodeIdentifier;
     }
 
@@ -608,8 +717,11 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeswithof affect) {
         String nodeIdentifier = this.nextState();
-        affect.typeid.accept(this);
+        tailledec=true;
+        tailletype="";
         affect.expr1.accept(this);
+        tailledec=false;
+        affect.typeid.accept(this);
         affect.expr2.accept(this);
         return nodeIdentifier;
     }
@@ -627,6 +739,9 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Idcall2 affect) {
         String nodeIdentifier = this.nextState();
+        if (tailledec){
+            tailletype+=affect.id;
+        }
         return nodeIdentifier;
     }
 
@@ -644,9 +759,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Arrof affect) {
         String nodeIdentifier = this.nextState();
-
+        elementtypedec=true;
         affect.type.accept(this);
-
+        elementtypedec=false;
+        Typetype="Array of";
 
         return nodeIdentifier;
     }

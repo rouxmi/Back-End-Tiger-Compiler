@@ -1,6 +1,8 @@
 let
 var N := 8
 type intArray = array of int
+type intcro = {c:int,d:string,e:int}
+type int2 = int
 var row := intArray [ N ] of 0
 var col := intArray [ N ] of 0
 var diag1 := intArray [ N+N-1 ] of 0

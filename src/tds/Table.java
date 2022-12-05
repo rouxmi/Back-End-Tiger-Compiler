@@ -11,11 +11,13 @@ public class Table {
     public int arg_depl;
     public int var_depl;
     public int arr_depl;
+    public String nompere;
 	
-	public Table(int pere){
+	public Table(int pere,String nompere){
 		nbTable++;
 		this.id = nbTable;
         this.idpere = pere; 
+        this.nompere=nompere;
         arg_depl = -2;
         var_depl = 1;
 	}
@@ -41,23 +43,69 @@ public class Table {
         }
 	}
 	public String toString(){
+        int nbvar= 0;
+        int nbfct=0;
+        for(int k=0;k<this.variables.size();k++){
+            if (!this.variables.get(k).getNature().equals("Type")){
+			    nbvar++;
+            }
+		}
+        for(int k=0;k<this.fonctions.size();k++){
+            if (this.fonctions.get(k).getNature().equals("fonction")){
+			    nbfct++;
+            }
+		}
 		String val = "";
 		val = "\u001B[32m"+"| TABLE ID="+this.id+"\u001B[0m"+"\n"+"\u001B[32m"+
-				"| ID du pere="+this.idpere+"\u001B[0m"+"\n"+"\u001B[31m" +"| Variables:"+"\u001B[0m"+"\n";
-		//on ajoute les variables à l'affichage
-        val += "\u001B[34m"+"| " + String.format("%-5s", "LOCAL") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-7s", "Type") + " | " 
-         + String.format("%-8s", "tableID") + " | " + String.format("%-5s", "Deplacement") + "\u001B[0m" + "\n";
-		for(int k=0;k<this.variables.size();k++){
-			//System.out.println("");
-			val=val+this.variables.get(k).toString()+"\n";
-		}
-		//on ajoute les fonctions à l'affichage
-		val += "\u001B[31m" +"| Fonctions:"+"\u001B[0m"+"\n";
-        val += "\u001B[34m"+"| " + String.format("%-5s", "LOCAL") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-7s", "Type") 
-        + " | " + String.format("%-7s", "Nb Args") + " | " + String.format("%-20s", "Types Arguments") + "\u001B[0m" + "\n";
-		for(int k=0;k<this.fonctions.size();k++){
-			val=val+this.fonctions.get(k).toString()+"\n";
-		}
+        "| Nom de la fonction="+this.nompere+"\u001B[0m"+"\n"+"\u001B[32m"+
+				"| ID du pere="+this.idpere+"\u001B[0m"+"\n"+"\u001B[31m" ;
+        if (this.variables.size()-nbvar>0){
+            //on ajoute les Types à l'affichage
+            val += "| Types:"+"\u001B[0m"+"\n"+"\u001B[34m"+"| " + String.format("%-6s", "Nature") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-9s", "Type") + " | " 
+            + String.format("%-12s", "Deplacement") + " | " + String.format("%-12s", "Dimensions") + " | " + String.format("%-15s", "Type des éléments") + "\u001B[0m" + "\n";
+            for(int k=0;k<this.variables.size();k++){
+                //System.out.println("");
+                if (this.variables.get(k).getNature().equals("Type")){
+                    val=val+this.variables.get(k).toString()+"\n";
+                }
+            }
+        }
+        if (nbvar>0){
+            //on ajoute les variables à l'affichage
+            val += "\u001B[31m" +"| Variables:"+"\u001B[0m"+"\n";
+            val += "\u001B[34m"+"| " + String.format("%-6s", "Nature") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-9s", "Type") + " | " 
+            + String.format("%-12s", "Deplacement") + " | " + String.format("%-12s", "Dimensions") + "\u001B[0m" + "\n";
+            for(int k=0;k<this.variables.size();k++){
+                //System.out.println("");
+                if (this.variables.get(k).getNature().equals("Var")){
+                    val=val+this.variables.get(k).toString()+"\n";
+                }
+            }
+        }
+        
+        if (this.fonctions.size()-nbfct>0){
+            //on ajoute les procédures à l'affichage
+            val += "\u001B[31m" +"| Procédures:"+"\u001B[0m"+"\n";
+            val += "\u001B[34m"+"| " + String.format("%-10s", "Nature") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-9s", "Type") 
+            + " | " + String.format("%-7s", "Nb Args")  + "\u001B[0m" + "\n";
+            for(int k=0;k<this.fonctions.size();k++){
+                if (this.fonctions.get(k).getNature().equals("procedure")){
+                    val=val+this.fonctions.get(k).toString()+"\n";
+                }
+            }
+        }
+
+        if (nbfct>0){
+            //on ajoute les procédures à l'affichage
+            val += "\u001B[31m" +"| Fonctions:"+"\u001B[0m"+"\n";
+            val += "\u001B[34m"+"| " + String.format("%-10s", "Nature") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-9s", "Type") 
+            + " | " + String.format("%-7s", "Nb Args") + " | " + String.format("%-20s", "Types Arguments") + "\u001B[0m" + "\n";
+            for(int k=0;k<this.fonctions.size();k++){
+                if (this.fonctions.get(k).getNature().equals("fonction")){
+                    val=val+this.fonctions.get(k).toString()+"\n";
+                }
+            }
+        }
 		return val;
 	}
 	

@@ -1,5 +1,7 @@
 package tds;
 
+import java.util.ArrayList;
+
 public class VarType{
     public String identifiant;
     public String nature;
@@ -7,25 +9,74 @@ public class VarType{
     public int deplacement;
     public int tableID;
     public boolean isLocal;
+    public ArrayList<String> elementtype;
+    public String taille;
 
 
 
-    public VarType(String identifiant, String type){
+    public VarType(String identifiant, String type,String nature){
         this.identifiant= identifiant;
         this.type = type;
         this.deplacement=0;
         this.isLocal=true;
-        this.nature = "variable/type";
+        this.nature = nature;
         this.tableID= -2;
+        this.elementtype=null;
+        this.taille="1";
+
+    }
+    public VarType(String identifiant, String type,String nature,String taille){
+        this.identifiant= identifiant;
+        this.type = type;
+        this.deplacement=0;
+        this.isLocal=true;
+        this.nature = nature;
+        this.tableID= -2;
+        this.elementtype=null;
+        this.taille=taille;
+
+    }
+    public VarType(String identifiant, String type,String nature,ArrayList<String> elementtype){
+        this.identifiant= identifiant;
+        this.type = type;
+        this.deplacement=0;
+        this.isLocal=true;
+        this.nature = nature;
+        this.tableID= -2;
+        this.elementtype= elementtype;
+        this.taille="1";
+
+    }
+    public VarType(String identifiant, String type,String nature,ArrayList<String> elementtype,String taille){
+        this.identifiant= identifiant;
+        this.type = type;
+        this.deplacement=0;
+        this.isLocal=true;
+        this.nature = nature;
+        this.tableID= -2;
+        this.elementtype= elementtype;
+        this.taille=taille;
 
     }
     public String toString(){
-        return "| "+ String.format("%-5s", this.isLocal) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-7s", this.type) 
-        + " | "  + String.format("%-8s", this.tableID) + " | " + String.format("%-5s", this.deplacement);
-	}
+        String the_types = "";
+        if (elementtype!=null){
+            for (String i : this.elementtype) {
+                the_types+=i;
+            }
+        }
+        if (this.nature=="Type"){
+            return "| "+ String.format("%-6s", this.nature) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) 
+            + " | "  + String.format("%-12s", this.deplacement)+ " | "  + String.format("%-12s", this.taille)+ " | "  + String.format("%-15s", the_types);
+        }
+        else{return "| "+ String.format("%-6s", this.nature) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) 
+        + " | "  + String.format("%-12s", this.deplacement)+ " | "  + String.format("%-12s", this.taille);
+
+        }
+    }
 
     public String getIdentifiant(){
-        return this.identifiant;
+        return this.identifiant;    
     }
     public void setIdentifiant(String identifiant){
         this.identifiant=identifiant;
