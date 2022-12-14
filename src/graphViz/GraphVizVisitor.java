@@ -34,7 +34,8 @@ import ast.Exprlist ;
  import ast.Fieldlist ;
  import ast.Field ;
  import ast.Fieldlisbis ;
- import ast.Idcall ;
+import ast.AccesVar;
+import ast.Appelfunc ;
 import ast.Idcall2;
 import ast.Pointid ;
  import ast.Croexpr ;
@@ -366,15 +367,25 @@ public class GraphVizVisitor implements AstVisitor<String> {
     }
 
     @Override
-    public String visit(Idcall affect) {
+    public String visit(Appelfunc affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Idcall");
+        this.addNode(nodeIdentifier, "Appel fonction");
         String nodeIdentifier1 = this.nextState();
+        String nodeIdentifier2 = this.nextState();
+        
         this.addNodeTerm(nodeIdentifier1, affect.id);
-        this.addTransition(nodeIdentifier, nodeIdentifier1);
+        this.addNode(nodeIdentifier2, "Id fonction");
+        
+        this.addTransition(nodeIdentifier, nodeIdentifier2);
+        
+        this.addTransition(nodeIdentifier2, nodeIdentifier1);
+        System.out.println(affect.right);
         if (affect.right != null){
+            String nodeIdentifier3 = this.nextState();
+            this.addNode(nodeIdentifier3, "Parametres");
+            this.addTransition(nodeIdentifier, nodeIdentifier3);
             String right = affect.right.accept(this);
-            this.addTransition(nodeIdentifier, right);
+            this.addTransition(nodeIdentifier3, right);
         }
         return nodeIdentifier;
     }
@@ -746,6 +757,29 @@ public class GraphVizVisitor implements AstVisitor<String> {
         
         this.addTransition(nodeIdentifier, type);
 
+        return nodeIdentifier;
+    }
+
+    @Override
+    public String visit(AccesVar affect) {
+        String nodeIdentifier = this.nextState();
+        this.addNode(nodeIdentifier, "Acces Var");
+        String nodeIdentifier1 = this.nextState();
+        String nodeIdentifier2 = this.nextState();
+        
+        this.addNodeTerm(nodeIdentifier1, affect.id);
+        this.addNode(nodeIdentifier2, "Var");
+        
+        this.addTransition(nodeIdentifier, nodeIdentifier2);
+        
+        this.addTransition(nodeIdentifier2, nodeIdentifier1);
+        if (affect.right != null){
+            String nodeIdentifier3 = this.nextState();
+            this.addNode(nodeIdentifier3, "Valeur");
+            this.addTransition(nodeIdentifier, nodeIdentifier3);
+            String right = affect.right.accept(this);
+            this.addTransition(nodeIdentifier3, right);
+        }
         return nodeIdentifier;
     }
     
