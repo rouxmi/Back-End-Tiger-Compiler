@@ -35,7 +35,8 @@ import ast.Exprlisbis ;
 import ast.Fieldlist ;
 import ast.Field ;
 import ast.Fieldlisbis ;
-import ast.Idcall ;
+import ast.AccesVar;
+import ast.Appelfunc ;
 import ast.Idcall2;
 import ast.Pointid ;
 import ast.Croexpr ;
@@ -339,7 +340,7 @@ public class TdsVisitor implements AstVisitor<String> {
     }
 
     @Override
-    public String visit(Idcall affect) {
+    public String visit(Appelfunc affect) {
         String nodeIdentifier = this.nextState();
         if (tailledec){
             tailletype=affect.id;
@@ -765,5 +766,21 @@ public class TdsVisitor implements AstVisitor<String> {
         Typetype="Array of";
 
         return nodeIdentifier;
+    }
+
+    @Override
+    public String visit(AccesVar affect) {
+        String nodeIdentifier = this.nextState();
+        if (tailledec){
+            tailletype=affect.id;
+        }
+        
+
+        if (affect.right != null){
+            affect.right.accept(this);
+
+        }
+        return nodeIdentifier;
+
     }
 }

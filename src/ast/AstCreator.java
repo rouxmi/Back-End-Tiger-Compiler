@@ -556,8 +556,14 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	@Override public Ast visitIdcall(Parsertiger.IdcallContext ctx) {
 		String id= ctx.getChild(0).getText();
 		if(ctx.getChild(1).getChild(0)!=null){
+			String filsnom= ctx.getChild(1).getText();
 			Ast fils= ctx.getChild(1).accept(this);
-			return new Idcall(id, fils);
+			if (filsnom.charAt(0)=='('){
+				System.out.println(filsnom+"\n");
+				return new Appelfunc(id, fils);
+			}
+			else {return new AccesVar(id, fils);}
+			
 		}
 		else {
 			return new Idcall2(id);

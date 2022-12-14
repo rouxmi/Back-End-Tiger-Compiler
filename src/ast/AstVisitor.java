@@ -35,7 +35,7 @@ public interface AstVisitor<T> {
 	public T visit(Fieldlist affect);
 	public T visit(Field affect);
 	public T visit(Fieldlisbis affect);
-	public T visit(Idcall affect);
+	public T visit(Appelfunc affect);
 	public T visit(Idcall2 affect);
 	public T visit(Pointid affect);
 	public T visit(Croexpr affect);
@@ -50,4 +50,6 @@ public interface AstVisitor<T> {
 	public T visit(Vardec1 affect);
 	public T visit(Dptegal affect);
 	public T visit(Arrof affect);
+	public T visit(AccesVar affect);
+
 }
