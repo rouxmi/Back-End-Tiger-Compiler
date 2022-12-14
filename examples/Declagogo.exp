@@ -1,5 +1,5 @@
 let
-var N := 8
+var N := 
 type intArray = array of int
 type intcro = {c:int,d:string,e:int}
 type int2 = int

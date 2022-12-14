@@ -74,7 +74,7 @@ public class Table {
             //on ajoute les variables à l'affichage
             val += "\u001B[31m" +"| Variables:"+"\u001B[0m"+"\n";
             val += "\u001B[34m"+"| " + String.format("%-6s", "Nature") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-9s", "Type") + " | " 
-            + String.format("%-12s", "Deplacement") + " | " + String.format("%-12s", "Dimensions") + "\u001B[0m" + "\n";
+            + String.format("%-12s", "Deplacement") + " | " + String.format("%-14s", "Initialisation") + " | " + String.format("%-12s", "Dimensions") + "\u001B[0m" + "\n";
             for(int k=0;k<this.variables.size();k++){
                 //System.out.println("");
                 if (this.variables.get(k).getNature().equals("Var")){

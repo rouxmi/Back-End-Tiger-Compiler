@@ -455,6 +455,7 @@ public class TdsVisitor implements AstVisitor<String> {
             VarType var ;
             if (tailletype==null){
                 var = new VarType(decvalue, affect.type, "Var");
+                var.initialized=false;
             }else{
                 var = new VarType(decvalue, affect.type, "Var",tailletype);
                 tailletype=null;
