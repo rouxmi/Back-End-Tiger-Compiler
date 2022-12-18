@@ -325,8 +325,10 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addNode(nodeIdentifier, "Exprlisbis");
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
-        String exprlistbis = affect.exprlistbis.accept(this);
-        this.addTransition(nodeIdentifier, exprlistbis);
+        if(affect.exprlistbis != null){
+            String exprlistbis = affect.exprlistbis.accept(this);
+            this.addTransition(nodeIdentifier, exprlistbis);
+        }
         return nodeIdentifier;
     }
 

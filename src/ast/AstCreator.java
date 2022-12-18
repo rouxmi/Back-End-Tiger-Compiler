@@ -490,7 +490,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 			Ast exprlistbis = ctx.getChild(1).accept(this);
 			return new Exprlist(expr, exprlistbis);
 		}
-		else return ctx.getChild(1).accept(this);
+		else return ctx.getChild(0).accept(this);
 	}
 	/**
 	 * {@inheritDoc}
@@ -504,7 +504,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 			Ast exprlisbis = ctx.getChild(2).accept(this);
 			return new Exprlisbis(expr, exprlisbis);
 		}
-		else{return ctx.getChild(2).accept(this);}
+		else{return ctx.getChild(1).accept(this);}
 
 	}
 	/**
@@ -555,15 +555,16 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 */
 	@Override public Ast visitIdcall(Parsertiger.IdcallContext ctx) {
 		String id= ctx.getChild(0).getText();
+		Ast fils= ctx.getChild(1).accept(this);
+		String filsnom= ctx.getChild(1).getText();
 		if(ctx.getChild(1).getChild(0)!=null){
-			String filsnom= ctx.getChild(1).getText();
-			Ast fils= ctx.getChild(1).accept(this);
 			if (filsnom.charAt(0)=='('){
-				System.out.println(filsnom+"\n");
+				System.out.println(id+filsnom+"\n");
 				return new Appelfunc(id, fils);
 			}
-			else {return new AccesVar(id, fils);}
-			
+			else {
+				return new AccesVar(id, fils);
+			}
 		}
 		else {
 			return new Idcall2(id);

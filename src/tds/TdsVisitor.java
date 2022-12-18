@@ -298,9 +298,10 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         affect.expr.accept(this);
+        if(affect.exprlistbis != null){
+            affect.exprlistbis.accept(this);
 
-        affect.exprlistbis.accept(this);
-
+        }
         return nodeIdentifier;
     }
 
