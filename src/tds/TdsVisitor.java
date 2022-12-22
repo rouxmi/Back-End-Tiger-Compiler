@@ -141,7 +141,6 @@ public class TdsVisitor implements AstVisitor<String> {
 
         affect.left.accept(this);
         affect.right.accept(this);
-
         return nodeIdentifier;
     }
 
@@ -508,8 +507,6 @@ public class TdsVisitor implements AstVisitor<String> {
             }
             this.addVarType(var);
             varDec=false;
-            //System.out.println(Dec+" ,"+typedec+" ,"+elementtypedec+" ,"+varDec+","+funcdec+","+typefuncdec+","+elementtypedec+","+tailledec+"\n");
-            //System.out.print(decvalue+"\n");
         }
         if (funcdec && !elementtypedec && !tailledec){
             args.add(new VarType(varid, affect.id, "Var"));

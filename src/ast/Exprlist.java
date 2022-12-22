@@ -9,7 +9,6 @@ public class Exprlist implements Ast{
     public Ast exprlistbis;
 
     public Exprlist(Ast expr, Ast exprlistbis){
-        System.out.print("ok\n");
         this.expr = expr;
         this.exprlistbis = exprlistbis;
     }

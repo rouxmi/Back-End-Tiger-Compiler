@@ -381,7 +381,6 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addTransition(nodeIdentifier, nodeIdentifier2);
         
         this.addTransition(nodeIdentifier2, nodeIdentifier1);
-        System.out.println(affect.right);
         if (affect.right != null){
             String nodeIdentifier3 = this.nextState();
             this.addNode(nodeIdentifier3, "Parametres");

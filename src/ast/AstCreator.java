@@ -559,7 +559,6 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 		String filsnom= ctx.getChild(1).getText();
 		if(ctx.getChild(1).getChild(0)!=null){
 			if (filsnom.charAt(0)=='('){
-				System.out.println(id+filsnom+"\n");
 				return new Appelfunc(id, fils);
 			}
 			else {

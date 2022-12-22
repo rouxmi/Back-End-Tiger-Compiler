@@ -11,10 +11,5 @@ public class Appelfunc implements Ast{
     public Appelfunc(String id,Ast right){
         this.id=id;
         this.right= right;
-        if (this.right == null){
-            System.out.print(id+"\n");
-            System.out.print("oui\n");
-        }
-        
     }
 }
