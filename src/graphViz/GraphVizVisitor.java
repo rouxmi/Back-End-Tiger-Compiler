@@ -3,7 +3,8 @@ package graphViz;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
- import ast.Program ;
+
+import ast.Program ;
  import ast.Expr0 ;
  import ast.Expr1 ;
  import ast.Strin ;
@@ -244,7 +245,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Functiondeclaration affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "function");
+        this.addNode(nodeIdentifier, "Function");
         String functiondeclaration = affect.functiondeclaration.accept(this);
         String nodeIdentifier1 = this.nextState();
         this.addNodeTerm(nodeIdentifier1, affect.id);
@@ -270,7 +271,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typegal affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "TypeEgal");
+        this.addNode(nodeIdentifier, "Type Egal");
         String typeid = affect.typeid.accept(this);
         this.addTransition(nodeIdentifier, typeid);
         String nodeIdentifier1 = this.nextState();
@@ -284,7 +285,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Exprnegation affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Exprnegation");
+        this.addNode(nodeIdentifier, "Negation Expr");
         String nodeIdentifier1 = this.nextState();
         this.addNodeTerm(nodeIdentifier1, affect.neg);
         this.addTransition(nodeIdentifier, nodeIdentifier1);
@@ -296,7 +297,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Exprseq affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Exprseq");
+        this.addNode(nodeIdentifier, "Expr Seq");
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
         if(affect.exprseqbis != null){
@@ -309,7 +310,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Exprlist affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Exprlist");
+        this.addNode(nodeIdentifier, "Expr List");
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
         if(affect.exprlistbis != null){
@@ -322,7 +323,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Exprlisbis affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Exprlisbis");
+        this.addNode(nodeIdentifier, "Expr lisbis");
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
         if(affect.exprlistbis != null){
@@ -335,7 +336,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Fieldlist affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Fieldlist");
+        this.addNode(nodeIdentifier, "Field List");
         String field = affect.field.accept(this);
         this.addTransition(nodeIdentifier, field);
         if(affect.fieldlistbis != null){
@@ -371,12 +372,12 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Appelfunc affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Appel fonction");
+        this.addNode(nodeIdentifier, "Appel Fonction");
         String nodeIdentifier1 = this.nextState();
         String nodeIdentifier2 = this.nextState();
         
         this.addNodeTerm(nodeIdentifier1, affect.id);
-        this.addNode(nodeIdentifier2, "Id fonction");
+        this.addNode(nodeIdentifier2, "Id Fonction");
         
         this.addTransition(nodeIdentifier, nodeIdentifier2);
         
@@ -421,7 +422,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typedeclaration affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Typedeclaration");
+        this.addNode(nodeIdentifier, "Type Declaration");
         String typeid = affect.typeid.accept(this);
         this.addTransition(nodeIdentifier, typeid);
         String type = affect.type.accept(this);
@@ -471,7 +472,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Variabledeclaration affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Variabledeclaration");
+        this.addNode(nodeIdentifier, "Variable Declaration");
         String nodeIdentifier1 = this.nextState();
         this.addNodeTerm(nodeIdentifier1, affect.id);
         this.addTransition(nodeIdentifier, nodeIdentifier1);
@@ -483,7 +484,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Vardec1 affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Vardec1");
+        this.addNode(nodeIdentifier, "Variable Declaration");
         String expr = affect.expr.accept(this);
         this.addTransition(nodeIdentifier, expr);
         String typeid = affect.typeid.accept(this);
@@ -496,7 +497,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     public String visit(Program affect) {
         String nodeIdentifier = this.nextState();
 
-        this.addNode(nodeIdentifier, "program");
+        this.addNode(nodeIdentifier, "Program");
         String nodeIdentifier1 = affect.expression.accept(this);
         this.addTransition(nodeIdentifier, nodeIdentifier1);
         return nodeIdentifier;
@@ -507,7 +508,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         String nodeIdentifier1 = this.nextState();
         String nodeIdentifier2 = this.nextState();
-        this.addNode(nodeIdentifier, "ifThen");
+        this.addNode(nodeIdentifier, "if Then");
         this.addNode(nodeIdentifier1, "If Block");
         this.addNode(nodeIdentifier2, "Then Block");
         String left = affect.left.accept(this);
@@ -530,7 +531,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     public String visit(Print affect) {
         String nodeIdentifier = this.nextState();
         String nodeIdentifier1 = affect.fils.accept(this);
-        this.addNode(nodeIdentifier, "print");
+        this.addNode(nodeIdentifier, "Print");
         this.addTransition(nodeIdentifier, nodeIdentifier1);
         return nodeIdentifier;
     }
@@ -673,7 +674,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(FdecWithoutfields affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "function");
+        this.addNode(nodeIdentifier, "Function");
         String functiondeclaration = affect.functiondeclaration.accept(this);
         String nodeIdentifier1 = this.nextState();
         this.addNodeTerm(nodeIdentifier1, affect.id);
@@ -700,7 +701,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeswithof affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "types");
+        this.addNode(nodeIdentifier, "Types");
         String typeid = affect.typeid.accept(this);
         this.addTransition(nodeIdentifier, typeid);
         String expr1 = affect.expr1.accept(this);
@@ -716,7 +717,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeswithfieldlist affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "types");
+        this.addNode(nodeIdentifier, "Types");
         String typeid = affect.typeid.accept(this);
         this.addTransition(nodeIdentifier, typeid);
         if(affect.fieldlist != null){
@@ -754,7 +755,7 @@ public class GraphVizVisitor implements AstVisitor<String> {
 
         String type = affect.type.accept(this);
 
-        this.addNode(nodeIdentifier, "Arrayof");
+        this.addNode(nodeIdentifier, "Array Of");
         
         this.addTransition(nodeIdentifier, type);
 
