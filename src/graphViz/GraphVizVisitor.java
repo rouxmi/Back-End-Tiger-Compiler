@@ -31,10 +31,8 @@ import ast.Typegal ;
  import ast.Exprseq ;
 import ast.FdecWithoutfields;
 import ast.Exprlist ;
- import ast.Exprlisbis ;
  import ast.Fieldlist ;
  import ast.Field ;
- import ast.Fieldlisbis ;
 import ast.AccesVar;
 import ast.Appelfunc ;
 import ast.Idcall2;
@@ -298,11 +296,12 @@ public class GraphVizVisitor implements AstVisitor<String> {
     public String visit(Exprseq affect) {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "Expr Seq");
-        String expr = affect.expr.accept(this);
-        this.addTransition(nodeIdentifier, expr);
-        if(affect.exprseqbis != null){
-            String exprseqbis = affect.exprseqbis.accept(this);
-            this.addTransition(nodeIdentifier, exprseqbis);
+        for(int i=0;i<affect.expr.size();i++){
+            String expr = affect.expr.get(i).accept(this);
+            String nodeIdentifierTemp = this.nextState();
+            this.addNode(nodeIdentifierTemp, "Expr n°"+(i+1));
+            this.addTransition(nodeIdentifier, nodeIdentifierTemp);
+            this.addTransition(nodeIdentifierTemp, expr);
         }
         return nodeIdentifier;
     }
@@ -311,24 +310,12 @@ public class GraphVizVisitor implements AstVisitor<String> {
     public String visit(Exprlist affect) {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "Expr List");
-        String expr = affect.expr.accept(this);
-        this.addTransition(nodeIdentifier, expr);
-        if(affect.exprlistbis != null){
-            String exprlistbis = affect.exprlistbis.accept(this);
-            this.addTransition(nodeIdentifier, exprlistbis);
-        }
-        return nodeIdentifier;
-    }
-
-    @Override
-    public String visit(Exprlisbis affect) {
-        String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Expr lisbis");
-        String expr = affect.expr.accept(this);
-        this.addTransition(nodeIdentifier, expr);
-        if(affect.exprlistbis != null){
-            String exprlistbis = affect.exprlistbis.accept(this);
-            this.addTransition(nodeIdentifier, exprlistbis);
+        for(int i=0;i<affect.expr.size();i++){
+            String expr = affect.expr.get(i).accept(this);
+            String nodeIdentifierTemp = this.nextState();
+            this.addNode(nodeIdentifierTemp, "Expr n°"+(i+1));
+            this.addTransition(nodeIdentifier, nodeIdentifierTemp);
+            this.addTransition(nodeIdentifierTemp, expr);
         }
         return nodeIdentifier;
     }
@@ -337,11 +324,12 @@ public class GraphVizVisitor implements AstVisitor<String> {
     public String visit(Fieldlist affect) {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "Field List");
-        String field = affect.field.accept(this);
-        this.addTransition(nodeIdentifier, field);
-        if(affect.fieldlistbis != null){
-            String fieldlistbis = affect.fieldlistbis.accept(this);
-            this.addTransition(nodeIdentifier, fieldlistbis);
+        for(int i=0;i<affect.field.size();i++){
+            String expr = affect.field.get(i).accept(this);
+            String nodeIdentifierTemp = this.nextState();
+            this.addNode(nodeIdentifierTemp, "Field n°"+(i+1));
+            this.addTransition(nodeIdentifier, nodeIdentifierTemp);
+            this.addTransition(nodeIdentifierTemp, expr);
         }
         return nodeIdentifier;
     }
@@ -358,16 +346,6 @@ public class GraphVizVisitor implements AstVisitor<String> {
         return nodeIdentifier;
     }
 
-    @Override
-    public String visit(Fieldlisbis affect) {
-        String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Fieldlisbis");
-        String field = affect.field.accept(this);
-        this.addTransition(nodeIdentifier, field);
-        String fieldlisbis = affect.fieldlisbis.accept(this);
-        this.addTransition(nodeIdentifier, fieldlisbis);
-        return nodeIdentifier;
-    }
 
     @Override
     public String visit(Appelfunc affect) {
@@ -434,11 +412,12 @@ public class GraphVizVisitor implements AstVisitor<String> {
     public String visit(Typefields affect) {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "Typefields");
-        String typefield = affect.typefield.accept(this);
-        this.addTransition(nodeIdentifier, typefield);
-        if(affect.typefieldsbis != null){
-            String typefieldsbis = affect.typefieldsbis.accept(this);
-            this.addTransition(nodeIdentifier, typefieldsbis);
+        for(int i=0;i<affect.typefield.size();i++){
+            String expr = affect.typefield.get(i).accept(this);
+            String nodeIdentifierTemp = this.nextState();
+            this.addNode(nodeIdentifierTemp, "Field n°"+(i+1));
+            this.addTransition(nodeIdentifier, nodeIdentifierTemp);
+            this.addTransition(nodeIdentifierTemp, expr);
         }
         return nodeIdentifier;
     }
@@ -703,14 +682,23 @@ public class GraphVizVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         this.addNode(nodeIdentifier, "Types");
         String typeid = affect.typeid.accept(this);
-        this.addTransition(nodeIdentifier, typeid);
+        String nodeIdentifier2 = this.nextState();
+        String nodeIdentifier3 = this.nextState();
+        String nodeIdentifier4 = this.nextState();
+        this.addNode(nodeIdentifier2, "type name");
+        this.addTransition(nodeIdentifier,nodeIdentifier2);
+        this.addTransition(nodeIdentifier2, typeid);
         String expr1 = affect.expr1.accept(this);
-        this.addTransition(nodeIdentifier, expr1);
+        this.addNode(nodeIdentifier3, "size");
+        this.addTransition(nodeIdentifier,nodeIdentifier3);
+        this.addTransition(nodeIdentifier3, expr1);
         String nodeIdentifier1 = this.nextState();
         this.addNodeTerm(nodeIdentifier1, affect.of);
         this.addTransition(nodeIdentifier, nodeIdentifier1);
+        this.addNode(nodeIdentifier4, "value");
+        this.addTransition(nodeIdentifier, nodeIdentifier4);
         String expr2 = affect.expr2.accept(this);
-        this.addTransition(nodeIdentifier, expr2);
+        this.addTransition(nodeIdentifier4, expr2);
         return nodeIdentifier;
     }
 

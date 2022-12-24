@@ -31,10 +31,8 @@ public interface AstVisitor<T> {
 	public T visit(Exprnegation affect);
 	public T visit(Exprseq affect);
 	public T visit(Exprlist affect);
-	public T visit(Exprlisbis affect);
 	public T visit(Fieldlist affect);
 	public T visit(Field affect);
-	public T visit(Fieldlisbis affect);
 	public T visit(Appelfunc affect);
 	public T visit(Idcall2 affect);
 	public T visit(Pointid affect);

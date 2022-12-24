@@ -1,16 +1,16 @@
 package ast;
 
+import java.util.ArrayList;
+
 public class Exprseq implements Ast{
     public <T> T accept(AstVisitor<T> visitor){
         return visitor.visit(this);
     }
     
-    public Ast expr;
-    public Ast exprseqbis;
+    public ArrayList<Ast> expr;
 
-    public Exprseq(Ast expr, Ast exprseqbis){
+    public Exprseq(ArrayList<Ast> expr){
         this.expr = expr;
-        this.exprseqbis = exprseqbis;
     }
 
 }

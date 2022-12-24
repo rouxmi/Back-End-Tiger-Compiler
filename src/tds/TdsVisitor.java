@@ -31,10 +31,8 @@ import ast.Exprnegation ;
 import ast.Exprseq ;
 import ast.FdecWithoutfields;
 import ast.Exprlist ;
-import ast.Exprlisbis ;
 import ast.Fieldlist ;
 import ast.Field ;
-import ast.Fieldlisbis ;
 import ast.AccesVar;
 import ast.Appelfunc ;
 import ast.Idcall2;
@@ -272,9 +270,8 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Exprseq affect) {
         String nodeIdentifier = this.nextState();
-        affect.expr.accept(this);
-        if(affect.exprseqbis != null){
-            affect.exprseqbis.accept(this);
+        for (Ast ast : affect.expr){
+            ast.accept(this);
         }
         return nodeIdentifier;
     }
@@ -282,37 +279,18 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Exprlist affect) {
         String nodeIdentifier = this.nextState();
-
-        affect.expr.accept(this);
-
-        if(affect.exprlistbis != null){
-            affect.exprlistbis.accept(this);
-
+        for (Ast ast : affect.expr){
+            ast.accept(this);
         }
         return nodeIdentifier;
     }
 
-    @Override
-    public String visit(Exprlisbis affect) {
-        String nodeIdentifier = this.nextState();
-
-        affect.expr.accept(this);
-        if(affect.exprlistbis != null){
-            affect.exprlistbis.accept(this);
-
-        }
-        return nodeIdentifier;
-    }
 
     @Override
     public String visit(Fieldlist affect) {
         String nodeIdentifier = this.nextState();
-
-        affect.field.accept(this);
-
-        if(affect.fieldlistbis != null){
-            affect.fieldlistbis.accept(this);
-
+        for (Ast ast : affect.field){
+            ast.accept(this);
         }
         return nodeIdentifier;
     }
@@ -328,16 +306,6 @@ public class TdsVisitor implements AstVisitor<String> {
         return nodeIdentifier;
     }
 
-    @Override
-    public String visit(Fieldlisbis affect) {
-        String nodeIdentifier = this.nextState();
-
-        affect.field.accept(this);
-
-        affect.fieldlisbis.accept(this);
-
-        return nodeIdentifier;
-    }
 
     @Override
     public String visit(Appelfunc affect) {
@@ -407,11 +375,8 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typefields affect) {
         String nodeIdentifier = this.nextState();
-        affect.typefield.accept(this);
-
-        if(affect.typefieldsbis != null){
-            affect.typefieldsbis.accept(this);
-
+        for (Ast ast : affect.typefield){
+            ast.accept(this);
         }
         return nodeIdentifier;
     }

@@ -2,6 +2,9 @@ package ast;
 
 import parser.ParsertigerBaseVisitor;
 
+import java.util.ArrayList;
+
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import parser.Parsertiger;
 
@@ -462,12 +465,17 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Ast visitExprseq(Parsertiger.ExprseqContext ctx) { 
-		if (ctx.getChild(1).getChild(0)!=null){
-			Ast expr = ctx.getChild(0).accept(this);
-			Ast exprseqbis = ctx.getChild(1).accept(this);
-			return new Exprseq(expr, exprseqbis);
-		} else return ctx.getChild(0).accept(this);
+	@Override public Ast visitExprseq(Parsertiger.ExprseqContext ctx) {
+		ArrayList<Ast> list = new ArrayList<Ast>();
+		ParseTree expr = ctx;
+		while (true){
+			list.add(expr.getChild(0).accept(this));
+			if (expr.getChild(1).getChild(0)==null){
+				break;
+			}
+			expr = expr.getChild(1).getChild(1);
+		}
+		return new Exprseq(list);
 	}
 	/**
 	 * {@inheritDoc}
@@ -485,27 +493,22 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitExprlist(Parsertiger.ExprlistContext ctx) { 
-		if (ctx.getChild(1).getChild(0)!=null){
-			Ast expr = ctx.getChild(0).accept(this);
-			Ast exprlistbis = ctx.getChild(1).accept(this);
-			return new Exprlist(expr, exprlistbis);
+		ArrayList<Ast> list = new ArrayList<Ast>();
+		ParseTree expr = ctx;
+		list.add(expr.getChild(0).accept(this));
+		if (expr.getChild(1).getChild(0)==null){
+			return new Exprlist(list);
 		}
-		else return ctx.getChild(0).accept(this);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitExprlisbis(Parsertiger.ExprlisbisContext ctx) { 
-		if (ctx.getChild(2).getChild(0)!=null){
-			Ast expr= ctx.getChild(1).accept(this);
-			Ast exprlisbis = ctx.getChild(2).accept(this);
-			return new Exprlisbis(expr, exprlisbis);
+		expr = expr.getChild(1);
+		while (true){
+			list.add(expr.getChild(1).accept(this));
+			if (expr.getChild(2).getChild(0)==null){
+				break;
+			}
+			expr = expr.getChild(2);
+			
 		}
-		else{return ctx.getChild(1).accept(this);}
-
+		return new Exprlist(list);
 	}
 	/**
 	 * {@inheritDoc}
@@ -514,12 +517,22 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitFieldlist(Parsertiger.FieldlistContext ctx) { 
-		if (ctx.getChild(3).getChild(0)!=null){
-			Ast field = ctx.getChild(0).accept(this);
-			Ast fieldlistbis = ctx.getChild(1).accept(this);
-			return new Fieldlist(field, fieldlistbis);
+		ArrayList<Ast> list = new ArrayList<Ast>();
+		ParseTree field = ctx;
+		list.add(field.getChild(0).accept(this));
+		if (field.getChild(1).getChild(0)==null){
+			return new Fieldlist(list);
 		}
-		else return ctx.getChild(1).accept(this);
+		field = field.getChild(1);
+		while (true){
+			list.add(field.getChild(1).accept(this));
+			if (field.getChild(2).getChild(0)==null){
+				break;
+			}
+			field = field.getChild(2);
+			
+		}
+		return new Fieldlist(list);
 	}
 	/**
 	 * {@inheritDoc}
@@ -531,21 +544,6 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 		String id = ctx.getChild(0).getText();
 		Ast expr = ctx.getChild(2).accept(this);
 		return new Field(expr, id);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Ast visitFieldlisbis(Parsertiger.FieldlisbisContext ctx) { 
-		if (ctx.getChild(2).getChild(0)!=null){
-			Ast field = ctx.getChild(1).accept(this);
-			Ast fieldlisbis = ctx.getChild(2).accept(this);
-			return new Fieldlisbis(field, fieldlisbis);
-		}
-		else{return ctx.getChild(2).accept(this);}
-		
 	}
 	/**
 	 * {@inheritDoc}
@@ -669,11 +667,16 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Ast visitTypefields(Parsertiger.TypefieldsContext ctx) { 
-		if (ctx.getChild(1).getChild(0)!=null){
-			Ast typefield = ctx.getChild(0).accept(this);
-			Ast typefieldsbis = ctx.getChild(1).accept(this);
-			return new Typefields(typefield, typefieldsbis);
-		}else return ctx.getChild(0).accept(this);
+		ArrayList<Ast> list = new ArrayList<Ast>();
+		ParseTree field = ctx;
+		while (true){
+			list.add(field.getChild(0).accept(this));
+			if (field.getChild(1).getChild(0)==null){
+				break;
+			}
+			field = field.getChild(1).getChild(1);
+		}
+		return new Typefields(list);
 	}
 	/**
 	 * {@inheritDoc}

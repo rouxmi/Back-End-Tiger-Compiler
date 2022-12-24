@@ -56,9 +56,15 @@ public class Table {
             }
 		}
 		String val = "";
-		val = "\u001B[32m"+"| TABLE ID="+this.id+"\u001B[0m"+"\n"+"\u001B[32m"+
-        "| Nom de la fonction="+this.nompere+"\u001B[0m"+"\n"+"\u001B[32m"+
-				"| ID du pere="+this.idpere+"\u001B[0m"+"\n"+"\u001B[31m" ;
+        if (this.idpere==-1){
+            val = "\u001B[32m"+"| TABLE ID="+this.id+"\u001B[0m"+"\n"+"\u001B[32m"+
+            "| Nom de la fonction="+this.nompere+"\u001B[0m"+"\n"+"\u001B[31m" ;
+        }
+        else{
+            val = "\u001B[32m"+"| TABLE ID="+this.id+"\u001B[0m"+"\n"+"\u001B[32m"+
+            "| Nom de la fonction="+this.nompere+"\u001B[0m"+"\n"+"\u001B[32m"+
+            "| ID du pere="+this.idpere+"\u001B[0m"+"\n"+"\u001B[31m" ;
+        }
         if (this.variables.size()-nbvar>0){
             //on ajoute les Types à l'affichage
             val += "| Types:"+"\u001B[0m"+"\n"+"\u001B[34m"+"| " + String.format("%-6s", "Nature") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-9s", "Type") + " | " 
