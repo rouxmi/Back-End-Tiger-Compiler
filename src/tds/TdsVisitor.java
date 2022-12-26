@@ -17,6 +17,7 @@ import ast.Nil ;
 import ast.Plus;
 import ast.IfThen ;
 import ast.While ;
+import controlesemantique.fonction;
 import ast.For ;
 import ast.Break ;
 import ast.Let ;
@@ -58,6 +59,7 @@ import ast.Arrof;
 public class TdsVisitor implements AstVisitor<String> {
     private Stack<Table> tdsStack = new Stack<Table>();
     private Table tds;
+    public Stack<Exception> exceptions = new Stack<Exception>();
     private int state;
     private boolean varDec;
     private String varid;
@@ -308,16 +310,18 @@ public class TdsVisitor implements AstVisitor<String> {
 
 
     @Override
-    public String visit(Appelfunc affect) {
+    public String visit(Appelfunc affect){
         String nodeIdentifier = this.nextState();
+        try {
+            fonction.checknombreparametres(affect,this.tdsStack,this.tds);
+        } catch (Exception e) {
+           exceptions.push(e);
+        }
         if (tailledec){
             tailletype=affect.id;
         }
-        
-
         if (affect.right != null){
             affect.right.accept(this);
-
         }
         return nodeIdentifier;
     }

@@ -1,5 +1,6 @@
 package tds;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Table {
 	public static int nbTable=-1;
@@ -211,4 +212,31 @@ public class Table {
             fils.afficher();
         }
     }
+
+    public Table joinTDS(Stack<Table> pile) {
+        Table newTDS = this;
+        int id = this.idpere;
+        while(id != -1) {
+            Table tds = searchTDS(pile, id);
+            for (VarType var : tds.variables) {
+                newTDS.addVarType(var);
+            }
+            for (ProcFonc proc : tds.fonctions) {
+                newTDS.addProcFonc(proc);
+            }
+            id=tds.getIdpere();
+
+        }
+        return newTDS;
+    }
+
+    public Table searchTDS(Stack<Table> pile, int id) {
+        for (Table tds : pile) {
+            if (tds.getId() == id) {
+                return tds;
+            }
+        }
+        return null;
+    }
+
 }
