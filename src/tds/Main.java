@@ -42,6 +42,8 @@ public class Main {
             TdsVisitor tdscreator = new TdsVisitor();
             ast.accept(tdscreator);
             tdscreator.afficher();
+
+            //Print de toute les erreurs
             while(!tdscreator.exceptions.isEmpty()){
                 System.err.println(tdscreator.exceptions.pop().getMessage());
             }
