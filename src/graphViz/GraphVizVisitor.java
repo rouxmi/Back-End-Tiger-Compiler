@@ -373,13 +373,16 @@ public class GraphVizVisitor implements AstVisitor<String> {
     @Override
     public String visit(Pointid affect) {
         String nodeIdentifier = this.nextState();
-        this.addNode(nodeIdentifier, "Pointid");
-        String nodeIdentifier1 = this.nextState();
-        this.addNodeTerm(nodeIdentifier1, affect.id);
-        this.addTransition(nodeIdentifier, nodeIdentifier1);
-        if(affect.lvaluebis != null){
-            String lvaluebis = affect.lvaluebis.accept(this);
+        if(affect.fils != null){
+            this.addNode(nodeIdentifier, ".");
+            String nodeIdentifier1 = this.nextState();
+            this.addNodeTerm(nodeIdentifier1, affect.id);
+            this.addTransition(nodeIdentifier, nodeIdentifier1);
+            String lvaluebis = affect.fils.accept(this);
             this.addTransition(nodeIdentifier, lvaluebis);
+        }
+        else{
+            this.addNodeTerm(nodeIdentifier, affect.id);
         }
         return nodeIdentifier;
     }

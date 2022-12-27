@@ -6,10 +6,10 @@ public class Pointid implements Ast{
     }
     
     public String id;
-    public Ast lvaluebis;
+    public Ast fils;
 
-    public Pointid (String id, Ast lvaluebis){
+    public Pointid (String id, Ast fils){
         this.id = id;
-        this.lvaluebis = lvaluebis;
+        this.fils = fils;
     }
 }

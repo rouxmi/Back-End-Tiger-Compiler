@@ -35,7 +35,7 @@ public class expression {
                 return true;
             }
         }
-        throw new ExprException("Type incorrect dans l'expression : "+tree.toString()+"(attendu : int");
+        throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int");
         
     }
     
@@ -62,11 +62,11 @@ public class expression {
             }else{
                 Table tdsactuel = new Table(tds.getId());
                 tdsactuel=tdsactuel.joinTDS(pile);
-                if(string.equals(tdsactuel.getVarType(((Idcall2)tree).id).getType())){
+                if(string.equals(tdsactuel.getVar(((Idcall2)tree).id).getType())){
                     return true;
                 }
                 else{
-                    throw new ExprException("Type de la variable "+((Idcall2)tree).id+" incorrect dans l'expression: "+tree.toString()+"(attendu : "+string+")");
+                    throw new ExprException("Type de la variable "+((Idcall2)tree).id+" incorrect dans l'expression: "+name+"(attendu : "+string+")");
                 }
             }
         }else if(name.equals("ast.Croexpr") && string.equals("int")){
@@ -85,11 +85,41 @@ public class expression {
                 return false;
             }
         }
-        else{
-            System.out.println(name);
-            throw new ExprException("Type incorrect dans l'expression : "+tree.toString()+"(attendu : "+string+")");
+        else if(name.equals("ast.IfThen")){
+            if(checktype(((IfThen)tree).left,string,pile,tds)){
+                return true;
+            }
+            if(((IfThen)tree).right!=null){
+                if(checktype(((IfThen)tree).right,string,pile,tds)){
+                    return true;
+                }
+            }
+        }else if(name.equals("ast.Typeswithfieldlist")){
+            if(Declaration.checkVardeclared(((Typeidid)((Typeswithfieldlist)tree).typeid).id,pile,tds)){
+                if(string.equals(tds.getVarType(((Typeidid)((Typeswithfieldlist)tree).typeid).id).getIdentifiant()) && checktypefield((Fieldlist)((Typeswithfieldlist)tree).fieldlist, tds.getVarType(((Typeidid)((Typeswithfieldlist)tree).typeid).id).getIdentifiant(), pile, tds)){
+                    return true;
+                }
+            }
         }
+        else if(name.equals("ast.Pointid")){
+            String id=((Pointid)tree).id;
+            String type = ((Typeidid)((Pointid)tree).fils).id;
+            Table tdsactuel = new Table(tds.getId());
+            tdsactuel=tdsactuel.joinTDS(pile);
+            if(Declaration.checkVardeclared(type,pile,tds)){
+                if(replaceType(tds.getVarType(id).getType(),tdsactuel,type).equals(string)){
+                    return true;
+                }
+            }
+
+        }
+        else{
+            throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : "+string+")");
+        }
+        return false;
     }
+
+
 
     private static boolean checkTypeSupInf(Ast tree,Stack<Table> pile,Table tds) throws Exception {
         String name =tree.getClass().getName().replace('\n', '\0');
@@ -110,9 +140,11 @@ public class expression {
                 return true;
             }
         }
-        throw new ExprException("Type incorrect dans l'expression : "+tree.toString()+"(attendu : int"+")");
+        throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int"+")");
     }
         
+
+
 
     //verifie si les deux expressions sont du meme type int ou string
     /*
@@ -133,7 +165,7 @@ public class expression {
                 return true;
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression : "+tree.toString()+"(attendu : int ou string des deux côtés)");
+                throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés)");
             }
         }else if(name.equals("ast.Dif")){
             if(checktype(((Dif)tree).left,"int",pile,tds) && checktype(((Dif)tree).right,"int",pile,tds)){
@@ -146,27 +178,74 @@ public class expression {
                 return true;
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression : "+tree.toString()+"(attendu : int ou string des deux côtés)");
+                throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés)");
             }
         }else if(name.equals("ast.Expr1")){
             if(checktype(((Expr1)tree).left,"bool",pile,tds) && checktype(((Expr1)tree).right,"bool",pile,tds)){
                 return true;
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression : "+tree.toString()+"(attendu : int ou string des deux côtés");
+                throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés");
             }
         }else if(name.equals("ast.Expr0")){
             if(checktype(((Expr0)tree).left,"bool",pile,tds) && checktype(((Expr0)tree).right,"bool",pile,tds)){
                 return true;
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression : "+tree.toString()+"(attendu : int ou string des deux côtés");
+                throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés");
             }
         }
         else{
-            throw new ExprException("Type incorrect dans l'expression : "+tree.toString()+"(attendu : int ou string des deux côtés");
+            throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés");
         }
     }
-    
-    
+
+    public static boolean checktypefield(Fieldlist tree,String nametype,Stack<Table> pile,Table tds) throws Exception{
+        String name =tree.getClass().getName().replace('\n', '\0');
+        Table tableactuel = new Table(tds.getId());
+        tableactuel = tableactuel.joinTDS(pile);
+        int j=0;
+        for (int i = 0; i < tree.field.size(); i++) {
+            Field field =(Field) tree.field.get(i);
+            if(name.equals("ast.Fieldlist")){
+                if(checktype(field.expr,tableactuel.getVarType(nametype+"."+field.id).getType(),pile,tds)){
+                    j++;
+                }
+                else{
+                    throw new ExprException("Type incorrect dans l'expression Field: "+name+"(attendu : "+tableactuel.getVarType(nametype+"."+field.id).getType()+")");
+                }
+            }
+            else{
+                throw new ExprException("Type incorrect dans l'expression Field: "+name+"(attendu : "+tableactuel.getVarType(nametype+"."+field.id).getType()+")");
+            }
+        }
+        if(j==tree.field.size()){
+            return true;
+        }
+        return false;
+        
+    }
+
+    public static String replaceType(String type,Table tableactuel, String name){
+        if(type.equals("int") || type.equals("string")){
+            return type;
+        }
+        else{
+            String text = tableactuel.getVarType(type).getType();
+            if(text.equals("Array of")){
+                return tableactuel.getVarType(type).getElementtype().get(0).replace(',',' ').trim();
+            }
+            else if(text.equals("TypeList")){
+                return tableactuel.getVarType(name).getType();
+            }
+            else{
+                return text;
+            }
+
+        }
+            
+    }
+        
 }
+    
+    

@@ -137,6 +137,24 @@ public class Table {
         }
     }
 
+    public VarType getVar(String varName) {
+        for (VarType myVar : variables) {
+            if (myVar.getIdentifiant().equals(varName) && myVar.getNature()=="Var") {
+                return myVar;
+            }
+        }
+        return null;
+    }
+
+    public VarType getType(String varName) {
+        for (VarType myVar : variables) {
+            if (myVar.getIdentifiant().equals(varName) && myVar.getNature()=="Type") {
+                return myVar;
+            }
+        }
+        return null;
+    }
+
     public void addArray(VarType var) {
 		if(!checkAlreadyExist(var)){
             this.variables.add(var);
@@ -174,7 +192,7 @@ public class Table {
 	public boolean checkAlreadyExist(Object var){
 		if(var instanceof  VarType){
 			for(VarType el : variables){
-				if(el.getIdentifiant().equals(((VarType) var).getIdentifiant())){
+                if(el.getIdentifiant().equals(((VarType) var).getIdentifiant()) && el.getNature().equals(((VarType) var).getNature())){
 					return true;
 				}
 			}

@@ -204,10 +204,10 @@ public class TdsVisitor implements AstVisitor<String> {
         } catch (Exception e) {
             exceptions.push(e);
         }
-        /* peut être à ajouter
+        // peut être à ajouter
         VarType var = new VarType(affect.id, "int", "Var");
         this.addVarType(var);
-        */
+        
         affect.min.accept(this);
         affect.max.accept(this);
         affect.regle.accept(this);
@@ -331,6 +331,7 @@ public class TdsVisitor implements AstVisitor<String> {
             Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds);
             fonction.checknombreparametres(affect,this.tdsStack,this.tds);
             fonction.checktypeparametres(affect, this.tdsStack, this.tds);
+            fonction.checkdeclaration(affect, this.tdsStack, this.tds);
         } catch (Exception e) {
            exceptions.push(e);
         }
@@ -346,11 +347,9 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Pointid affect) {
         String nodeIdentifier = this.nextState();
-
         
-
-        if(affect.lvaluebis != null){
-            affect.lvaluebis.accept(this);
+        if(affect.fils != null){
+            affect.fils.accept(this);
 
         }
         return nodeIdentifier;
@@ -360,7 +359,11 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Croexpr affect) {
         String nodeIdentifier = this.nextState();
         affect.expr.accept(this);
-
+        try {
+            expression.checktype(affect.expr, "int", this.tdsStack, this.tds);
+        } catch (Exception e) {
+            exceptions.push(e);
+        }
         if(affect.lvaluebis != null){
             affect.lvaluebis.accept(this);
         }

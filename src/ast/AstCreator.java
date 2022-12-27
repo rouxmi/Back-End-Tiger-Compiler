@@ -559,6 +559,9 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 			if (filsnom.charAt(0)=='('){
 				return new Appelfunc(id, fils);
 			}
+			else if (filsnom.charAt(0)=='.'){
+				return new Pointid(id, fils);
+			}
 			else {
 				return new AccesVar(id, fils);
 			}
@@ -575,8 +578,13 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 */
 	@Override public Ast visitPointid(Parsertiger.PointidContext ctx) { 
 		String id = ctx.getChild(1).getText();
-		Ast lvaluebis = ctx.getChild(2).accept(this);
-		return new Pointid(id, lvaluebis);
+		if (ctx.getChild(2).getChild(0)==null){
+			return new Pointid(id,(Ast)null);
+		}
+		else {
+			Ast lvaluebis = ctx.getChild(2).accept(this);
+			return new Pointid(id, lvaluebis);
+		}
 	}
 	/**
 	 * {@inheritDoc}
