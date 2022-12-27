@@ -80,6 +80,10 @@ public class VarType{
         }
     }
 
+    public ArrayList<String> getElementtype() {
+        return this.elementtype;
+    }
+    
     public String getIdentifiant(){
         return this.identifiant;    
     }

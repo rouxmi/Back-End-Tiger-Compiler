@@ -18,6 +18,8 @@ import ast.Plus;
 import ast.IfThen ;
 import ast.While ;
 import controlesemantique.fonction;
+import controlesemantique.Declaration;
+import controlesemantique.expression;
 import ast.For ;
 import ast.Break ;
 import ast.Let ;
@@ -163,7 +165,7 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(In affect) {
         String nodeIdentifier = this.nextState();
         if (varDec && !tailledec){
-            VarType var = new VarType(varid, "Int", "Var");
+            VarType var = new VarType(varid, "int", "Var");
             this.addVarType(var);
             varDec=false;
         }
@@ -182,7 +184,11 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(While affect) {
         String nodeIdentifier = this.nextState();
-
+        try {
+            expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
+        } catch (Exception e) {
+            exceptions.push(e);
+        }
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -192,7 +198,16 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(For affect) {
         String nodeIdentifier = this.nextState();
-
+        try {
+            expression.checktype(affect.min, "int", this.tdsStack, this.tds);
+            expression.checktype(affect.max, "int", this.tdsStack, this.tds);
+        } catch (Exception e) {
+            exceptions.push(e);
+        }
+        /* peut être à ajouter
+        VarType var = new VarType(affect.id, "int", "Var");
+        this.addVarType(var);
+        */
         affect.min.accept(this);
         affect.max.accept(this);
         affect.regle.accept(this);
@@ -313,7 +328,9 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Appelfunc affect){
         String nodeIdentifier = this.nextState();
         try {
+            Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds);
             fonction.checknombreparametres(affect,this.tdsStack,this.tds);
+            fonction.checktypeparametres(affect, this.tdsStack, this.tds);
         } catch (Exception e) {
            exceptions.push(e);
         }
@@ -532,6 +549,11 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(IfThen affect) {
         String nodeIdentifier = this.nextState();
+        try {
+            expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
+        } catch (Exception e) {
+            exceptions.push(e);
+        }
         affect.left.accept(this);
         affect.center.accept(this);
 
@@ -739,6 +761,11 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(AccesVar affect) {
         String nodeIdentifier = this.nextState();
+        try {
+            Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
+        } catch (Exception e) {
+            exceptions.push(e);
+        }
         if (tailledec){
             tailletype=affect.id;
         }

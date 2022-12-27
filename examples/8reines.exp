@@ -13,7 +13,7 @@ let /* The eight queens solver from Appel */
                 print(1));
             print(0))
     function try(c:int,d:int,e:int) =
-        if c=N then printboard()
+        if c=N then printboard(6)
         else for r := 0 to N-1
             do if row[r]=0 &
                 diag1[r+c]=0 & diag2[r+7-c]=0

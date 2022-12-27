@@ -1,5 +1,6 @@
 let
-var N := 
+var N := 9
+var j := 0
 type intArray = array of int
 type intcro = {c:int,d:string,e:int}
 type int2 = int
@@ -8,10 +9,23 @@ var col := intArray [ N ] of 0
 var diag1 := intArray [ N+N-1 ] of 0
 var diag2 := intArray [ N+N-1 ] of 0
 
-function try(c:int) = 0
+function try(c:int) = 
+    for i := "ok" to N-1 do
+        for j := 0 to N-1 do
+            if c = 0 then
+                print(0)
+            else
+                print(1)
+            
 
 function try2(): int = 0
 
 function try3(c:int): int = 0
 
-in end
+in try(1+4*6/7-6);
+    try(8*5/7+6/"ok");
+    try2();
+    try2(8);
+    try3(c);
+    try3(N)
+end

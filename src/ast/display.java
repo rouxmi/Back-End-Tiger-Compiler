@@ -13,7 +13,7 @@ public class display {
     public static void main(String[] args){
 
         try {
-
+            
             //affichage du png de l'ast
             JFrame astframe = new JFrame("Arbre syntaxique CHAOS");
             JPanel astpanel = new JPanel();
@@ -23,6 +23,7 @@ public class display {
             double min = Math.min(1800/(double)width, 1800/(double)height);
             int newWidth = (int)Math.round(width *min);
             int newHeight = (int)Math.round(height *min);
+
             // Scale l'image sous 2000x2000
             Image scaledImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
             ImageIcon icon = new ImageIcon(scaledImage);
@@ -32,7 +33,7 @@ public class display {
             astframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             astframe.pack();
             astframe.setVisible(true);
-
+            
 
         } 
         catch (Exception e) {

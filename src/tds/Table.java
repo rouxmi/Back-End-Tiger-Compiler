@@ -22,6 +22,11 @@ public class Table {
         arg_depl = -2;
         var_depl = 1;
 	}
+
+    public Table(int pere){
+        this.id = pere;
+        this.idpere = pere; 
+	}
 	
 	public Table(ArrayList<VarType> var, ArrayList<ProcFonc> fct,int pere){
 		nbTable++;
@@ -166,7 +171,7 @@ public class Table {
 		this.fils.add(fils);
 	}
 
-	private boolean checkAlreadyExist(Object var){
+	public boolean checkAlreadyExist(Object var){
 		if(var instanceof  VarType){
 			for(VarType el : variables){
 				if(el.getIdentifiant().equals(((VarType) var).getIdentifiant())){
