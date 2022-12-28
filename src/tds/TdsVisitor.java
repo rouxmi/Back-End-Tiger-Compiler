@@ -20,6 +20,7 @@ import ast.While ;
 import controlesemantique.fonction;
 import controlesemantique.Declaration;
 import controlesemantique.expression;
+import controlesemantique.Division;
 import ast.For ;
 import ast.Break ;
 import ast.Let ;
@@ -671,7 +672,12 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Div affect) {
         String nodeIdentifier = this.nextState();
+        try {
+            Division.checkDiviseur( this.tdsStack, this.tds,affect.right);
 
+        } catch (Exception e) {
+           exceptions.push(e);
+        }
         affect.left.accept(this);
         if (tailledec){
             tailletype+="/";

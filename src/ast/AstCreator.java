@@ -163,10 +163,10 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 
             switch (operation) {
                 case "*":
-                    noeudTemporaire = new Minus(noeudTemporaire,right);
+                    noeudTemporaire = new Mul(noeudTemporaire,right);
                     break;
                 case "/":
-                    noeudTemporaire = new Plus(noeudTemporaire,right);
+                    noeudTemporaire = new Div(noeudTemporaire,right);
                     break;
                 default:
                     break;
