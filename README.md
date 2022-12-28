@@ -14,13 +14,13 @@
 
 - Construire la TDS du programme.
 
-- Crée des contrôles sémantiques sur différentes parties du programme.
+- Créer des contrôles sémantiques sur différentes parties du programme.
 
 # Utilisation de notre compilateur 
 
 ## Commandes et leur affichage : 
 
-Des messages sont présent pour aider à l'éxecution du compilateur.
+Des messages sont présents pour aider à l'éxecution du compilateur.
 
 L'utilisation des différentes commandes est décrite ici:
 
@@ -44,7 +44,7 @@ $ make arbrelex src="exemple.exp"
 ````
 
 permet de compiler le programme affichant l'Arbre lexical et de l'éxécuter sur la source donnée.
-Il affiche ensuite l'arbre lexical dans une fenêtre qu'il faut fermé pour terminer l'éxécution.
+Il affiche ensuite l'arbre lexical dans une fenêtre qu'il faut fermer pour terminer l'exécution.
 
 ### Compilation AST :
 
@@ -54,7 +54,7 @@ La commande:
 $ make ast
 ````
 
-permet de compiler le programme contruisant l'AST et de l'éxécuter sur la source donnée.
+permet de compiler le programme contruisant l'AST et de l'exécuter sur la source donnée.
 
 ### Affichage AST :
 
@@ -75,11 +75,11 @@ La commande:
 $ make tds src="exemple.exp"
 ````
 
-permet de compiler le programme qui permet de créer et d'afficher dans le terminal la table des symboles de la source donée.
+permet de compiler le programme qui permet de créer et d'afficher dans le terminal la table des symboles de la source donnée.
 
 ### Compilation complète:
 
-La commande suivante permet de faire les 5 commandes précédentes succésivement:
+La commande suivante permet de faire les 5 commandes précédentes successivement:
 
 ````shell
 $ make all src="exemple.exp"
