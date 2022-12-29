@@ -10,7 +10,7 @@ public class BoucleFor {
         if(nameMin.equals("ast.In") && nameMax.equals("ast.In")){
             int minInt = ((In)min).in;
             int maxInt = ((In)max).in;
-            if(minInt<maxInt){
+            if(minInt<=maxInt){
                 return true;
             }
         }
