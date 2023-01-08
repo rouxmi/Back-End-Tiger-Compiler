@@ -18,8 +18,10 @@ import ast.Plus;
 import ast.IfThen ;
 import ast.While ;
 import controlesemantique.fonction;
+import controlesemantique.BoucleFor;
 import controlesemantique.Declaration;
 import controlesemantique.expression;
+import controlesemantique.Division;
 import ast.For ;
 import ast.Break ;
 import ast.Let ;
@@ -201,6 +203,7 @@ public class TdsVisitor implements AstVisitor<String> {
         try {
             expression.checktype(affect.min, "int", this.tdsStack, this.tds);
             expression.checktype(affect.max, "int", this.tdsStack, this.tds);
+            BoucleFor.CheckBorneMinInfBorneMax(affect.min, affect.max);
         } catch (Exception e) {
             exceptions.push(e);
         }
@@ -666,7 +669,12 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Div affect) {
         String nodeIdentifier = this.nextState();
+        try {
+            Division.checkDiviseur( this.tdsStack, this.tds,affect.right);
 
+        } catch (Exception e) {
+           exceptions.push(e);
+        }
         affect.left.accept(this);
         if (tailledec){
             tailletype+="/";

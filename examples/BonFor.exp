@@ -1,0 +1,7 @@
+let
+    function printboard() =
+        (for i := 7 to 6
+            do print(0))
+in
+    printboard()
+end
