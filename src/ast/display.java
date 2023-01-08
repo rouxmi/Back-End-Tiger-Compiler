@@ -20,7 +20,7 @@ public class display {
             Image image = new ImageIcon("./out/tree.png").getImage();
             int width = image.getWidth(null);
             int height = image.getHeight(null);
-            double min = Math.min(1800/(double)width, 900/(double)height);
+            double min = Math.min(1800/(double)width, 700/(double)height);
             int newWidth = (int)Math.round(width *min);
             int newHeight = (int)Math.round(height *min);
 

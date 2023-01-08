@@ -22,6 +22,7 @@ import controlesemantique.BoucleFor;
 import controlesemantique.Declaration;
 import controlesemantique.expression;
 import controlesemantique.Division;
+import controlesemantique.IfInutile;
 import ast.For ;
 import ast.Break ;
 import ast.Let ;
@@ -557,9 +558,11 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         try {
             expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
+
         } catch (Exception e) {
             exceptions.push(e);
         }
+        IfInutile.warningIfInutile(affect.left);
         affect.left.accept(this);
         affect.center.accept(this);
 

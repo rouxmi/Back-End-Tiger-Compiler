@@ -2,7 +2,7 @@ package controlesemantique;
 import java.util.Stack;
 
 import ast.*;
-import exception.ExprException;
+import exception.DivisionException;
 import tds.Table;
 
 public class Division {
@@ -18,7 +18,7 @@ public class Division {
             }
 
         }
-        throw new ExprException("Division par 0 :"+name+" attendu un diviseur différent de 0");
+        throw new DivisionException("Division par 0 :"+name+" attendu un diviseur différent de 0");
 
     }
 }
