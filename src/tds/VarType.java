@@ -113,6 +113,10 @@ public class VarType{
         this.type=type;
     }
 
+    public String getTaille(){
+        return this.taille;
+    }
+
     public int getDeplacement(){
         return this.deplacement;
     }

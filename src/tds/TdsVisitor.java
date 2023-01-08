@@ -18,6 +18,7 @@ import ast.Plus;
 import ast.IfThen ;
 import ast.While ;
 import controlesemantique.Fonction;
+import controlesemantique.AccesListe;
 import controlesemantique.BoucleFor;
 import controlesemantique.Declaration;
 import controlesemantique.Expression;
@@ -830,6 +831,7 @@ public class TdsVisitor implements AstVisitor<String> {
         tds.setUsed(this.tdsStack, affect.id);
         String nodeIdentifier = this.nextState();
         Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
+        AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);
         if (tailledec){
             tailletype=affect.id;
         }
