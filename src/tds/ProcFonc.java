@@ -9,6 +9,7 @@ public class ProcFonc{
     public int tableID;
     public boolean isLocal;
     public ArrayList<VarType> arguments = new ArrayList<VarType>();
+    public boolean isUsed;
 
     public ProcFonc(String identifiant, String type, ArrayList<VarType> args ){
         this.identifiant=identifiant;
@@ -25,6 +26,7 @@ public class ProcFonc{
             this.nature = "fonction";
         }
         this.tableID= -2;
+        this.isUsed=false;
     }
 
     public String toString(){
@@ -47,10 +49,10 @@ public class ProcFonc{
         }
         if (this.nature=="fonction"){
             return "| " + String.format("%-10s", this.nature) + " | "+ String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) + " | " 
-            + String.format("%-7s", this.arguments.size()) + " | " + String.format("%-20s", the_types);
+            + String.format("%-7s", this.arguments.size()) + " | " + String.format("%-20s", the_types)+ " | "  + String.format("%-14s", this.isUsed);
         }
         else{return "| " + String.format("%-10s", this.nature) + " | "+ String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) + " | " 
-        + String.format("%-7s", this.arguments.size()) ;
+        + String.format("%-7s", this.arguments.size()) + " | "  + String.format("%-14s", this.isUsed);
 
         }
     }
@@ -99,6 +101,14 @@ public class ProcFonc{
 
     public boolean isLocal(){
         return this.isLocal;
+    }
+
+    public boolean isUsed(){
+        return this.isUsed;
+    }
+
+    public void setUsed(){
+        this.isUsed=true;
     }
 
 }

@@ -96,9 +96,11 @@ public class TdsVisitor implements AstVisitor<String> {
         tailletype=null;
     }
 
-    public Stack<Table> getTdsStack() {
-        return tdsStack;
+    public Table getTds() {
+        return tds;
     }
+
+
 
     public void afficher() {
         while (!tdsStack.empty()){
@@ -204,7 +206,9 @@ public class TdsVisitor implements AstVisitor<String> {
             }
         }
         ProcFonc whileblock = new ProcFonc("While block "+i, "While",new ArrayList<VarType>());
+        whileblock.setUsed();
         this.addProcFonc(whileblock);
+
         this.addFils("While block "+i);
         affect.right.accept(this);
         this.closeFils();
@@ -235,6 +239,7 @@ public class TdsVisitor implements AstVisitor<String> {
             }
         }
         ProcFonc forboucle = new ProcFonc("Boucle for "+i, "for", args);
+        forboucle.setUsed();
         this.addProcFonc(forboucle);
         this.addFils("Boucle for "+i);
         this.addVarType(var);
@@ -359,11 +364,14 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Appelfunc affect){
         String nodeIdentifier = this.nextState();
 
+        
+
         //Controles Semantiques
         if (Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds)){
             Fonction.checknombreparametres(affect,this.tdsStack,this.tds);
             Fonction.checktypeparametres(affect, this.tdsStack, this.tds);
             Fonction.checkdeclaration(affect, this.tdsStack, this.tds);
+            tds.setUsed(tdsStack, affect.id);
         }
 
         if (tailledec){
@@ -524,6 +532,9 @@ public class TdsVisitor implements AstVisitor<String> {
             varDec=false;
         }
         if (funcdec && !elementtypedec && !tailledec){
+            if(args==null){
+                args= new ArrayList<VarType>();
+            }
             args.add(new VarType(varid, affect.id, "Var"));
         }
         if (typefuncdec && !elementtypedec && !tailledec){
@@ -590,6 +601,7 @@ public class TdsVisitor implements AstVisitor<String> {
             }
         }
         ProcFonc then = new ProcFonc("Then block "+i, "Then",new ArrayList<VarType>());
+        then.setUsed();
         this.addProcFonc(then);
         this.addFils("Then block "+i);
         affect.center.accept(this);
@@ -602,6 +614,7 @@ public class TdsVisitor implements AstVisitor<String> {
                 }
             }
             ProcFonc Else = new ProcFonc("Else block "+k, "Else",new ArrayList<VarType>());
+            Else.setUsed();
             this.addProcFonc(Else);
             this.addFils("Else block "+k);
             affect.right.accept(this);
@@ -794,6 +807,7 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Idcall2 affect) {
 
         tds.setUsed(this.tdsStack, affect.id);
+
         String nodeIdentifier = this.nextState();
         if (tailledec){
             tailletype+=affect.id;
