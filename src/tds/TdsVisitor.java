@@ -22,7 +22,7 @@ import controlesemantique.BoucleFor;
 import controlesemantique.Declaration;
 import controlesemantique.Expression;
 import controlesemantique.Division;
-import controlesemantique.IfInutile;
+import controlesemantique.IfWhileInutile;
 import controlesemantique.SimplificationCalcul;
 import ast.For ;
 import ast.Break ;
@@ -191,7 +191,7 @@ public class TdsVisitor implements AstVisitor<String> {
 
         //Controle Semantique
         Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
-
+        IfWhileInutile.warningIfInutile("while",affect.left,this.tds);
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -552,7 +552,7 @@ public class TdsVisitor implements AstVisitor<String> {
         
         //Controle semantique
         Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
-        IfInutile.warningIfInutile(affect.left);
+        IfWhileInutile.warningIfInutile("if",affect.left,this.tds);
         affect.left.accept(this);
         affect.center.accept(this);
 
