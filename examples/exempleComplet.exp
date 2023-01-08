@@ -1,10 +1,18 @@
 let
+    type rec = { val : int }
+    type rec_arr = array of rec
+    var  table := rec_arr[2] of nil
+    var j := 0 /* Variable inutilisée */
     function printboard() =
-        (for i := 7 to 7
+        (for i := 7 to 7 /* Borne Min == Borne Max */
             do 25/0)
-    function joli() =
-        (for i := 7 to 6
+    function joli() = /* Fonction inutilisée */
+        (for i := 7 to 6 /* Borne Min > Borne Max */
             do print(0))
 in
+    for i := 0 to 1 do
+        table[i] := (rec{val = 42}) ;
+    table[0].val := 51;
+    table[1].val := "toto"; /* Erreur de type */
     printboard()
 end
