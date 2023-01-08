@@ -1,5 +1,6 @@
 package tds;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class Table {
@@ -101,7 +102,7 @@ public class Table {
             //on ajoute les procédures à l'affichage
             val += "\u001B[31m" +"| Procédures:"+"\u001B[0m"+"\n";
             val += "\u001B[34m"+"| " + String.format("%-10s", "Nature") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-9s", "Type") 
-            + " | " + String.format("%-7s", "Nb Args")  + "\u001B[0m" + "\n";
+            + " | " + String.format("%-7s", "Nb Args") + " | " + String.format("%-14s", "Est Utilisé")  + "\u001B[0m" + "\n";
             for(int k=0;k<this.fonctions.size();k++){
                 if (this.fonctions.get(k).getNature().equals("procedure")){
                     val=val+this.fonctions.get(k).toString()+"\n";
@@ -113,7 +114,7 @@ public class Table {
             //on ajoute les procédures à l'affichage
             val += "\u001B[31m" +"| Fonctions:"+"\u001B[0m"+"\n";
             val += "\u001B[34m"+"| " + String.format("%-10s", "Nature") + " | " + String.format("%-13s", "Name") + " | " + String.format("%-9s", "Type") 
-            + " | " + String.format("%-7s", "Nb Args") + " | " + String.format("%-20s", "Types Arguments") + "\u001B[0m" + "\n";
+            + " | " + String.format("%-7s", "Nb Args") + " | " + String.format("%-20s", "Types Arguments") + " | " + String.format("%-14s", "Est Utilisé")+ "\u001B[0m" + "\n";
             for(int k=0;k<this.fonctions.size();k++){
                 if (this.fonctions.get(k).getNature().equals("fonction")){
                     val=val+this.fonctions.get(k).toString()+"\n";
@@ -261,7 +262,14 @@ public class Table {
             if (var != null) {
                 var.setUsed(true);
                 return;
+            }else{
+                ProcFonc proc = tds.getProcFonc(varName);
+                if (proc != null) {
+                    proc.setUsed();
+                    return;
+                }
             }
+            
         }
     }
 
@@ -272,6 +280,15 @@ public class Table {
             }
         }
         return null;
+    }
+
+    public ArrayList<Table> getAllChildren(){
+        ArrayList<Table> allChildren = new ArrayList<>();
+        allChildren.add(this);
+        for (Table fils : this.fils) {
+            allChildren.addAll(fils.getAllChildren());
+        }
+        return allChildren;
     }
 
 }

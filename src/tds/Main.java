@@ -42,7 +42,10 @@ public class Main {
 
             TdsVisitor tdscreator = new TdsVisitor();
             ast.accept(tdscreator);
-            Utilisation.CheckUtilisation(tdscreator);
+
+            // Contrôle de l'utilisation des variables et fonctions
+            Utilisation.CheckUtilisation(tdscreator.getTds());
+
             tdscreator.afficher();
 
             //Print de toute les erreurs

@@ -26,6 +26,7 @@ public class VarType{
         this.elementtype=null;
         this.taille="1";
         this.initialized=true;
+        this.isUsed=false;
 
     }
     public VarType(String identifiant, String type,String nature,String taille){
@@ -38,6 +39,7 @@ public class VarType{
         this.elementtype=null;
         this.taille=taille;
         this.initialized=true;
+        this.isUsed=false;
 
     }
     public VarType(String identifiant, String type,String nature,ArrayList<String> elementtype){
@@ -50,7 +52,7 @@ public class VarType{
         this.elementtype= elementtype;
         this.taille="1";
         this.initialized=true;
-
+        this.isUsed=false;
     }
     public VarType(String identifiant, String type,String nature,ArrayList<String> elementtype,String taille){
         this.identifiant= identifiant;
@@ -62,7 +64,7 @@ public class VarType{
         this.elementtype= elementtype;
         this.taille=taille;
         this.initialized=true;
-
+        this.isUsed=false;
     }
     public String toString(){
         String the_types = "";
