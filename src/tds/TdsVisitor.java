@@ -347,11 +347,6 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Pointid affect) {
         String nodeIdentifier = this.nextState();
-        
-        if(affect.fils != null){
-            affect.fils.accept(this);
-
-        }
         return nodeIdentifier;
     }
 
@@ -725,6 +720,14 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Typeswithfieldlist affect) {
         String nodeIdentifier = this.nextState();
         affect.typeid.accept(this);
+        try{
+            Declaration.checkVardeclared(((Typeidid)affect.typeid).id,this.tdsStack,this.tds);
+            if(affect.fieldlist != null){
+                expression.checktypefield((Fieldlist)affect.fieldlist, tds.getVarType(((Typeidid)affect.typeid).id).getIdentifiant(), this.tdsStack, this.tds);   
+            }             
+        }catch(Exception e){
+            exceptions.push(e);
+        }
         if(affect.fieldlist != null){
             affect.fieldlist.accept(this);
         }
