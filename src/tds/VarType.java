@@ -16,8 +16,8 @@ public class VarType{
 
 
 
-    public VarType(String identifiant, String type,String nature){
-        this.identifiant= identifiant;
+    public VarType(String identifiant1, String type,String nature){
+        this.identifiant= identifiant1;
         this.type = type;
         this.deplacement=0;
         this.isLocal=true;
@@ -77,10 +77,17 @@ public class VarType{
             return "| "+ String.format("%-6s", this.nature) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) 
             + " | "  + String.format("%-12s", this.deplacement)+ " | "+ String.format("%-14s", this.isUsed)+ " | "  + String.format("%-12s", this.taille)+ " | "  + String.format("%-15s", the_types);
         }
-        else{return "| "+ String.format("%-6s", this.nature) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) 
+        else{
+            if(this.identifiant.contains(".")){ 
+                String id ="\033[95m"+identifiant.substring(0,identifiant.indexOf("."))+"\033[0m"+identifiant.substring(identifiant.indexOf("."),identifiant.length());
+                return "| "+ String.format("%-6s", this.nature) + " | " + String.format("%-22s",id) + " | " + String.format("%-9s", this.type) 
+        + " | "  + String.format("%-12s", this.deplacement)+ " | "  + String.format("%-14s", this.initialized)+ " | "+ String.format("%-14s", this.isUsed)+ " | "  + String.format("%-12s", this.taille);
+            }
+            else{return "| "+ String.format("%-6s", this.nature) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) 
         + " | "  + String.format("%-12s", this.deplacement)+ " | "  + String.format("%-14s", this.initialized)+ " | "+ String.format("%-14s", this.isUsed)+ " | "  + String.format("%-12s", this.taille);
 
         }
+    }
     }
 
     public ArrayList<String> getElementtype() {
@@ -106,6 +113,10 @@ public class VarType{
     }
     public void setType(String type){
         this.type=type;
+    }
+
+    public String getTaille(){
+        return this.taille;
     }
 
     public int getDeplacement(){

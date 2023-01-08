@@ -213,7 +213,9 @@ public class Expression {
             return true;
         }
         else{
-            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+leftType+" dans le membre droit de l'expression)\u001B[0m\n");
+            if (!rightType.equals("") && !leftType.equals("")){
+                System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+leftType+" dans le membre droit de l'expression)\u001B[0m\n");
+            }
             return false;
         }
     }
@@ -227,7 +229,12 @@ public class Expression {
             Ast left = ((Pointid)tree).left;
             String fils = ((Pointid)tree).fils;
             String leftType = getType(left, tds, pile);
-            return tdsActuelle.getVarType(leftType+"."+fils).getType();
+            if (Declaration.checkVardeclared(leftType+"."+fils, pile, tds)){
+                return tdsActuelle.getVarType(leftType+"."+fils).getType();
+            }
+            else{
+                return "";
+            }
         }
         else if(name=="ast.Idcall2"){
             return tdsActuelle.getVar(((Idcall2)tree).id).getType();
@@ -275,12 +282,14 @@ public class Expression {
         for (int i = 0; i < tree.field.size(); i++) {
             Field field =(Field) tree.field.get(i);
             if(name.equals("ast.Fieldlist")){
-                if(checktype(field.expr,tableactuel.getVarType(nametype+"."+field.id).getType(),pile,tds)){
-                    j++;
-                }
-                else{
-                    System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression Field: "+name+"(attendu : "+tableactuel.getVarType(nametype+"."+field.id).getType()+")\u001B[0m");
-                    return false;
+                if (Declaration.checkVardeclared(nametype+"."+field.id, pile, tds)) {
+                    if(checktype(field.expr,tableactuel.getVarType(nametype+"."+field.id).getType(),pile,tds)){
+                        j++;
+                    }
+                    else{
+                        System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression Field: "+name+"(attendu : "+tableactuel.getVarType(nametype+"."+field.id).getType()+")\u001B[0m");
+                        return false;
+                    }
                 }
             }
             else{

@@ -1,7 +1,10 @@
 package controlesemantique;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 
+=======
+>>>>>>> 3d46d8864bf9ccec5fc17a04d9f9ae2ea77eede7
 import tds.Table;
 
 public class Utilisation {
