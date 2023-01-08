@@ -379,6 +379,21 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Pointid affect) {
         String nodeIdentifier = this.nextState();
+        String point = ".";
+        String fils = affect.fils;
+        String id;
+        if(affect.id != null){
+            id = affect.id;
+        }
+        else{
+            id = Expression.getType(affect.left, tds, tdsStack);
+        }
+        String type = id + point + fils;
+        Table tableActuelle = new Table(tds.getId());
+        tableActuelle=tableActuelle.joinTDS(tdsStack);
+        if (tableActuelle.getVarType(type) != null){
+            tableActuelle.getVarType(type).setUsed(true);
+        }
         return nodeIdentifier;
     }
 
