@@ -11,13 +11,13 @@ public class SimplificationCalcul {
                 
                 int gauche1= gauche.in;
                 int droit1=droit.in;
-                System.out.println("1"+gauche1+ " et " + droit1);
+                //System.out.println("1"+gauche1+ " et " + droit1);
                 return gauche1+droit1;
             }
             else if(((Plus)tree).left instanceof In && !(((Plus)tree).right instanceof In)){
                 In gauche = (In) ((Plus)tree).left;
                 int gauche1= gauche.in;
-                System.out.println("2");
+                //System.out.println("2");
                 return gauche1+ checkSimplification(((Plus)tree).right);
             }
             else if(!(((Plus)tree).left instanceof In) && (((Plus)tree).right instanceof In)){
@@ -26,7 +26,7 @@ public class SimplificationCalcul {
                 return droit1+ checkSimplification(((Plus)tree).left);
             }
             else{
-                System.out.println("4");
+                //System.out.println("4");
                 return checkSimplification(((Plus)tree).right)+ checkSimplification(((Plus)tree).left);
             }
         }
