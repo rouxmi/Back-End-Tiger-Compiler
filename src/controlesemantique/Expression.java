@@ -37,22 +37,22 @@ public class Expression {
         return false;
     }
     
-    public static boolean checktype(Ast tree, String string,Stack<Table> pile,Table tds) {
+    public static boolean checktype(Ast tree, String typeAttendu,Stack<Table> pile,Table tds) {
         if (tree == null) {
             return false;
         }
         String name =tree.getClass().getName().replace('\n', '\0');
-        if((name.equals("ast.Egal2") || name.equals("ast.Dif") || name.equals("ast.Expr1") || name.equals("ast.Expr0")) && string.equals("bool")){
+        if((name.equals("ast.Egal2") || name.equals("ast.Dif") || name.equals("ast.Expr1") || name.equals("ast.Expr0")) && typeAttendu.equals("bool")){
             return checktypeEgal(tree,pile,tds);
         }else if(name.equals("ast.Mul") || name.equals("ast.Div") || name.equals("ast.Plus") || name.equals("ast.Minus")){
             return checktypeOp(tree,pile,tds);
-        }else if(name.equals("ast.In") && string.equals("int")){
+        }else if(name.equals("ast.In") && typeAttendu.equals("int")){
             return true;
-        }else if(name.equals("ast.Strin") && string.equals("string")){
+        }else if(name.equals("ast.Strin") && typeAttendu.equals("string")){
             return true;
-        }else if((name.equals("ast.Sup") || name.equals("ast.Inf") || name.equals("ast.Supeg") || name.equals("ast.Infeg")) && string.equals("bool")){
+        }else if((name.equals("ast.Sup") || name.equals("ast.Inf") || name.equals("ast.Supeg") || name.equals("ast.Infeg")) && typeAttendu.equals("bool")){
             return checkTypeSupInf(tree,pile,tds);
-        }else if(name.equals("ast.Not") && string.equals("bool")){
+        }else if(name.equals("ast.Not") && typeAttendu.equals("bool")){
             return checktype((Ast)((Exprnegation)tree).expr,"bool",pile,tds);
         }else if(name.equals("ast.Idcall2")){
             if(!Declaration.checkVardeclared(((Idcall2)tree).id,pile,tds)){
@@ -61,14 +61,14 @@ public class Expression {
             }else{
                 Table tdsactuel = new Table(tds.getId());
                 tdsactuel=tdsactuel.joinTDS(pile);
-                if(string.equals(tdsactuel.getVar(((Idcall2)tree).id).getType())){
+                if(typeAttendu.equals(tdsactuel.getVar(((Idcall2)tree).id).getType())){
                     return true;
                 }
                 else{
-                    System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type de la variable "+((Idcall2)tree).id+" incorrect dans l'expression: "+name+"(attendu : "+string+")\u001B[0m");
+                    System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type de la variable "+((Idcall2)tree).id+" incorrect dans l'expression: "+name+"(attendu : "+typeAttendu+")\u001B[0m");
                 }
             }
-        }else if(name.equals("ast.Croexpr") && string.equals("int")){
+        }else if(name.equals("ast.Croexpr") && typeAttendu.equals("int")){
             return checktype(((Croexpr)tree).expr,"int",pile,tds);
         }else if(name.equals("ast.AccesVar")){
             Table tdsactuel = new Table(tds.getId());
@@ -77,7 +77,7 @@ public class Expression {
             if(tdsactuel.getVarType(type)!=null){
                 type = tdsactuel.getVarType(type).getElementtype().get(0).replace(',',' ').trim();
             }
-            if (type.equals(string)){
+            if (type.equals(typeAttendu)){
                 return true;
             }
             else{
@@ -85,17 +85,17 @@ public class Expression {
             }
         }
         else if(name.equals("ast.IfThen")){
-            if(checktype(((IfThen)tree).left,string,pile,tds)){
+            if(checktype(((IfThen)tree).left,typeAttendu,pile,tds)){
                 return true;
             }
             if(((IfThen)tree).right!=null){
-                if(checktype(((IfThen)tree).right,string,pile,tds)){
+                if(checktype(((IfThen)tree).right,typeAttendu,pile,tds)){
                     return true;
                 }
             }
         }else if(name.equals("ast.Typeswithfieldlist")){
             if(Declaration.checkVardeclared(((Typeidid)((Typeswithfieldlist)tree).typeid).id,pile,tds)){
-                if(string.equals(tds.getVarType(((Typeidid)((Typeswithfieldlist)tree).typeid).id).getIdentifiant()) && checktypefield((Fieldlist)((Typeswithfieldlist)tree).fieldlist, tds.getVarType(((Typeidid)((Typeswithfieldlist)tree).typeid).id).getIdentifiant(), pile, tds)){
+                if(typeAttendu.equals(tds.getVarType(((Typeidid)((Typeswithfieldlist)tree).typeid).id).getIdentifiant()) && checktypefield((Fieldlist)((Typeswithfieldlist)tree).fieldlist, tds.getVarType(((Typeidid)((Typeswithfieldlist)tree).typeid).id).getIdentifiant(), pile, tds)){
                     return true;
                 }
             }
@@ -106,14 +106,14 @@ public class Expression {
             Table tdsactuel = new Table(tds.getId());
             tdsactuel=tdsactuel.joinTDS(pile);
             if(Declaration.checkVardeclared(type,pile,tds)){
-                if(replaceType(tds.getVarType(id).getType(),tdsactuel,type).equals(string)){
+                if(replaceType(tds.getVarType(id).getType(),tdsactuel,type).equals(typeAttendu)){
                     return true;
                 }
             }
 
         }
         else{
-            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+string+")\u001B[0m");
+            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+typeAttendu+")\u001B[0m");
             return false;
         }
         return false;
@@ -205,6 +205,53 @@ public class Expression {
             return false;
         }
     }
+
+    public static boolean checktypeDptEgal(Ast tree, Table tds){
+        String leftType = getType(((Dptegal)tree).left, tds);
+        String rightType = getType(((Dptegal)tree).right, tds);
+        if(leftType.equals(rightType)){
+            return true;
+        }
+        else{
+            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+leftType+" dans le membre droit de l'expression)\u001B[0m");
+            return false;
+        }
+    }
+
+
+    public static String getType(Ast tree, Table tds){
+        String name =tree.getClass().getName().replace('\n', '\0');
+        if(name=="ast.Pointid"){
+            Ast left = ((Pointid)tree).left;
+            String fils = ((Pointid)tree).fils;
+            String leftType = getType(left, tds);
+            return tds.getVarType(leftType+"."+fils).getType();
+        }
+        else if(name=="ast.Idcall2"){
+            return tds.getVar(((Idcall2)tree).id).getType();
+        }
+        else if(name=="ast.AccesVar"){
+            String type = tds.getVarType(((AccesVar)tree).id).getType();
+            if(tds.getVarType(type)!=null){
+                type = tds.getVarType(type).getElementtype().get(0).replace(',',' ').trim();
+            }
+            return type;
+        }
+        else if(name=="ast.In"){
+            return "int";
+        }
+        else if(name=="ast.Strin"){
+            return "string";
+        }
+        else if(name=="ast.Exprseq"){
+            String type = ((Typeidid)((Typeswithfieldlist)((Exprseq)tree).expr.get(0)).typeid).id;
+            return type;
+        }
+
+        return "";
+    }
+
+
 
     public static boolean checktypefield(Fieldlist tree,String nametype,Stack<Table> pile,Table tds) {
         String name =tree.getClass().getName().replace('\n', '\0');

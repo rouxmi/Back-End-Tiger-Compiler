@@ -748,6 +748,8 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Dptegal affect) {
         String nodeIdentifier = this.nextState();
 
+        Expression.checktypeDptEgal(affect, this.tds);
+
         affect.left.accept(this);
         affect.right.accept(this);
 
