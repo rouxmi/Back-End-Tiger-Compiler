@@ -2,7 +2,6 @@ package controlesemantique;
 import java.util.Stack;
 
 import ast.*;
-import exception.DivisionException;
 import tds.Table;
 
 public class Division {

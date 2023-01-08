@@ -150,7 +150,8 @@ public class IfInutile {
     public static void warningIfInutile(Ast tree){
         boolean IfInutile = checkIfInutile(tree);
         if(IfInutile){
-            System.out.println("Attention le if est inutile");
+            System.err.println("\u001B[33mIfInutileWarning : une condition if est utilisée alors qu'elle est toujours vraie\u001B[0m\n");
+        
         }
     }
 }
