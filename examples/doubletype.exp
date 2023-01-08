@@ -1,5 +1,5 @@
 let
-  type rec = { val : int }
+  type rec = { valjz : int }
   type rec_arr = array of rec
   var  table := rec_arr[2] of nil
 in
