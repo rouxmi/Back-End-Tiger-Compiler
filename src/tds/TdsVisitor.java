@@ -23,6 +23,7 @@ import controlesemantique.Declaration;
 import controlesemantique.Expression;
 import controlesemantique.Division;
 import controlesemantique.IfInutile;
+import controlesemantique.SimplificationCalcul;
 import ast.For ;
 import ast.Break ;
 import ast.Let ;
@@ -572,7 +573,8 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Dif affect) {
         String nodeIdentifier = this.nextState();
-
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole différent",affect.left);
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole différent",affect.right);
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -582,7 +584,8 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Inf affect) {
         String nodeIdentifier = this.nextState();
-
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole inférieur",affect.left);
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole inférieur",affect.right);
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -592,7 +595,8 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Sup affect) {
         String nodeIdentifier = this.nextState();
-
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole supérieur",affect.left);
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole supérieur",affect.right);
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -602,7 +606,8 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Infeg affect) {
         String nodeIdentifier = this.nextState();
-
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole inférieur ou égal",affect.left);
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole inférier égal",affect.right);
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -613,7 +618,8 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Supeg affect) {
         String nodeIdentifier = this.nextState();
-
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole supérieur ou égal ",affect.left);
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole supérieur ou égal",affect.right);
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -624,7 +630,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Plus affect) {
         String nodeIdentifier = this.nextState();
-
+        //SimplificationCalcul.warningSimplification(affect);
         affect.left.accept(this);
         if (tailledec){
             tailletype+="+";
@@ -650,7 +656,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Mul affect) {
         String nodeIdentifier = this.nextState();
-
+        
         affect.left.accept(this);
         if (tailledec){
             tailletype+="*";
@@ -698,7 +704,8 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Egal2 affect) {
         String nodeIdentifier = this.nextState();
-
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole égal",affect.left);
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole égal",affect.right);
         affect.left.accept(this);
         affect.right.accept(this);
 
