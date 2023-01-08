@@ -15,9 +15,14 @@ public class Division {
             if(diviseur!="0"){
                 return true;
             }
-
         }
-        System.err.println("\u001B[91mDivisionException dans "+tds.nom+" : Division par 0 (attendu un diviseur différent de 0)\u001B[0m\n");
         return false;
+    }
+
+    public static void warningDivision(Stack<Table> pile, Table tds, Ast tree){
+        boolean warning = checkDiviseur(pile, tds, tree);
+        if(warning){
+            System.err.println("\u001B[91mDivisionException dans "+tds.nom+" : Division par 0 (attendu un diviseur différent de 0)\u001B[0m\n");
+        }
     }
 }

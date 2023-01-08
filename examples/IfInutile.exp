@@ -1,8 +1,8 @@
 let
     function maxWith5 (x : int) : int =
-        if 3 < 5 | 3=3
+        if 2-3 < 5+5*5/2 | 3=3*3 | 2/2 >= 3
          then
-            x
+            x/(2+3)
         else
             5
 in
