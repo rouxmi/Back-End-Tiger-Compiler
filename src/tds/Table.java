@@ -255,6 +255,16 @@ public class Table {
         return newTDS;
     }
 
+    public void setUsed(Stack<Table> pile, String varName) {
+        for (Table tds : pile) {
+            VarType var = tds.getVarType(varName);
+            if (var != null) {
+                var.setUsed(true);
+                return;
+            }
+        }
+    }
+
     public Table searchTDS(Stack<Table> pile, int id) {
         for (Table tds : pile) {
             if (tds.getId() == id) {

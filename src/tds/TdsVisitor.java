@@ -22,7 +22,7 @@ import controlesemantique.BoucleFor;
 import controlesemantique.Declaration;
 import controlesemantique.Expression;
 import controlesemantique.Division;
-import controlesemantique.IfInutile;
+import controlesemantique.IfWhileInutile;
 import controlesemantique.SimplificationCalcul;
 import ast.For ;
 import ast.Break ;
@@ -94,6 +94,10 @@ public class TdsVisitor implements AstVisitor<String> {
         typedec=false;
         typefuncdec=false;
         tailletype=null;
+    }
+
+    public Stack<Table> getTdsStack() {
+        return tdsStack;
     }
 
     public void afficher() {
@@ -191,7 +195,7 @@ public class TdsVisitor implements AstVisitor<String> {
 
         //Controle Semantique
         Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
-
+        IfWhileInutile.warningIfInutile("while",affect.left,this.tds);
         affect.left.accept(this);
         int i=1;
         for(int j=1;j<=this.tds.fonctions.size();j++){
@@ -495,6 +499,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeidid affect) {
         String nodeIdentifier = this.nextState();
+        tds.setUsed(tdsStack, affect.id);
         if (varDec && !Dec && !funcdec  ){
             VarType var ;
             if (tailletype==null){
@@ -576,7 +581,7 @@ public class TdsVisitor implements AstVisitor<String> {
         
         //Controle semantique
         Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
-        IfInutile.warningIfInutile(affect.left);
+        IfWhileInutile.warningIfInutile("if",affect.left,this.tds);
         affect.left.accept(this);
         int i=1;
         for(int j=1;j<=this.tds.fonctions.size();j++){
@@ -757,6 +762,7 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(Typeswithof affect) {
+
         String nodeIdentifier = this.nextState();
         tailledec=true;
         tailletype="";
@@ -786,9 +792,8 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(Idcall2 affect) {
-        /*if(tds.getVarType(affect.id)!=null){
-            tds.getVarType(affect.id).setUsed(true);
-        }*/
+
+        tds.setUsed(this.tdsStack, affect.id);
         String nodeIdentifier = this.nextState();
         if (tailledec){
             tailletype+=affect.id;
@@ -822,6 +827,7 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(AccesVar affect) {
+        tds.setUsed(this.tdsStack, affect.id);
         String nodeIdentifier = this.nextState();
         Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
         if (tailledec){
