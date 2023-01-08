@@ -223,7 +223,8 @@ public class Expression {
 
     public static String getType(Ast tree, Table tds, Stack<Table> pile){
         String name =tree.getClass().getName().replace('\n', '\0');
-        Table tdsActuelle = tds.joinTDS(pile);
+        Table tdsActuelle = new Table(tds.getId());
+        tdsActuelle =tdsActuelle.joinTDS(pile);
         if(name=="ast.Pointid"){
             Ast left = ((Pointid)tree).left;
             String fils = ((Pointid)tree).fils;

@@ -728,13 +728,10 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Typeswithfieldlist affect) {
         String nodeIdentifier = this.nextState();
         affect.typeid.accept(this);
-        try{
-            Declaration.checkVardeclared(((Typeidid)affect.typeid).id,this.tdsStack,this.tds);
-            if(affect.fieldlist != null){
-                Expression.checktypefield((Fieldlist)affect.fieldlist, tds.getVarType(((Typeidid)affect.typeid).id).getIdentifiant(), this.tdsStack, this.tds);   
-            }             
-        }catch(Exception e){
-            exceptions.push(e);
+        Table tableActuelle = new Table(this.tds.getId());
+        tableActuelle=tableActuelle.joinTDS(tdsStack);
+        if(affect.fieldlist != null && Declaration.checkVardeclared(((Typeidid)affect.typeid).id,this.tdsStack,this.tds)){
+            Expression.checktypefield((Fieldlist)affect.fieldlist, tableActuelle.getVarType(((Typeidid)affect.typeid).id).getIdentifiant(), this.tdsStack, this.tds);   
         }
         if(affect.fieldlist != null){
             affect.fieldlist.accept(this);
