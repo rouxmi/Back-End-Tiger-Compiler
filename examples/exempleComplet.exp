@@ -1,0 +1,10 @@
+let
+    function printboard() =
+        (for i := 7 to 7
+            do 25/0)
+    function joli() =
+        (for i := 7 to 6
+            do print(0))
+in
+    printboard()
+end

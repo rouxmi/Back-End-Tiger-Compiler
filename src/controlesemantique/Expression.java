@@ -4,11 +4,9 @@ package controlesemantique;
 import java.util.Stack;
 
 import ast.*;
-import exception.DecException;
-import exception.ExprException;
 import tds.Table;
 
-public class expression {
+public class Expression {
 
     //verifie si les deux expressions sont du type int
     /*
@@ -16,7 +14,7 @@ public class expression {
      * -tree Ast noeud d'expression
      * -type type de l'expression attendu
      */
-    public static boolean checktypeOp(Ast tree,Stack<Table> pile,Table tds) throws Exception{
+    public static boolean checktypeOp(Ast tree,Stack<Table> pile,Table tds){
         String name =tree.getClass().getName().replace('\n', '\0');
         if(name.equals("ast.Mul")){
             if(checktype(((Mul)tree).left,"int",pile,tds) && checktype(((Mul)tree).right,"int",pile,tds)){
@@ -35,11 +33,11 @@ public class expression {
                 return true;
             }
         }
-        throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int");
-        
+        System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression : "+name+"(attendu : int\u001B[0m");
+        return false;
     }
     
-    public static boolean checktype(Ast tree, String string,Stack<Table> pile,Table tds) throws Exception {
+    public static boolean checktype(Ast tree, String string,Stack<Table> pile,Table tds) {
         if (tree == null) {
             return false;
         }
@@ -58,7 +56,8 @@ public class expression {
             return checktype((Ast)((Exprnegation)tree).expr,"bool",pile,tds);
         }else if(name.equals("ast.Idcall2")){
             if(!Declaration.checkVardeclared(((Idcall2)tree).id,pile,tds)){
-                throw new DecException("Variable non déclarée : "+((Idcall2)tree).id);
+                System.err.println("\u001B[91mDeclarationException dans "+tds.nom+" : Variable non déclarée : "+((Idcall2)tree).id+"\u001B[0m");
+                return false;
             }else{
                 Table tdsactuel = new Table(tds.getId());
                 tdsactuel=tdsactuel.joinTDS(pile);
@@ -66,7 +65,7 @@ public class expression {
                     return true;
                 }
                 else{
-                    throw new ExprException("Type de la variable "+((Idcall2)tree).id+" incorrect dans l'expression: "+name+"(attendu : "+string+")");
+                    System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type de la variable "+((Idcall2)tree).id+" incorrect dans l'expression: "+name+"(attendu : "+string+")\u001B[0m");
                 }
             }
         }else if(name.equals("ast.Croexpr") && string.equals("int")){
@@ -114,14 +113,15 @@ public class expression {
 
         }
         else{
-            throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : "+string+")");
+            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+string+")\u001B[0m");
+            return false;
         }
         return false;
     }
 
 
 
-    private static boolean checkTypeSupInf(Ast tree,Stack<Table> pile,Table tds) throws Exception {
+    private static boolean checkTypeSupInf(Ast tree,Stack<Table> pile,Table tds){
         String name =tree.getClass().getName().replace('\n', '\0');
         if(name.equals("ast.Sup")){
             if(checktype(((Sup)tree).left,"int",pile,tds) && checktype(((Sup)tree).right,"int",pile,tds)){
@@ -140,7 +140,8 @@ public class expression {
                 return true;
             }
         }
-        throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int"+")");
+        System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : int"+")\u001B[0m");
+        return false;
     }
         
 
@@ -152,7 +153,7 @@ public class expression {
      * -tree Ast noeud d'expression
      * -type type de l'expression attendu
      */
-    public static boolean checktypeEgal(Ast tree,Stack<Table> pile,Table tds) throws Exception{
+    public static boolean checktypeEgal(Ast tree,Stack<Table> pile,Table tds){
         String name =tree.getClass().getName().replace('\n', '\0');
         if(name.equals("ast.Egal2")){
             if(checktype(((Egal2)tree).left,"int",pile,tds) && checktype(((Egal2)tree).right,"int",pile,tds)){
@@ -165,7 +166,8 @@ public class expression {
                 return true;
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés)");
+                System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : int ou string des deux côtés)\u001B[0m");
+                return false;
             }
         }else if(name.equals("ast.Dif")){
             if(checktype(((Dif)tree).left,"int",pile,tds) && checktype(((Dif)tree).right,"int",pile,tds)){
@@ -178,29 +180,33 @@ public class expression {
                 return true;
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés)");
+                System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : int ou string des deux côtés)\u001B[0m");
+                return false;
             }
         }else if(name.equals("ast.Expr1")){
             if(checktype(((Expr1)tree).left,"bool",pile,tds) && checktype(((Expr1)tree).right,"bool",pile,tds)){
                 return true;
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés");
+                System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : int ou string des deux côtés)\u001B[0m");
+                return false;
             }
         }else if(name.equals("ast.Expr0")){
             if(checktype(((Expr0)tree).left,"bool",pile,tds) && checktype(((Expr0)tree).right,"bool",pile,tds)){
                 return true;
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés");
+                System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : int ou string des deux côtés)\u001B[0m");
+                return false;
             }
         }
         else{
-            throw new ExprException("Type incorrect dans l'expression : "+name+"(attendu : int ou string des deux côtés");
+            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : int ou string des deux côtés)\u001B[0m");
+            return false;
         }
     }
 
-    public static boolean checktypefield(Fieldlist tree,String nametype,Stack<Table> pile,Table tds) throws Exception{
+    public static boolean checktypefield(Fieldlist tree,String nametype,Stack<Table> pile,Table tds) {
         String name =tree.getClass().getName().replace('\n', '\0');
         Table tableactuel = new Table(tds.getId());
         tableactuel = tableactuel.joinTDS(pile);
@@ -212,11 +218,13 @@ public class expression {
                     j++;
                 }
                 else{
-                    throw new ExprException("Type incorrect dans l'expression Field: "+name+"(attendu : "+tableactuel.getVarType(nametype+"."+field.id).getType()+")");
+                    System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression Field: "+name+"(attendu : "+tableactuel.getVarType(nametype+"."+field.id).getType()+")\u001B[0m");
+                    return false;
                 }
             }
             else{
-                throw new ExprException("Type incorrect dans l'expression Field: "+name+"(attendu : "+tableactuel.getVarType(nametype+"."+field.id).getType()+")");
+                System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression Field: "+name+"(attendu : "+tableactuel.getVarType(nametype+"."+field.id).getType()+")\u001B[0m");
+                return false;
             }
         }
         if(j==tree.field.size()){

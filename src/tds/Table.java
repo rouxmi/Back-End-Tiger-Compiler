@@ -12,13 +12,13 @@ public class Table {
     public int arg_depl;
     public int var_depl;
     public int arr_depl;
-    public String nompere;
+    public String nom;
 	
 	public Table(int pere,String nompere){
 		nbTable++;
 		this.id = nbTable;
         this.idpere = pere; 
-        this.nompere=nompere;
+        this.nom=nompere;
         arg_depl = -2;
         var_depl = 1;
 	}
@@ -64,11 +64,11 @@ public class Table {
 		String val = "";
         if (this.idpere==-1){
             val = "\u001B[32m"+"| TABLE ID="+this.id+"\u001B[0m"+"\n"+"\u001B[32m"+
-            "| Nom de la fonction="+this.nompere+"\u001B[0m"+"\n"+"\u001B[31m" ;
+            "| Nom de la fonction="+this.nom+"\u001B[0m"+"\n"+"\u001B[31m" ;
         }
         else{
             val = "\u001B[32m"+"| TABLE ID="+this.id+"\u001B[0m"+"\n"+"\u001B[32m"+
-            "| Nom de la fonction="+this.nompere+"\u001B[0m"+"\n"+"\u001B[32m"+
+            "| Nom de la fonction="+this.nom+"\u001B[0m"+"\n"+"\u001B[32m"+
             "| ID du pere="+this.idpere+"\u001B[0m"+"\n"+"\u001B[31m" ;
         }
         if (this.variables.size()-nbvar>0){
