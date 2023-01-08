@@ -12,6 +12,7 @@ public class VarType{
     public ArrayList<String> elementtype;
     public String taille;
     public boolean initialized;
+    public boolean isUsed;
 
 
 
@@ -72,10 +73,10 @@ public class VarType{
         }
         if (this.nature=="Type"){
             return "| "+ String.format("%-6s", this.nature) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) 
-            + " | "  + String.format("%-12s", this.deplacement)+ " | "  + String.format("%-12s", this.taille)+ " | "  + String.format("%-15s", the_types);
+            + " | "  + String.format("%-12s", this.deplacement)+ " | "+ String.format("%-14s", this.isUsed)+ " | "  + String.format("%-12s", this.taille)+ " | "  + String.format("%-15s", the_types);
         }
         else{return "| "+ String.format("%-6s", this.nature) + " | " + String.format("%-13s", this.identifiant) + " | " + String.format("%-9s", this.type) 
-        + " | "  + String.format("%-12s", this.deplacement)+ " | "  + String.format("%-14s", this.initialized)+ " | "  + String.format("%-12s", this.taille);
+        + " | "  + String.format("%-12s", this.deplacement)+ " | "  + String.format("%-14s", this.initialized)+ " | "+ String.format("%-14s", this.isUsed)+ " | "  + String.format("%-12s", this.taille);
 
         }
     }
@@ -125,6 +126,14 @@ public class VarType{
 
     public boolean initialized(){
         return this.initialized;
+    }
+
+    public boolean isUsed(){
+        return this.isUsed;
+    }
+
+    public void setUsed(boolean isUsed){
+        this.isUsed=isUsed;
     }
 
 }

@@ -3,6 +3,8 @@ package controlesemantique;
 
 import java.util.Stack;
 
+import org.antlr.v4.parse.ANTLRParser.parserRule_return;
+
 import ast.*;
 import tds.Table;
 
@@ -206,9 +208,9 @@ public class Expression {
         }
     }
 
-    public static boolean checktypeDptEgal(Ast tree, Table tds){
-        String leftType = getType(((Dptegal)tree).left, tds);
-        String rightType = getType(((Dptegal)tree).right, tds);
+    public static boolean checktypeDptEgal(Ast tree, Table tds, Stack<Table> pile){
+        String leftType = getType(((Dptegal)tree).left, tds, pile);
+        String rightType = getType(((Dptegal)tree).right, tds, pile);
         if(leftType.equals(rightType)){
             return true;
         }
@@ -219,23 +221,30 @@ public class Expression {
     }
 
 
-    public static String getType(Ast tree, Table tds){
+    public static String getType(Ast tree, Table tds, Stack<Table> pile){
         String name =tree.getClass().getName().replace('\n', '\0');
+        Table tdsActuelle = tds.joinTDS(pile);
         if(name=="ast.Pointid"){
             Ast left = ((Pointid)tree).left;
             String fils = ((Pointid)tree).fils;
-            String leftType = getType(left, tds);
-            return tds.getVarType(leftType+"."+fils).getType();
+            String leftType = getType(left, tds, pile);
+            return tdsActuelle.getVarType(leftType+"."+fils).getType();
         }
         else if(name=="ast.Idcall2"){
-            return tds.getVar(((Idcall2)tree).id).getType();
+            return tdsActuelle.getVar(((Idcall2)tree).id).getType();
         }
         else if(name=="ast.AccesVar"){
-            String type = tds.getVarType(((AccesVar)tree).id).getType();
-            if(tds.getVarType(type)!=null){
-                type = tds.getVarType(type).getElementtype().get(0).replace(',',' ').trim();
+            if(Declaration.checkVardeclared(((AccesVar)tree).id, pile, tds)){
+                
+                String type = tdsActuelle.getVarType(((AccesVar)tree).id).getType();
+                if(tdsActuelle.getVarType(type)!=null){
+                    type = tdsActuelle.getVarType(type).getElementtype().get(0).replace(',',' ').trim();
+                }
+                return type;
             }
-            return type;
+            else{
+                return "";
+            }
         }
         else if(name=="ast.In"){
             return "int";

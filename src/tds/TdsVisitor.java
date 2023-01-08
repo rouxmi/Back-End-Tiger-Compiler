@@ -737,6 +737,9 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(Idcall2 affect) {
+        /*if(tds.getVarType(affect.id)!=null){
+            tds.getVarType(affect.id).setUsed(true);
+        }*/
         String nodeIdentifier = this.nextState();
         if (tailledec){
             tailletype+=affect.id;
@@ -748,7 +751,7 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Dptegal affect) {
         String nodeIdentifier = this.nextState();
 
-        Expression.checktypeDptEgal(affect, this.tds);
+        Expression.checktypeDptEgal(affect, this.tds, this.tdsStack);
 
         affect.left.accept(this);
         affect.right.accept(this);
