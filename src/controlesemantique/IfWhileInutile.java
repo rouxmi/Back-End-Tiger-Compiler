@@ -1,9 +1,9 @@
 package controlesemantique;
 import ast.*;
+import tds.Table;
 
 
-
-public class IfInutile {
+public class IfWhileInutile {
     public static boolean checkIfInutile(Ast tree) {
         String name =tree.getClass().getName().replace('\n', '\0');
         if(name.equals("ast.Expr0") ){
@@ -147,10 +147,10 @@ public class IfInutile {
         return false;
     }
 
-    public static void warningIfInutile(Ast tree){
+    public static void warningIfInutile(String info,Ast tree, Table tds ){
         boolean IfInutile = checkIfInutile(tree);
         if(IfInutile){
-            System.err.println("\u001B[33mIfInutileWarning : une condition if est utilisée alors qu'elle est toujours vraie\u001B[0m\n");
+            System.err.println("\u001B[33m"+info+"InutileWarning dans "+ tds.nom +": une condition "+info+" est utilisée alors qu'elle est toujours vraie\u001B[0m\n");
         
         }
     }
