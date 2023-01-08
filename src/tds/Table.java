@@ -67,9 +67,11 @@ public class Table {
             "| Nom de la fonction="+this.nom+"\u001B[0m"+"\n"+"\u001B[31m" ;
         }
         else{
-            val = "\u001B[32m"+"| TABLE ID="+this.id+"\u001B[0m"+"\n"+"\u001B[32m"+
-            "| Nom de la fonction="+this.nom+"\u001B[0m"+"\n"+"\u001B[32m"+
-            "| ID du pere="+this.idpere+"\u001B[0m"+"\n"+"\u001B[31m" ;
+            if (this.variables.size()-nbvar>0 || this.fonctions.size()-nbfct>0 || nbvar>0 || nbfct>0){
+                val = "\u001B[32m"+"| TABLE ID="+this.id+"\u001B[0m"+"\n"+"\u001B[32m"+
+                "| Nom de la fonction="+this.nom+"\u001B[0m"+"\n"+"\u001B[32m"+
+                "| ID du pere="+this.idpere+"\u001B[0m"+"\n"+"\u001B[31m" ;
+            }
         }
         if (this.variables.size()-nbvar>0){
             //on ajoute les Types à l'affichage
