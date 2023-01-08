@@ -1,6 +1,6 @@
 let
     function printboard() =
-        (for i := 7 to 6
+        (for i := 5 to 7
             do print(0))
 in
     printboard()

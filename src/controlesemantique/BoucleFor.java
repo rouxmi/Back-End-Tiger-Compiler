@@ -1,10 +1,10 @@
 package controlesemantique;
 
 import ast.*;
-import exception.ForException;
+import tds.Table;
 
 public class BoucleFor {
-    public static boolean CheckBorneMinInfBorneMax(Ast min, Ast max) throws Exception {
+    public static boolean CheckBorneMinInfBorneMax(Ast min, Ast max, Table tds){
         String nameMin =min.getClass().getName().replace('\n', '\0');
         String nameMax =max.getClass().getName().replace('\n', '\0');
         if(nameMin.equals("ast.In") && nameMax.equals("ast.In")){
@@ -14,6 +14,22 @@ public class BoucleFor {
                 return true;
             }
         }
-        throw new ForException("Boucle For : Borne min supérieure à borne max : attendu une borne min inférieure à une borne max");
+        System.err.println("\u001B[91mBoucleForException dans "+tds.nom+" : Borne min supérieure à borne max (attendu une borne min strictement inférieure à une borne max)\u001B[0m\n");
+        return false;
     }
+
+    public static boolean CheckBorneMinNotBorneMax(Ast min, Ast max, Table tds) {
+        String nameMin =min.getClass().getName().replace('\n', '\0');
+        String nameMax =max.getClass().getName().replace('\n', '\0');
+        if(nameMin.equals("ast.In") && nameMax.equals("ast.In")){
+            int minInt = ((In)min).in;
+            int maxInt = ((In)max).in;
+            if(minInt!=maxInt){
+                return true;
+            }
+        }
+        System.err.println("\u001B[33mBoucleForWarning dans "+tds.nom+" : Borne min egale à borne max (attendu une borne min strictement inférieure à une borne max)\u001B[0m\n");
+        return false;
+    }
+
 }

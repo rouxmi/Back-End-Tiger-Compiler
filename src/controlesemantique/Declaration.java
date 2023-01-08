@@ -2,7 +2,6 @@ package controlesemantique;
 
 import java.util.Stack;
 
-import exception.DecException;
 import tds.Table;
 
 public class Declaration {
@@ -13,13 +12,14 @@ public class Declaration {
      * -name nom de la variable
      * -tableactuel Table table des symboles actuelle
      */
-    public static boolean checkVardeclared(String name,Stack<Table> pile, Table tds) throws DecException{
+    public static boolean checkVardeclared(String name,Stack<Table> pile, Table tds) {
         Table tdsactuel = new Table(tds.getId());
         tdsactuel = tdsactuel.joinTDS(pile);
         if(tdsactuel.getVarType(name) != null){
             return true;
         }
-        throw new DecException("Variable non déclarée : "+name);
+        System.err.println("\u001B[91mDeclarationException dans "+tds.nom+" : Variable "+name+" non déclarée\u001B[0m\n");
+        return false;
     }
 
     //verifie si la fonction est deja declaree
@@ -28,13 +28,14 @@ public class Declaration {
      * -name nom de la fonction
      * -tableactuel Table table des symboles actuelle
      */
-    public static boolean checkFuncdeclared(String name,Stack<Table> pile, Table tds) throws DecException{
+    public static boolean checkFuncdeclared(String name,Stack<Table> pile, Table tds){
         Table tdsactuel = new Table(tds.getId());
         tdsactuel = tdsactuel.joinTDS(pile);
         if(tdsactuel.getProcFonc(name) != null){
             return true;
         }
-        throw new DecException("Fonction non déclarée : "+name);
+        System.err.println("\u001B[91mDeclarationException dans "+tds.nom+" : Fonction "+name+" non déclarée \u001B[0m\n");
+        return false;
     }
         
 }

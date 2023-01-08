@@ -6,11 +6,10 @@ import java.util.Stack;
 import ast.AccesVar;
 import ast.Appelfunc;
 import ast.Exprlist;
-import exception.FonctionException;
 import tds.Table;
 import tds.VarType;
 
-public class fonction {
+public class Fonction {
 
     //verifie que le nombre de parametres est correct pour une fonction donnée grace à la tds
     /*
@@ -18,14 +17,14 @@ public class fonction {
      * -tree Ast noeud d'appel de fonction
      * -tdsactuel jonctions des tables de symboles aucquels l'on peut accéder à l'endroit de l'appel.
      */
-    public static void checknombreparametres(Appelfunc tree,Stack<Table> pile, Table tds) throws Exception{
+    public static void checknombreparametres(Appelfunc tree,Stack<Table> pile, Table tds) {
         Table tdsactuel = new Table(tds.getId());
         tdsactuel = tdsactuel.joinTDS(pile);
         int nbrparametre = tdsactuel.getProcFonc(tree.id).getArguments().size();
         //pas de paramètres
         if (tree.right == null){
             if(nbrparametre != 0){
-                throw new FonctionException("Nombre de paramètres incorrect dans: "+tree.id+"(attendu : "+nbrparametre+" trouvé : 0)");
+                System.err.println("\u001B[91mFonctionException dans "+tds.nom+" : Nombre de paramètres incorrect (attendu : "+nbrparametre+" trouvé : 0)\u001B[0m\n");
             }
             else {
                 return;
@@ -37,7 +36,7 @@ public class fonction {
             nbrparametre2++;
         }
         if(nbrparametre-nbrparametre2 != 0){
-            throw new FonctionException("Nombre de paramètres incorrect dans: "+tree.id+"(attendu : "+nbrparametre+" trouvé : "+nbrparametre2+")");
+            System.err.println("\u001B[91mFonctionException dans "+tds.nom+" : Nombre de paramètres incorrect (attendu : "+nbrparametre+" trouvé : "+nbrparametre2+")\u001B[0m\n");
         }
 
 
@@ -49,7 +48,7 @@ public class fonction {
      * -tree Ast noeud d'appel de fonction
      * -tdsactuel jonctions des tables de symboles aucquels l'on peut accéder à l'endroit de l'appel.
     */
-    public static void checktypeparametres(Appelfunc tree,Stack<Table> pile, Table tds) throws Exception{
+    public static void checktypeparametres(Appelfunc tree,Stack<Table> pile, Table tds) {
         Table tdsactuel = new Table(tds.getId());
         tdsactuel = tdsactuel.joinTDS(pile);
         ArrayList<VarType> listarg = tdsactuel.getProcFonc(tree.id).getArguments();
@@ -60,8 +59,12 @@ public class fonction {
         //des paramètres
         int nbrparametre = listarg.size();
         for(int i=0;i<nbrparametre;i++){
-            if(!expression.checktype(((Exprlist)tree.right).expr.get(i),(listarg.get(i).getType()),pile,tds)){
-                throw new FonctionException("Type de paramètre incorrect dans: "+tree.id+" "+(i+1)+"ème paramètre (attendu : "+listarg.get(i).getType()+" trouvé : "+((Exprlist)tree.right).expr.get(i)+")");
+            if(!Expression.checktype(((Exprlist)tree.right).expr.get(i),(listarg.get(i).getType()),pile,tds)){
+                if(i==0){
+                    System.err.println("\u001B[91mFonctionException dans "+tds.nom+" : Type du "+(i+1)+"er paramètre incorrect (attendu : "+listarg.get(i).getType()+" trouvé : "+((Exprlist)tree.right).expr.get(i)+")\u001B[0m\n");
+                }else{
+                System.err.println("\u001B[91mFonctionException dans "+tds.nom+" : Type du "+(i+1)+"ème paramètre incorrect (attendu : "+listarg.get(i).getType()+" trouvé : "+((Exprlist)tree.right).expr.get(i)+")\u001B[0m\n");
+                }
             }
         }
     }
@@ -72,7 +75,7 @@ public class fonction {
      * -tree Ast noeud d'appel de fonction
      * -tdsactuel jonctions des tables de symboles aucquels l'on peut accéder à l'endroit de l'appel.
     */
-    public static void checkdeclaration(Appelfunc tree,Stack<Table> pile, Table tds) throws Exception{
+    public static void checkdeclaration(Appelfunc tree,Stack<Table> pile, Table tds){
         Table tdsactuel = new Table(tds.getId());
         tdsactuel = tdsactuel.joinTDS(pile);
         //pas de paramètres
@@ -83,7 +86,7 @@ public class fonction {
         int nbrparametre = ((Exprlist)tree.right).expr.size();
         for(int i=0;i<nbrparametre;i++){
             if(((Exprlist)tree.right).expr.get(i) instanceof Appelfunc){
-                fonction.checkdeclaration((Appelfunc)((Exprlist)tree.right).expr.get(i),pile,tds);
+                Fonction.checkdeclaration((Appelfunc)((Exprlist)tree.right).expr.get(i),pile,tds);
 
             }
             else if(((Exprlist)tree.right).expr.get(i) instanceof AccesVar){

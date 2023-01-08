@@ -17,10 +17,10 @@ import ast.Nil ;
 import ast.Plus;
 import ast.IfThen ;
 import ast.While ;
-import controlesemantique.fonction;
+import controlesemantique.Fonction;
 import controlesemantique.BoucleFor;
 import controlesemantique.Declaration;
-import controlesemantique.expression;
+import controlesemantique.Expression;
 import controlesemantique.Division;
 import controlesemantique.IfInutile;
 import ast.For ;
@@ -187,11 +187,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(While affect) {
         String nodeIdentifier = this.nextState();
-        try {
-            expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
-        } catch (Exception e) {
-            exceptions.push(e);
-        }
+
+        //Controle Semantique
+        Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
+
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -201,17 +200,16 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(For affect) {
         String nodeIdentifier = this.nextState();
-        try {
-            expression.checktype(affect.min, "int", this.tdsStack, this.tds);
-            expression.checktype(affect.max, "int", this.tdsStack, this.tds);
-            BoucleFor.CheckBorneMinInfBorneMax(affect.min, affect.max);
-        } catch (Exception e) {
-            exceptions.push(e);
-        }
+
+        //Controles Semantiques
+        Expression.checktype(affect.min, "int", this.tdsStack, this.tds);
+        Expression.checktype(affect.max, "int", this.tdsStack, this.tds);
+        BoucleFor.CheckBorneMinInfBorneMax(affect.min, affect.max, this.tds);
+        BoucleFor.CheckBorneMinNotBorneMax(affect.min, affect.max, this.tds);
+        
         // peut être à ajouter
         VarType var = new VarType(affect.id, "int", "Var");
         this.addVarType(var);
-        
         affect.min.accept(this);
         affect.max.accept(this);
         affect.regle.accept(this);
@@ -331,14 +329,13 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Appelfunc affect){
         String nodeIdentifier = this.nextState();
-        try {
-            Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds);
-            fonction.checknombreparametres(affect,this.tdsStack,this.tds);
-            fonction.checktypeparametres(affect, this.tdsStack, this.tds);
-            fonction.checkdeclaration(affect, this.tdsStack, this.tds);
-        } catch (Exception e) {
-           exceptions.push(e);
-        }
+
+        //Controles Semantiques
+        Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds);
+        Fonction.checknombreparametres(affect,this.tdsStack,this.tds);
+        Fonction.checktypeparametres(affect, this.tdsStack, this.tds);
+        Fonction.checkdeclaration(affect, this.tdsStack, this.tds);
+
         if (tailledec){
             tailletype=affect.id;
         }
@@ -351,11 +348,6 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Pointid affect) {
         String nodeIdentifier = this.nextState();
-        
-        if(affect.fils != null){
-            affect.fils.accept(this);
-
-        }
         return nodeIdentifier;
     }
 
@@ -363,11 +355,10 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Croexpr affect) {
         String nodeIdentifier = this.nextState();
         affect.expr.accept(this);
-        try {
-            expression.checktype(affect.expr, "int", this.tdsStack, this.tds);
-        } catch (Exception e) {
-            exceptions.push(e);
-        }
+
+        //Controle semantique
+        Expression.checktype(affect.expr, "int", this.tdsStack, this.tds);
+
         if(affect.lvaluebis != null){
             affect.lvaluebis.accept(this);
         }
@@ -556,12 +547,9 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(IfThen affect) {
         String nodeIdentifier = this.nextState();
-        try {
-            expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
-
-        } catch (Exception e) {
-            exceptions.push(e);
-        }
+        
+        //Controle semantique
+        Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
         IfInutile.warningIfInutile(affect.left);
         affect.left.accept(this);
         affect.center.accept(this);
@@ -677,12 +665,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Div affect) {
         String nodeIdentifier = this.nextState();
-        try {
-            Division.checkDiviseur( this.tdsStack, this.tds,affect.right);
+        
+        //Controle semantique
+        Division.checkDiviseur( this.tdsStack, this.tds,affect.right);
 
-        } catch (Exception e) {
-           exceptions.push(e);
-        }
         affect.left.accept(this);
         if (tailledec){
             tailletype+="/";
@@ -735,6 +721,14 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Typeswithfieldlist affect) {
         String nodeIdentifier = this.nextState();
         affect.typeid.accept(this);
+        try{
+            Declaration.checkVardeclared(((Typeidid)affect.typeid).id,this.tdsStack,this.tds);
+            if(affect.fieldlist != null){
+                Expression.checktypefield((Fieldlist)affect.fieldlist, tds.getVarType(((Typeidid)affect.typeid).id).getIdentifiant(), this.tdsStack, this.tds);   
+            }             
+        }catch(Exception e){
+            exceptions.push(e);
+        }
         if(affect.fieldlist != null){
             affect.fieldlist.accept(this);
         }
@@ -775,11 +769,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(AccesVar affect) {
         String nodeIdentifier = this.nextState();
-        try {
-            Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
-        } catch (Exception e) {
-            exceptions.push(e);
-        }
+        Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
         if (tailledec){
             tailletype=affect.id;
         }

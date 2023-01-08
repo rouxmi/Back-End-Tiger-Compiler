@@ -553,21 +553,66 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 */
 	@Override public Ast visitIdcall(Parsertiger.IdcallContext ctx) {
 		String id= ctx.getChild(0).getText();
-		Ast fils= ctx.getChild(1).accept(this);
-		String filsnom= ctx.getChild(1).getText();
-		if(ctx.getChild(1).getChild(0)!=null){
-			if (filsnom.charAt(0)=='('){
-				return new Appelfunc(id, fils);
+		ParseTree fils = ctx.getChild(1);
+		ArrayList<String> list = new ArrayList<String>();
+		while (fils.getChild(0)!=null){
+			if (fils.getChild(0).getText().charAt(0)=='.'){
+				list.add("."+fils.getChild(1).getText());
+				fils = fils.getChild(2);
 			}
-			else if (filsnom.charAt(0)=='.'){
-				return new Pointid(id, fils);
+			else if (fils.getChild(0).getText().charAt(0)=='('){
+				list.add("("+fils.getChild(1).getText()+")");
+				break;
+			}
+			else if (fils.getChild(0).getText().charAt(0)=='['){
+				list.add("["+fils.getChild(1).getText()+"]");
+				fils = fils.getChild(3);
 			}
 			else {
-				return new AccesVar(id, fils);
+				list.add(fils.getText());
+				break;
 			}
+		}
+		if (list.size()>0){
+			return recursiveAppel(list, id, ctx.getChild(1), list.size());
 		}
 		else {
 			return new Idcall2(id);
+		}
+	}
+
+	public Ast recursiveAppel(ArrayList<String> list, String id, ParseTree ctx ,int taillelist){
+
+		if (list.size()==1){
+			if (list.get(0).charAt(0)=='('){
+				return new Appelfunc(id,ctx.getChild(1).accept(this));
+			}
+			else if (list.get(0).charAt(0)=='['){
+				return new AccesVar(id, ctx.getChild(1).accept(this));
+			}
+			else{
+				return new AccesVar(id, ctx.getChild(1).accept(this));
+			}
+		}
+		else {
+				
+				ParseTree temp = ctx;
+				for (int i=0; i<list.size()-1; i++){
+					if (list.get(i).charAt(0)=='.'){
+						temp = temp.getChild(2);
+					}
+					else {
+						temp = temp.getChild(3);
+					}
+				}
+				String actuel = list.remove(list.size()-1);
+			if (actuel.charAt(0)=='['){
+				return new AccesVar(recursiveAppel(list, id, ctx,taillelist),temp.getChild(1).accept(this));
+			}
+			else{
+				
+				return new Pointid(recursiveAppel(list, id, ctx,taillelist),temp.getChild(1).getText());
+			}
 		}
 	}
 	/**
@@ -578,13 +623,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 */
 	@Override public Ast visitPointid(Parsertiger.PointidContext ctx) { 
 		String id = ctx.getChild(1).getText();
-		if (ctx.getChild(2).getChild(0)==null){
-			return new Pointid(id,(Ast)null);
-		}
-		else {
-			Ast lvaluebis = ctx.getChild(2).accept(this);
-			return new Pointid(id, lvaluebis);
-		}
+		return new Pointid(id, null);
 	}
 	/**
 	 * {@inheritDoc}
