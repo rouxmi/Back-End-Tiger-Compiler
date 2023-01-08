@@ -332,10 +332,11 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         //Controles Semantiques
-        Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds);
-        Fonction.checknombreparametres(affect,this.tdsStack,this.tds);
-        Fonction.checktypeparametres(affect, this.tdsStack, this.tds);
-        Fonction.checkdeclaration(affect, this.tdsStack, this.tds);
+        if (Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds)){
+            Fonction.checknombreparametres(affect,this.tdsStack,this.tds);
+            Fonction.checktypeparametres(affect, this.tdsStack, this.tds);
+            Fonction.checkdeclaration(affect, this.tdsStack, this.tds);
+        }
 
         if (tailledec){
             tailletype=affect.id;
@@ -723,6 +724,8 @@ public class TdsVisitor implements AstVisitor<String> {
         affect.expr2.accept(this);
         return nodeIdentifier;
     }
+
+    
 
     @Override
     public String visit(Typeswithfieldlist affect) {
