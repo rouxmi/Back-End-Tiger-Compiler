@@ -254,7 +254,13 @@ public class Expression {
             return "string";
         }
         else if(name=="ast.Exprseq"){
-            String type = ((Typeidid)((Typeswithfieldlist)((Exprseq)tree).expr.get(0)).typeid).id;
+            Ast exp = ((Exprseq)tree).expr.get(0);
+            String type = "";
+            if(exp.getClass().getName().replace('\n', '\0')== "ast.Typeswithfieldlist"){
+                type = ((Typeidid)((Typeswithfieldlist)((Exprseq)tree).expr.get(0)).typeid).id;
+            }else if(exp.getClass().getName().replace('\n', '\0')== "ast.Typeswithof"){
+                type = ((Typeidid)((Typeswithof)((Exprseq)tree).expr.get(0)).typeid).id;
+            }
             return type;
         }
 

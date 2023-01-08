@@ -741,9 +741,8 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(Idcall2 affect) {
-        /*if(tds.getVarType(affect.id)!=null){
-            tds.getVarType(affect.id).setUsed(true);
-        }*/
+
+        tds.setUsed(this.tdsStack, affect.id);
         String nodeIdentifier = this.nextState();
         if (tailledec){
             tailletype+=affect.id;
@@ -777,6 +776,7 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(AccesVar affect) {
+        tds.setUsed(this.tdsStack, affect.id);
         String nodeIdentifier = this.nextState();
         Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
         if (tailledec){
