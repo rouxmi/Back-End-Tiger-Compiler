@@ -97,6 +97,10 @@ public class TdsVisitor implements AstVisitor<String> {
         tailletype=null;
     }
 
+    public Stack<Table> getTdsStack() {
+        return tdsStack;
+    }
+
     public void afficher() {
         while (!tdsStack.empty()){
             this.tds=tdsStack.pop();
@@ -194,7 +198,17 @@ public class TdsVisitor implements AstVisitor<String> {
         Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
         IfWhileInutile.warningIfInutile("while",affect.left,this.tds);
         affect.left.accept(this);
+        int i=1;
+        for(int j=1;j<=this.tds.fonctions.size();j++){
+            if(this.tds.getProcFonc("While block "+j)!=null){
+                i++;
+            }
+        }
+        ProcFonc whileblock = new ProcFonc("While block "+i, "While",new ArrayList<VarType>());
+        this.addProcFonc(whileblock);
+        this.addFils("While block "+i);
         affect.right.accept(this);
+        this.closeFils();
 
         return nodeIdentifier;
     }
@@ -210,12 +224,26 @@ public class TdsVisitor implements AstVisitor<String> {
         BoucleFor.CheckBorneMinNotBorneMax(affect.min, affect.max, this.tds);
         
         // peut être à ajouter
+        ArrayList<VarType> args = new ArrayList<VarType>();
+        varDec=false;
         VarType var = new VarType(affect.id, "int", "Var");
+        
+        args.add(var);
+        int i=1;
+        for(int j=1;j<=this.tds.fonctions.size();j++){
+            if(this.tds.getProcFonc("Boucle for "+j)!=null){
+                i++;
+            }
+        }
+        ProcFonc forboucle = new ProcFonc("Boucle for "+i, "for", args);
+        this.addProcFonc(forboucle);
+        this.addFils("Boucle for "+i);
         this.addVarType(var);
+        var.setUsed(true);
         affect.min.accept(this);
         affect.max.accept(this);
         affect.regle.accept(this);
-
+        this.closeFils();
 
         return nodeIdentifier;
     }
@@ -472,6 +500,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeidid affect) {
         String nodeIdentifier = this.nextState();
+        tds.setUsed(tdsStack, affect.id);
         if (varDec && !Dec && !funcdec  ){
             VarType var ;
             if (tailletype==null){
@@ -484,7 +513,7 @@ public class TdsVisitor implements AstVisitor<String> {
             this.addVarType(var);
             varDec=false;
         }
-        if (varDec && !funcdec && Dec  ){
+        if (varDec && !funcdec && Dec  ){ 
             VarType var ;
             if (tailletype==null){
                 var = new VarType(decvalue, affect.id, "Var");
@@ -555,11 +584,29 @@ public class TdsVisitor implements AstVisitor<String> {
         Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
         IfWhileInutile.warningIfInutile("if",affect.left,this.tds);
         affect.left.accept(this);
+        int i=1;
+        for(int j=1;j<=this.tds.fonctions.size();j++){
+            if(this.tds.getProcFonc("Then block "+j)!=null){
+                i++;
+            }
+        }
+        ProcFonc then = new ProcFonc("Then block "+i, "Then",new ArrayList<VarType>());
+        this.addProcFonc(then);
+        this.addFils("Then block "+i);
         affect.center.accept(this);
-
+        this.closeFils();
         if(affect.right != null){
+            int k=1;
+            for(int j=1;j<=this.tds.fonctions.size();j++){
+                if(this.tds.getProcFonc("Else block "+j)!=null){
+                    i++;
+                }
+            }
+            ProcFonc Else = new ProcFonc("Else block "+k, "Else",new ArrayList<VarType>());
+            this.addProcFonc(Else);
+            this.addFils("Else block "+k);
             affect.right.accept(this);
-
+            this.closeFils();
         }
         return nodeIdentifier;
     }
@@ -716,6 +763,7 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(Typeswithof affect) {
+
         String nodeIdentifier = this.nextState();
         tailledec=true;
         tailletype="";

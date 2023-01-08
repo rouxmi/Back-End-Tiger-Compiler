@@ -11,6 +11,7 @@ import lexer.Lexertiger;
 import parser.Parsertiger;
 import parser.Parsertiger.ProgramContext;
 import ast.*;
+import controlesemantique.Utilisation;
 
 public class Main {
 
@@ -41,6 +42,7 @@ public class Main {
 
             TdsVisitor tdscreator = new TdsVisitor();
             ast.accept(tdscreator);
+            Utilisation.CheckUtilisation(tdscreator);
             tdscreator.afficher();
 
             //Print de toute les erreurs

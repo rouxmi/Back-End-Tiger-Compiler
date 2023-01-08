@@ -3,8 +3,6 @@ package controlesemantique;
 
 import java.util.Stack;
 
-import org.antlr.v4.parse.ANTLRParser.parserRule_return;
-
 import ast.*;
 import tds.Table;
 
@@ -115,7 +113,7 @@ public class Expression {
 
         }
         else{
-            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+typeAttendu+")\u001B[0m");
+            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+typeAttendu+")\u001B[0m\ngi");
             return false;
         }
         return false;
@@ -215,7 +213,7 @@ public class Expression {
             return true;
         }
         else{
-            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+leftType+" dans le membre droit de l'expression)\u001B[0m");
+            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+leftType+" dans le membre droit de l'expression)\u001B[0m\n");
             return false;
         }
     }
