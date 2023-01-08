@@ -96,6 +96,10 @@ public class TdsVisitor implements AstVisitor<String> {
         tailletype=null;
     }
 
+    public Stack<Table> getTdsStack() {
+        return tdsStack;
+    }
+
     public void afficher() {
         while (!tdsStack.empty()){
             this.tds=tdsStack.pop();
@@ -471,6 +475,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeidid affect) {
         String nodeIdentifier = this.nextState();
+        tds.setUsed(tdsStack, affect.id);
         if (varDec && !Dec && !funcdec  ){
             VarType var ;
             if (tailletype==null){
@@ -715,6 +720,7 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(Typeswithof affect) {
+
         String nodeIdentifier = this.nextState();
         tailledec=true;
         tailletype="";
