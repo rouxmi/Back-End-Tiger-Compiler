@@ -353,13 +353,18 @@ public class GraphVizVisitor implements AstVisitor<String> {
         this.addNode(nodeIdentifier, "Appel Fonction");
         String nodeIdentifier1 = this.nextState();
         String nodeIdentifier2 = this.nextState();
-        
-        this.addNodeTerm(nodeIdentifier1, affect.id);
-        this.addNode(nodeIdentifier2, "Id Fonction");
-        
+        this.addNode(nodeIdentifier2, "Fonction");
         this.addTransition(nodeIdentifier, nodeIdentifier2);
+        if (affect.id != null){
+            this.addNodeTerm(nodeIdentifier1, affect.id);
+            this.addTransition(nodeIdentifier2, nodeIdentifier1);
+            
+        }
+        else{
+            String expr = affect.left.accept(this);
+            this.addTransition(nodeIdentifier2, expr);
+        }
         
-        this.addTransition(nodeIdentifier2, nodeIdentifier1);
         if (affect.right != null){
             String nodeIdentifier3 = this.nextState();
             this.addNode(nodeIdentifier3, "Parametres");
@@ -376,10 +381,24 @@ public class GraphVizVisitor implements AstVisitor<String> {
         if(affect.fils != null){
             this.addNode(nodeIdentifier, ".");
             String nodeIdentifier1 = this.nextState();
-            this.addNodeTerm(nodeIdentifier1, affect.id);
-            this.addTransition(nodeIdentifier, nodeIdentifier1);
-            String lvaluebis = affect.fils.accept(this);
-            this.addTransition(nodeIdentifier, lvaluebis);
+                this.addNode(nodeIdentifier1, "Variable");
+                this.addTransition(nodeIdentifier, nodeIdentifier1);
+            if (affect.left!=null){
+                
+                String left = affect.left.accept(this);
+                this.addTransition(nodeIdentifier1, left);
+            }
+            else{
+                String nodeIdentifier2 = this.nextState();
+                this.addNodeTerm(nodeIdentifier2, affect.id);
+                this.addTransition(nodeIdentifier1, nodeIdentifier2);
+            }
+            String nodeIdentifier3 = this.nextState();
+            this.addTransition(nodeIdentifier, nodeIdentifier3);
+            this.addNode(nodeIdentifier3, "Sous-Variable");
+            String nodeIdentifier4 = this.nextState();
+            this.addNodeTerm(nodeIdentifier4, affect.fils);
+            this.addTransition(nodeIdentifier3, nodeIdentifier4);
         }
         else{
             this.addNodeTerm(nodeIdentifier, affect.id);
@@ -760,12 +779,17 @@ public class GraphVizVisitor implements AstVisitor<String> {
         String nodeIdentifier1 = this.nextState();
         String nodeIdentifier2 = this.nextState();
         
-        this.addNodeTerm(nodeIdentifier1, affect.id);
-        this.addNode(nodeIdentifier2, "Var");
-        
+        this.addNode(nodeIdentifier2, "Variable");
         this.addTransition(nodeIdentifier, nodeIdentifier2);
-        
-        this.addTransition(nodeIdentifier2, nodeIdentifier1);
+        if (affect.id != null){
+            this.addNodeTerm(nodeIdentifier1, affect.id);
+            this.addTransition(nodeIdentifier2, nodeIdentifier1);
+            
+        }
+        else{
+            String expr = affect.left.accept(this);
+            this.addTransition(nodeIdentifier2, expr);
+        }
         if (affect.right != null){
             String nodeIdentifier3 = this.nextState();
             this.addNode(nodeIdentifier3, "Valeur");

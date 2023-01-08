@@ -103,7 +103,7 @@ public class expression {
         }
         else if(name.equals("ast.Pointid")){
             String id=((Pointid)tree).id;
-            String type = ((Typeidid)((Pointid)tree).fils).id;
+            String type = (((Pointid)tree).fils);
             Table tdsactuel = new Table(tds.getId());
             tdsactuel=tdsactuel.joinTDS(pile);
             if(Declaration.checkVardeclared(type,pile,tds)){

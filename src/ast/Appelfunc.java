@@ -7,9 +7,17 @@ public class Appelfunc implements Ast{
 
     public Ast right;
     public String id;
+    public Ast left;
 
     public Appelfunc(String id,Ast right){
         this.id=id;
         this.right= right;
+        this.left=null;
+    }
+
+    public Appelfunc(Ast left, Ast right){
+        this.left=left;
+        this.right=right;
+        this.id=null;
     }
 }
