@@ -243,8 +243,8 @@ public class TdsVisitor implements AstVisitor<String> {
         forboucle.setUsed();
         this.addProcFonc(forboucle);
         this.addFils("Boucle for "+i);
-        this.addVarType(var);
         var.setUsed(true);
+        this.addVarType(var);
         affect.min.accept(this);
         affect.max.accept(this);
         affect.regle.accept(this);
@@ -821,7 +821,7 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         Expression.checktypeDptEgal(affect, this.tds, this.tdsStack);
-
+        
         affect.left.accept(this);
         affect.right.accept(this);
 
