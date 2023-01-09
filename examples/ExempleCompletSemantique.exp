@@ -11,11 +11,11 @@ let
         (for i := 5 to 5  /* Borne Min == Borne Max */
             do 25/0)  /* Division par 0 */
 
-    function joli(d : int) = /* Fonction inutilisée */
+    function nombrePremier(d : int) = /* Fonction inutilisée */
         (for i := 7 to 6 /* Borne Min > Borne Max */
             do print(0))
 
-    function joli(c:int) = /*Double Déclaration*/
+    function nombrePremier(c:int) = /*Double Déclaration*/
         (for i := 5 to 6*"a" /* Mauvais type opération */
             do print(c))
 
@@ -32,22 +32,22 @@ in
     table[2].val := 49; /* Erreur de débordement accés liste*/
 
     table.val := 45; /* Erreur type de structure inexistant */
-    tresjoli(); /* Fonction non déclarée */
+    nombrePremier1(); /* Fonction non déclarée */
 
-    if "a" = "a" | 3>1  & 1=1   then /* If toujours vrai */
+    if "verifie" = "verifie" | 3>1  & 1=1   then /* If toujours vrai */
         print(1);
 
     printboard();
     printboard(2,3); /* Fonction avec mauvais nombre d'arguments */
-    joli("toto"); /* Fonction avec mauvais type d'arguments */
+    nombrePremier("test"); /* Fonction avec mauvais type d'arguments */
 
-    if -"lol" then /* Mauvais type opération unaire */
+    if -"operation" then /* Mauvais type opération unaire */
         print(1);
 
     if 1+2*3 | 1<2 then /* Mauvais type opération booléenne */
         print(1);
         
-    while  3<>3 | "ab"="cd"  do /* while toujours vrai */
+    while  3<>3 | "vrai"="faux"  do /* while toujours vrai */
         break; 
         print(1); /* Code inaccessible */
         print(3) /* Code inaccessible */
