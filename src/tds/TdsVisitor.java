@@ -163,7 +163,7 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Strin affect) {
         String nodeIdentifier = this.nextState();
         if (varDec && !typedec){
-            VarType var = new VarType(varid, "String", "Var");
+            VarType var = new VarType(varid, "String", "Var",affect.getLigne(),affect.getColonne());
             this.addVarType(var, affect);
             varDec=false;
         }
@@ -178,7 +178,7 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(In affect) {
         String nodeIdentifier = this.nextState();
         if (varDec && !tailledec){
-            VarType var = new VarType(varid, "int", "Var");
+            VarType var = new VarType(varid, "int", "Var",affect.getLigne(),affect.getColonne());
             this.addVarType(var, affect);
             varDec=false;
         }
@@ -236,7 +236,7 @@ public class TdsVisitor implements AstVisitor<String> {
         // peut être à ajouter
         ArrayList<VarType> args = new ArrayList<VarType>();
         varDec=false;
-        VarType var = new VarType(affect.id, "int", "Var");
+        VarType var = new VarType(affect.id, "int", "Var",affect.getLigne(),affect.getColonne());
         
         args.add(var);
         int i=1;
@@ -450,10 +450,10 @@ public class TdsVisitor implements AstVisitor<String> {
             tailletype=String.valueOf(cmptailletype);
         }
         if (Typetype.equals("Type") || Typetype.equals("Array of")){
-            VarType var = new VarType(varid, Typetype, "Type",elementtype);
+            VarType var = new VarType(varid, Typetype, "Type",elementtype,affect.getLigne(),affect.getColonne());
             this.addVarType(var, affect);
         }else{
-            VarType var = new VarType(varid, Typetype, "Type",elementtype,tailletype);
+            VarType var = new VarType(varid, Typetype, "Type",elementtype,tailletype,affect.getLigne(),affect.getColonne());
             this.addVarType(var, affect);
         }
         tailletype=null;
@@ -495,10 +495,10 @@ public class TdsVisitor implements AstVisitor<String> {
         if (varDec  && !funcdec && !Dec ){
             VarType var ;
             if (tailletype==null){
-                var = new VarType(varid, affect.type, "Var");
+                var = new VarType(varid, affect.type, "Var",affect.getLigne(),affect.getColonne());
             }else{
 
-                var = new VarType(varid, affect.type, "Var",tailletype);
+                var = new VarType(varid, affect.type, "Var",tailletype,affect.getLigne(),affect.getColonne());
                 tailletype=null;
             }
             this.addVarType(var,affect);
@@ -507,17 +507,17 @@ public class TdsVisitor implements AstVisitor<String> {
         if (varDec  && !funcdec && Dec){
             VarType var ;
             if (tailletype==null){
-                var = new VarType(decvalue, affect.type, "Var");
+                var = new VarType(decvalue, affect.type, "Var",affect.getLigne(),affect.getColonne());
                 var.initialized=false;
             }else{
-                var = new VarType(decvalue, affect.type, "Var",tailletype);
+                var = new VarType(decvalue, affect.type, "Var",tailletype,affect.getLigne(),affect.getColonne());
                 tailletype=null;
             }
             this.addVarType(var,affect);
             varDec=false;
         }
         if (funcdec && !tailledec && !elementtypedec){
-            args.add(new VarType(varid, affect.type, "Var"));
+            args.add(new VarType(varid, affect.type, "Var",affect.getLigne(),affect.getColonne()));
         }
         if (typefuncdec && !tailledec && !elementtypedec){
             functype=affect.type;
@@ -541,10 +541,10 @@ public class TdsVisitor implements AstVisitor<String> {
         if (varDec && !Dec && !funcdec  ){
             VarType var ;
             if (tailletype==null){
-                var = new VarType(varid, affect.id, "Var");
+                var = new VarType(varid, affect.id, "Var",affect.getLigne(),affect.getColonne());
             }else{
 
-                var = new VarType(varid, affect.id, "Var",tailletype);
+                var = new VarType(varid, affect.id, "Var",tailletype,affect.getLigne(),affect.getColonne());
                 tailletype=null;
             }
             this.addVarType(var,affect);
@@ -553,9 +553,9 @@ public class TdsVisitor implements AstVisitor<String> {
         if (varDec && !funcdec && Dec  ){ 
             VarType var ;
             if (tailletype==null){
-                var = new VarType(decvalue, affect.id, "Var");
+                var = new VarType(decvalue, affect.id, "Var",affect.getLigne(),affect.getColonne());
             }else{
-                var = new VarType(decvalue, affect.id, "Var",tailletype);
+                var = new VarType(decvalue, affect.id, "Var",tailletype,affect.getLigne(),affect.getColonne());
                 tailletype=null;
             }
             this.addVarType(var,affect);
@@ -565,7 +565,7 @@ public class TdsVisitor implements AstVisitor<String> {
             if(args==null){
                 args= new ArrayList<VarType>();
             }
-            args.add(new VarType(varid, affect.id, "Var"));
+            args.add(new VarType(varid, affect.id, "Var",affect.getLigne(),affect.getColonne()));
         }
         if (typefuncdec && !elementtypedec && !tailledec){
             functype=affect.id;

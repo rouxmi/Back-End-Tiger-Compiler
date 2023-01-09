@@ -13,10 +13,12 @@ public class VarType{
     public String taille;
     public boolean initialized;
     public boolean isUsed;
+    public int ligneDeclaration;
+    public int colonneDeclaration;
 
 
 
-    public VarType(String identifiant1, String type,String nature){
+    public VarType(String identifiant1, String type,String nature,int ligne,int colonne){
         this.identifiant= identifiant1;
         this.type = type;
         this.deplacement=0;
@@ -27,9 +29,11 @@ public class VarType{
         this.taille="1";
         this.initialized=true;
         this.isUsed=false;
+        this.ligneDeclaration=ligne;
+        this.colonneDeclaration=colonne;
 
     }
-    public VarType(String identifiant, String type,String nature,String taille){
+    public VarType(String identifiant, String type,String nature,String taille,int ligne,int colonne){
         this.identifiant= identifiant;
         this.type = type;
         this.deplacement=0;
@@ -40,9 +44,11 @@ public class VarType{
         this.taille=taille;
         this.initialized=true;
         this.isUsed=false;
+        this.ligneDeclaration=ligne;
+        this.colonneDeclaration=colonne;
 
     }
-    public VarType(String identifiant, String type,String nature,ArrayList<String> elementtype){
+    public VarType(String identifiant, String type,String nature,ArrayList<String> elementtype,int ligne,int colonne){
         this.identifiant= identifiant;
         this.type = type;
         this.deplacement=0;
@@ -53,8 +59,9 @@ public class VarType{
         this.taille="1";
         this.initialized=true;
         this.isUsed=false;
+        this.ligneDeclaration = ligne;
     }
-    public VarType(String identifiant, String type,String nature,ArrayList<String> elementtype,String taille){
+    public VarType(String identifiant, String type,String nature,ArrayList<String> elementtype,String taille,int ligne,int colonne){
         this.identifiant= identifiant;
         this.type = type;
         this.deplacement=0;
@@ -65,6 +72,8 @@ public class VarType{
         this.taille=taille;
         this.initialized=true;
         this.isUsed=false;
+        this.ligneDeclaration = ligne;
+        this.colonneDeclaration = colonne;
     }
     public String toString(){
         String the_types = "";
@@ -147,6 +156,14 @@ public class VarType{
 
     public void setUsed(boolean isUsed){
         this.isUsed=isUsed;
+    }
+
+    public int getLigneDeclaration(){
+        return this.ligneDeclaration;
+    }
+
+    public int getColonneDeclaration(){
+        return this.colonneDeclaration;
     }
 
 }
