@@ -113,7 +113,7 @@ public class Expression {
 
         }
         else{
-            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+typeAttendu+")\u001B[0m\ngi");
+            System.err.println("\u001B[91mExpressionException dans "+tds.nom+" : Type incorrect dans l'expression (attendu : "+typeAttendu+")\u001B[0m\n");
             return false;
         }
         return false;

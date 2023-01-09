@@ -1,0 +1,26 @@
+let
+    type rec = { val : int }
+    type rec_arr = array of rec
+    var  table := rec_arr[2] of nil
+    var i := 0 /* Variable inutilisée */
+    type i = array of int 
+    type i = int /*Double Déclaration de type */
+    function printboard() =
+        (for i := 5 to 7  /* Borne Min == Borne Max */
+            do 25/0)  /* Division par 0 */
+    function joli() = /* Fonction inutilisée */
+        (for i := 7 to 6 /* Borne Min > Borne Max */
+            do print(0))
+    function joli(c:int) = /* Fonction inutilisée */ /*Double Déclaration*/
+        (for i := 5 to 6
+            do print(c))
+in
+    for i := 0 to 1 do
+        table[0] := (rec{val = 42}) ;
+    table[0].val := 51;
+    table[1].val := "toto"; /* Erreur de type */
+    8/0;
+    if ("a" = "a" | 3/0  & 1=1  ) then
+        print(1);
+    printboard()
+end
