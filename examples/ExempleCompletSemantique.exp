@@ -6,7 +6,7 @@ let
     type i = array of int 
     type i = int /*Double Déclaration de type */
     function printboard() =
-        (for i := 5 to 7  /* Borne Min == Borne Max */
+        (for i := 5 to 5  /* Borne Min == Borne Max */
             do 25/0)  /* Division par 0 */
     function joli() = /* Fonction inutilisée */
         (for i := 7 to 6 /* Borne Min > Borne Max */
@@ -20,7 +20,7 @@ in
     table[0].val := 51;
     table[1].val := "toto"; /* Erreur de type */
     8/0;
-    if ("a" = "a" | 3/0  & 1=1  ) then
+    if "a" = "a" | 3>1  & 1=1   then
         print(1);
     printboard()
 end

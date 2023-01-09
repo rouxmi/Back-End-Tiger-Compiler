@@ -621,8 +621,9 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         
         //Controle semantique
-        Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
-        IfWhileInutile.warningIfInutile("if",affect.left,this.tds);
+        if (Expression.checktype(affect.left, "bool", this.tdsStack, this.tds)){
+            IfWhileInutile.warningIfInutile("if",affect.left,this.tds);
+        }
         affect.left.accept(this);
         int i=1;
         for(int j=1;j<=this.tds.fonctions.size();j++){
