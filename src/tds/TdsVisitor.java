@@ -855,7 +855,8 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         Expression.checktypeDptEgal(affect, this.tds, this.tdsStack);
-
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole :=",affect.left);
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole :=",affect.right);
         affect.left.accept(this);
         affect.right.accept(this);
 
