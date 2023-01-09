@@ -19,7 +19,7 @@ public class Declaration {
         if(tdsactuel.getVarType(name) != null){
             return true;
         }
-        System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DeclarationException : Variable "+name+" non déclarée\u001B[0m\n");
+        System.err.println("\u001B[31m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DeclarationException : Variable "+name+" non déclarée\u001B[0m\n");
         return false;
     }
 
@@ -35,7 +35,7 @@ public class Declaration {
         if(tdsactuel.getProcFonc(name) != null){
             return true;
         }
-        System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DeclarationException : Fonction "+name+" non déclarée \u001B[0m\n");
+        System.err.println("\u001B[31m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DeclarationException : Fonction "+name+" non déclarée \u001B[0m\n");
         return false;
     }
         
