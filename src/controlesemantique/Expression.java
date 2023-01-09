@@ -237,7 +237,10 @@ public class Expression {
             }
         }
         else if(name=="ast.Idcall2"){
-            return tdsActuelle.getVar(((Idcall2)tree).id).getType();
+            if (Declaration.checkVardeclared(((Idcall2)tree).id, pile, tds)){
+                return tdsActuelle.getVar(((Idcall2)tree).id).getType();
+            }
+            
         }
         else if(name=="ast.AccesVar"){
             if(Declaration.checkVardeclared(((AccesVar)tree).id, pile, tds)){

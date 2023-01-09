@@ -408,6 +408,7 @@ public class TdsVisitor implements AstVisitor<String> {
             id = affect.id;
         }
         else{
+            affect.left.accept(this);
             id = Expression.getType(affect.left, tds, tdsStack);
         }
         String type = id + point + fils;
@@ -621,8 +622,9 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         
         //Controle semantique
-        Expression.checktype(affect.left, "bool", this.tdsStack, this.tds);
-        IfWhileInutile.warningIfInutile("if",affect.left,this.tds);
+        if (Expression.checktype(affect.left, "bool", this.tdsStack, this.tds)){
+            IfWhileInutile.warningIfInutile("if",affect.left,this.tds);
+        }
         affect.left.accept(this);
         int i=1;
         for(int j=1;j<=this.tds.fonctions.size();j++){
@@ -854,7 +856,8 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         Expression.checktypeDptEgal(affect, this.tds, this.tdsStack);
-
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole :=",affect.left);
+        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole :=",affect.right);
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -877,8 +880,15 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(AccesVar affect) {
         tds.setUsed(this.tdsStack, affect.id, "Var");
         String nodeIdentifier = this.nextState();
-        Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
-        AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);
+        if (affect.id != null){
+            if (Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds)){
+                AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);
+            }
+        }
+        else{
+            affect.left.accept(this);
+            AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);
+        }
         if (tailledec){
             tailletype=affect.id;
         }

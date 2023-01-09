@@ -19,7 +19,7 @@ public class AccesListe {
                 String borneMax = varactu.getTaille();
                 if(isInteger(borneMax)){
                     int borneMaxbis= Integer.parseInt(borneMax);
-                    if(borneMaxbis<valeurbis){
+                    if(borneMaxbis<=valeurbis){
                         return true;
                     } 
                 }
