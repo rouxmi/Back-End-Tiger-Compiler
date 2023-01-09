@@ -140,7 +140,7 @@ public class Table {
             }
         }
         else{
-            System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DoubleDeclarationException : "+var.getNature()+" "+var.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
+            System.err.println("\u001B[31m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DoubleDeclarationException : "+var.getNature()+" "+var.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
         }
     }
 
@@ -191,7 +191,7 @@ public class Table {
             fct.setTableID(this.id);
 		}
         else{
-            System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DoubleDeclarationException : "+fct.getNature()+" "+fct.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
+            System.err.println("\u001B[31m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DoubleDeclarationException : "+fct.getNature()+" "+fct.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
         }
 	}
 	

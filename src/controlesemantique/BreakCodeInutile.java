@@ -12,7 +12,7 @@ public class BreakCodeInutile {
        String name = tree.getClass().getName().replace('\n', '\0');
        //System.out.println(name);
        if(name.equals("ast.Break")){
-        System.err.println("\u001B[33m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+info+"CodeInutileWarning avec break: la boucle n'exécute pas le code \u001B[0m\n");
+        System.err.println("\033[0;33m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+info+"CodeInutileWarning avec break: la boucle n'exécute pas le code \u001B[0m\n");
         
        }
        if(name.equals("ast.Exprseq")){
@@ -45,7 +45,7 @@ public class BreakCodeInutile {
             for(int i=0; i< seqExpr.size();i++){
                 if(isBreak==true){
                     String nameExpr=((seqExpr.get(i)).getClass().getName().replace('\n', '\0'));
-                    System.err.println("\u001B[33m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+info+"CodeInutileWarning avec break: l'expression "+nameExpr+" est jamais atteinte \u001B[0m\n");
+                    System.err.println("\033[0;33m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+info+"CodeInutileWarning avec break: l'expression "+nameExpr+" est jamais atteinte \u001B[0m\n");
                 }
                 if(((seqExpr.get(i)).getClass().getName().replace('\n', '\0')).equals("ast.Break")){
                     isBreak=true;
@@ -75,7 +75,7 @@ public class BreakCodeInutile {
             }
         } 
         if(!wellplaced){
-            System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"BreakError : le break est mal placé\u001B[0m\n");
+            System.err.println("\u001B[31m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"BreakError : le break est mal placé\u001B[0m\n");
                
         }
     }

@@ -23,7 +23,7 @@ public class Division {
     public static void warningDivision(Stack<Table> pile, Table tds, Ast tree){
         boolean warning = checkDiviseur(pile, tds, tree);
         if(warning){
-            System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DivisionException : Division par 0 (attendu un diviseur différent de 0)\u001B[0m\n");
+            System.err.println("\u001B[31m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DivisionException : Division par 0 (attendu un diviseur différent de 0)\u001B[0m\n");
         }
     }
 }

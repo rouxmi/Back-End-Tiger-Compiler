@@ -15,7 +15,7 @@ public class BoucleFor {
                     return true;
                 }
             }
-            System.err.println("\u001B[91m"+"Ligne "+min.getLigne()+":"+min.getColonne()+" : "+"BoucleForException : Borne min supérieure à borne max (attendu une borne min strictement inférieure à une borne max)\u001B[0m\n");
+            System.err.println("\u001B[31m"+"Ligne "+min.getLigne()+":"+min.getColonne()+" : "+"BoucleForException : Borne min supérieure à borne max (attendu une borne min strictement inférieure à une borne max)\u001B[0m\n");
             return false;
         }
         else{
