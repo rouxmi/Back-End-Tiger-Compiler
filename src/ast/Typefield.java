@@ -4,13 +4,25 @@ public class Typefield implements Ast{
     public <T> T accept(AstVisitor<T> visitor){
         return visitor.visit(this);
     }
+    public int getLigne(){
+        return this.ligne;
+    }
+
+    public int getColonne(){
+        return this.colonne;
+    }
     
     public String id;
     public Ast type;
+    public int ligne;
 
-    public Typefield(String id, Ast type){
+    public int colonne;
+
+    public Typefield(String id, Ast type, int ligne, int colonne){
         this.id = id;
         this.type = type;
+        this.ligne = ligne;
+        this.colonne = colonne;
     }
 }
 

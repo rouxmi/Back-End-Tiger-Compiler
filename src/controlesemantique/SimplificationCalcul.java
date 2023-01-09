@@ -99,7 +99,7 @@ public class SimplificationCalcul {
     public static void warningSimplification(String tdsname,String info ,Ast tree){
         int resultatsimpli = checkSimplification(tree);
         if(resultatsimpli!=0){
-           System.err.println("\u001B[33mSimplificationWarning dans " +tdsname+ " : vous pourriez remplacer le calcul "+ info+ " par " +resultatsimpli + " plutot \u001B[0m\n");
+           System.err.println("\u001B[33m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"SimplificationWarning : vous pourriez remplacer le calcul "+ info+ " par " +resultatsimpli + " plutot \u001B[0m\n");
      
         }
         

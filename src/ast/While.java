@@ -5,12 +5,25 @@ public class While implements Ast {
         return visitor.visit(this);
     }
 
+    public int getLigne(){
+        return this.ligne;
+    }
+
+    public int getColonne(){
+        return this.colonne;
+    }
+
     public Ast left;
     public Ast right;
+    public int ligne;
 
-    public While(Ast left, Ast right){
+    public int colonne;
+
+    public While(Ast left, Ast right, int ligne, int colonne) {
         this.left=left;
         this.right=right;
+        this.ligne=ligne;
+        this.colonne=colonne;
     }
 
 }

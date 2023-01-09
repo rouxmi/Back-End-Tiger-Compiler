@@ -293,11 +293,11 @@ public class IfWhileInutile {
     public static void warningIfInutile(String info,Ast tree, Table tds ){
         boolean IfInutile = checkIfInutile(tree);
         if(IfInutile){
-            System.err.println("\u001B[33m"+info+"InutileWarning dans "+ tds.nom +": une condition "+info+" est utilisée alors qu'elle est toujours vraie\u001B[0m\n");
+            System.err.println("\u001B[33m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+info+"InutileWarning : une condition "+info+" est utilisée alors qu'elle est toujours vraie\u001B[0m\n");
         
         }
         if(checkIfInutileFalse(tree)){
-            System.err.println("\u001B[33m"+info+"InutileWarning dans "+ tds.nom +": une condition "+info+" est utilisée alors qu'elle est toujours fausse\u001B[0m\n");
+            System.err.println("\u001B[33m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+info+"InutileWarning : une condition "+info+" est utilisée alors qu'elle est toujours fausse\u001B[0m\n");
         
         }
     }

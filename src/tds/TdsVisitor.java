@@ -119,8 +119,8 @@ public class TdsVisitor implements AstVisitor<String> {
         tds = tdsFils;
     }
 
-    public void addProcFonc(ProcFonc procfonc){
-            tds.addProcFonc(procfonc);
+    public void addProcFonc(ProcFonc procfonc, Ast tree){
+            tds.addProcFonc(procfonc, tree);
     }
 
     private String nextState(){
@@ -134,8 +134,8 @@ public class TdsVisitor implements AstVisitor<String> {
         tds = tdsStack.peek();
     }
 
-    public void addVarType(VarType varType) {
-        tds.addVarType(varType);
+    public void addVarType(VarType varType, Ast tree) {
+        tds.addVarType(varType, tree);
     }
 
 
@@ -164,7 +164,7 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         if (varDec && !typedec){
             VarType var = new VarType(varid, "String", "Var");
-            this.addVarType(var);
+            this.addVarType(var, affect);
             varDec=false;
         }
         if (tailledec){
@@ -179,7 +179,7 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         if (varDec && !tailledec){
             VarType var = new VarType(varid, "int", "Var");
-            this.addVarType(var);
+            this.addVarType(var, affect);
             varDec=false;
         }
         if (tailledec){
@@ -210,7 +210,7 @@ public class TdsVisitor implements AstVisitor<String> {
         }
         ProcFonc whileblock = new ProcFonc("While block "+i, "While",new ArrayList<VarType>());
         whileblock.setUsed();
-        this.addProcFonc(whileblock);
+        this.addProcFonc(whileblock, affect);
 
         this.addFils("While block "+i);
         affect.right.accept(this);
@@ -247,10 +247,10 @@ public class TdsVisitor implements AstVisitor<String> {
         }
         ProcFonc forboucle = new ProcFonc("Boucle for "+i, "for", args);
         forboucle.setUsed();
-        this.addProcFonc(forboucle);
+        this.addProcFonc(forboucle, affect);
         this.addFils("Boucle for "+i);
         var.setUsed(true);
-        this.addVarType(var);
+        this.addVarType(var, affect);
         affect.min.accept(this);
         affect.max.accept(this);
         affect.regle.accept(this);
@@ -268,7 +268,7 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
         Table tdsActuelle = new Table(tds.getId());
         tdsActuelle= tdsActuelle.joinTDS(tdsStack);
-        BreakCodeInutile.checkBreakWellPlaced(tdsActuelle,tds.nom);
+        BreakCodeInutile.checkBreakWellPlaced(tdsActuelle,tds.nom, affect);
         this.inutile=true;
         return nodeIdentifier;
     }
@@ -298,10 +298,10 @@ public class TdsVisitor implements AstVisitor<String> {
             affect.typefields.accept(this);
         }
         ProcFonc func = new ProcFonc(funcid, functype, args);
-        this.addProcFonc(func);
+        this.addProcFonc(func, affect);
         this.addFils(funcid);
         for (VarType var:args){
-            this.addVarType(var);
+            this.addVarType(var, affect);
         }
         funcdec=false;
         affect.functiondeclaration.accept(this);
@@ -382,7 +382,7 @@ public class TdsVisitor implements AstVisitor<String> {
         
 
         //Controles Semantiques
-        if (Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds)){
+        if (Declaration.checkFuncdeclared(affect.id, this.tdsStack, this.tds,affect)){
             Fonction.checknombreparametres(affect,this.tdsStack,this.tds);
             Fonction.checktypeparametres(affect, this.tdsStack, this.tds);
             Fonction.checkdeclaration(affect, this.tdsStack, this.tds);
@@ -451,10 +451,10 @@ public class TdsVisitor implements AstVisitor<String> {
         }
         if (Typetype.equals("Type") || Typetype.equals("Array of")){
             VarType var = new VarType(varid, Typetype, "Type",elementtype);
-            this.addVarType(var);
+            this.addVarType(var, affect);
         }else{
             VarType var = new VarType(varid, Typetype, "Type",elementtype,tailletype);
-            this.addVarType(var);
+            this.addVarType(var, affect);
         }
         tailletype=null;
         return nodeIdentifier;
@@ -501,7 +501,7 @@ public class TdsVisitor implements AstVisitor<String> {
                 var = new VarType(varid, affect.type, "Var",tailletype);
                 tailletype=null;
             }
-            this.addVarType(var);
+            this.addVarType(var,affect);
             varDec=false;
         }
         if (varDec  && !funcdec && Dec){
@@ -513,7 +513,7 @@ public class TdsVisitor implements AstVisitor<String> {
                 var = new VarType(decvalue, affect.type, "Var",tailletype);
                 tailletype=null;
             }
-            this.addVarType(var);
+            this.addVarType(var,affect);
             varDec=false;
         }
         if (funcdec && !tailledec && !elementtypedec){
@@ -547,7 +547,7 @@ public class TdsVisitor implements AstVisitor<String> {
                 var = new VarType(varid, affect.id, "Var",tailletype);
                 tailletype=null;
             }
-            this.addVarType(var);
+            this.addVarType(var,affect);
             varDec=false;
         }
         if (varDec && !funcdec && Dec  ){ 
@@ -558,7 +558,7 @@ public class TdsVisitor implements AstVisitor<String> {
                 var = new VarType(decvalue, affect.id, "Var",tailletype);
                 tailletype=null;
             }
-            this.addVarType(var);
+            this.addVarType(var,affect);
             varDec=false;
         }
         if (funcdec && !elementtypedec && !tailledec){
@@ -634,7 +634,7 @@ public class TdsVisitor implements AstVisitor<String> {
         }
         ProcFonc then = new ProcFonc("Then block "+i, "Then",new ArrayList<VarType>());
         then.setUsed();
-        this.addProcFonc(then);
+        this.addProcFonc(then, affect.center);
         this.addFils("Then block "+i);
         affect.center.accept(this);
     
@@ -649,7 +649,7 @@ public class TdsVisitor implements AstVisitor<String> {
             }
             ProcFonc Else = new ProcFonc("Else block "+k, "Else",new ArrayList<VarType>());
             Else.setUsed();
-            this.addProcFonc(Else);
+            this.addProcFonc(Else, affect.right);
             this.addFils("Else block "+k);
             affect.right.accept(this);
             this.closeFils();
@@ -788,7 +788,7 @@ public class TdsVisitor implements AstVisitor<String> {
         funcdec=true;
         typefuncdec=false;
         ProcFonc func = new ProcFonc(funcid, functype , null);
-        this.addProcFonc(func);
+        this.addProcFonc(func, affect);
         this.addFils(funcid);
 
         affect.functiondeclaration.accept(this);
@@ -830,7 +830,7 @@ public class TdsVisitor implements AstVisitor<String> {
         tds.setUsed(tdsStack,((Typeidid)affect.typeid).id, "Type");
         Table tableActuelle = new Table(this.tds.getId());
         tableActuelle=tableActuelle.joinTDS(tdsStack);
-        if(affect.fieldlist != null && Declaration.checkVardeclared(((Typeidid)affect.typeid).id,this.tdsStack,this.tds)){
+        if(affect.fieldlist != null && Declaration.checkVardeclared(((Typeidid)affect.typeid).id,this.tdsStack,this.tds,affect)){
             Expression.checktypefield((Fieldlist)affect.fieldlist, tableActuelle.getVarType(((Typeidid)affect.typeid).id).getIdentifiant(), this.tdsStack, this.tds);   
         }
         if(affect.fieldlist != null){
@@ -881,7 +881,7 @@ public class TdsVisitor implements AstVisitor<String> {
         tds.setUsed(this.tdsStack, affect.id, "Var");
         String nodeIdentifier = this.nextState();
         if (affect.id != null){
-            if (Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds)){
+            if (Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds,affect)){
                 AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);
             }
         }

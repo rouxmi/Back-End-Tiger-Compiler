@@ -8,10 +8,22 @@ public class Functiondeclaration implements Ast{
    public String id;
    public Ast typefields;
    public Ast functiondeclaration;
+   public int ligne;
 
-    public Functiondeclaration(String id, Ast typefields, Ast functiondeclaration){
+   public int colonne;
+
+    public Functiondeclaration(String id, Ast typefields, Ast functiondeclaration, int ligne, int colonne){
         this.id = id;
         this.typefields = typefields;
         this.functiondeclaration = functiondeclaration;
+        this.ligne = ligne;
+        this.colonne = colonne;
+    }
+    public int getLigne(){
+        return this.ligne;
+    }
+
+    public int getColonne(){
+        return this.colonne;
     }
 }

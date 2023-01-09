@@ -24,7 +24,7 @@ public class Fonction {
         //pas de paramètres
         if (tree.right == null){
             if(nbrparametre != 0){
-                System.err.println("\u001B[91mFonctionException dans "+tds.nom+" : Nombre de paramètres incorrect (attendu : "+nbrparametre+" trouvé : 0)\u001B[0m\n");
+                System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"FonctionException : Nombre de paramètres incorrect (attendu : "+nbrparametre+" trouvé : 0)\u001B[0m\n");
             }
             else {
                 return;
@@ -36,7 +36,7 @@ public class Fonction {
             nbrparametre2++;
         }
         if(nbrparametre-nbrparametre2 != 0){
-            System.err.println("\u001B[91mFonctionException dans "+tds.nom+" : Nombre de paramètres incorrect (attendu : "+nbrparametre+" trouvé : "+nbrparametre2+")\u001B[0m\n");
+            System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"FonctionException : Nombre de paramètres incorrect (attendu : "+nbrparametre+" trouvé : "+nbrparametre2+")\u001B[0m\n");
         }
 
 
@@ -61,9 +61,9 @@ public class Fonction {
         for(int i=0;i<nbrparametre;i++){
             if(!Expression.checktype(((Exprlist)tree.right).expr.get(i),(listarg.get(i).getType()),pile,tds)){
                 if(i==0){
-                    System.err.println("\u001B[91mFonctionException dans "+tds.nom+" : Type du "+(i+1)+"er paramètre incorrect (attendu : "+listarg.get(i).getType()+" trouvé : "+((Exprlist)tree.right).expr.get(i)+")\u001B[0m\n");
+                    System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"FonctionException : Type du "+(i+1)+"er paramètre incorrect (attendu : "+listarg.get(i).getType()+" trouvé : "+((Exprlist)tree.right).expr.get(i)+")\u001B[0m\n");
                 }else{
-                System.err.println("\u001B[91mFonctionException dans "+tds.nom+" : Type du "+(i+1)+"ème paramètre incorrect (attendu : "+listarg.get(i).getType()+" trouvé : "+((Exprlist)tree.right).expr.get(i)+")\u001B[0m\n");
+                System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"FonctionException : Type du "+(i+1)+"ème paramètre incorrect (attendu : "+listarg.get(i).getType()+" trouvé : "+((Exprlist)tree.right).expr.get(i)+")\u001B[0m\n");
                 }
             }
         }
@@ -90,7 +90,7 @@ public class Fonction {
 
             }
             else if(((Exprlist)tree.right).expr.get(i) instanceof AccesVar){
-                Declaration.checkVardeclared(((AccesVar)((Exprlist)tree.right).expr.get(i)).id,pile,tds);
+                Declaration.checkVardeclared(((AccesVar)((Exprlist)tree.right).expr.get(i)).id,pile,tds,tree);
             }
         }
     }

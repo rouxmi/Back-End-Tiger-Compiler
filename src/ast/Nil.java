@@ -5,10 +5,23 @@ public class Nil implements Ast {
         return visitor.visit(this);
     }
 
-    public String ni;
+    public int getLigne(){
+        return this.ligne;
+    }
 
-    public Nil(String ni) {
+    public int getColonne(){
+        return this.colonne;
+    }
+
+    public String ni;
+    public int ligne;
+
+    public int colonne;
+
+    public Nil(String ni, int ligne, int colonne) {
         this.ni=ni;
+        this.ligne=ligne;
+        this.colonne=colonne;
     }
 
 }

@@ -5,12 +5,24 @@ public class Egal implements Ast{
     public <T> T accept(AstVisitor<T> visitor){
         return visitor.visit(this);
     }
+    public int getLigne(){
+        return this.ligne;
+    }
+
+    public int getColonne(){
+        return this.colonne;
+    }
 
     public String eg;
     public Ast expr;
+    public int ligne;
 
-    public Egal(String eg, Ast expr){
+    public int colonne;
+
+    public Egal(String eg, Ast expr, int ligne, int colonne){
         this.eg = eg;
         this.expr = expr;
+        this.ligne = ligne;
+        this.colonne = colonne;
     }
 }

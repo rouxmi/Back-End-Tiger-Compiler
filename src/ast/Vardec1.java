@@ -7,9 +7,23 @@ public class Vardec1 implements Ast{
 
     public Ast expr;
     public Ast typeid;
+    public int ligne;
 
-    public Vardec1(Ast typeid, Ast expr) {
+    public int colonne;
+
+    public Vardec1(Ast typeid, Ast expr, int ligne, int colonne) {
         this.expr = expr;
         this.typeid = typeid;
+        this.ligne = ligne;
+        this.colonne = colonne;
+
+    }
+
+    public int getLigne(){
+        return this.ligne;
+    }
+
+    public int getColonne(){
+        return this.colonne;
     }
 }

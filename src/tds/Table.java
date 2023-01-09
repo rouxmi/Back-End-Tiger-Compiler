@@ -2,6 +2,8 @@ package tds;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import ast.Ast;
+
 public class Table {
 	public static int nbTable=-1;
 	public int id;
@@ -127,7 +129,7 @@ public class Table {
 		return this.id;
 	}
 	
-	public void addVarType(VarType var) {
+	public void addVarType(VarType var, Ast tree) {
 		if(!checkAlreadyExist(var)){
             this.variables.add(var);
             var.setTableID(this.id);
@@ -138,7 +140,7 @@ public class Table {
             }
         }
         else{
-            System.err.println("\u001B[91mDoubleDeclarationException dans "+this.nom+": "+var.getNature()+" "+var.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
+            System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DoubleDeclarationException : "+var.getNature()+" "+var.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
         }
     }
 
@@ -183,13 +185,13 @@ public class Table {
         }
 	}
 	
-	public void addProcFonc(ProcFonc fct ) {
+	public void addProcFonc(ProcFonc fct , Ast tree) {
 		if(!checkAlreadyExist(fct)){
             this.fonctions.add(fct);
             fct.setTableID(this.id);
 		}
         else{
-            System.err.println("\u001B[91mDoubleDeclarationException dans "+this.nom+": "+fct.getNature()+" "+fct.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
+            System.err.println("\u001B[91m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"DoubleDeclarationException : "+fct.getNature()+" "+fct.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
         }
 	}
 	

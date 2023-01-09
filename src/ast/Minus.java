@@ -9,11 +9,24 @@ public class Minus implements Ast{
 
     public Ast left;
     public Ast right;
+    public int ligne;
+
+    public int colonne;
 
 
-    public Minus(Ast left, Ast right) {
+    public Minus(Ast left, Ast right, int ligne, int colonne) {
         this.left = left;
         this.right = right;
+        this.ligne = ligne;
+        this.colonne = colonne;
+    }
+
+    public int getLigne(){
+        return this.ligne;
+    }
+
+    public int getColonne(){
+        return this.colonne;
     }
 
 }
