@@ -766,14 +766,15 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Div affect) {
         String nodeIdentifier = this.nextState();
         
-        //Controle semantique
-        Division.checkDiviseur( this.tdsStack, this.tds,affect.right);
-
+        
         affect.left.accept(this);
         if (tailledec){
             tailletype+="/";
         }
         affect.right.accept(this);
+
+        //Controle semantique
+        Division.warningDivision( this.tdsStack, this.tds,affect.right);
 
 
         return nodeIdentifier;
