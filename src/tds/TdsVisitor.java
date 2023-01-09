@@ -386,7 +386,7 @@ public class TdsVisitor implements AstVisitor<String> {
             Fonction.checknombreparametres(affect,this.tdsStack,this.tds);
             Fonction.checktypeparametres(affect, this.tdsStack, this.tds);
             Fonction.checkdeclaration(affect, this.tdsStack, this.tds);
-            tds.setUsed(tdsStack, affect.id);
+            tds.setUsed(tdsStack, affect.id, "Fonction");
         }
 
         if (tailledec){
@@ -537,7 +537,6 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeidid affect) {
         String nodeIdentifier = this.nextState();
-        tds.setUsed(tdsStack, affect.id);
         if (varDec && !Dec && !funcdec  ){
             VarType var ;
             if (tailletype==null){
@@ -602,6 +601,7 @@ public class TdsVisitor implements AstVisitor<String> {
         affect.expr.accept(this);
         
         affect.typeid.accept(this);
+        tds.setUsed(tdsStack,((Typeidid)affect.typeid).id, "Type");
         return nodeIdentifier;
     }
 
@@ -807,13 +807,13 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(Typeswithof affect) {
-
         String nodeIdentifier = this.nextState();
         tailledec=true;
         tailletype="";
         affect.expr1.accept(this);
         tailledec=false;
         affect.typeid.accept(this);
+        tds.setUsed(tdsStack,((Typeidid)affect.typeid).id, "Type");
         affect.expr2.accept(this);
         return nodeIdentifier;
     }
@@ -824,6 +824,7 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Typeswithfieldlist affect) {
         String nodeIdentifier = this.nextState();
         affect.typeid.accept(this);
+        tds.setUsed(tdsStack,((Typeidid)affect.typeid).id, "Type");
         Table tableActuelle = new Table(this.tds.getId());
         tableActuelle=tableActuelle.joinTDS(tdsStack);
         if(affect.fieldlist != null && Declaration.checkVardeclared(((Typeidid)affect.typeid).id,this.tdsStack,this.tds)){
@@ -838,7 +839,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Idcall2 affect) {
 
-        tds.setUsed(this.tdsStack, affect.id);
+        tds.setUsed(this.tdsStack, affect.id, "Var");
 
         String nodeIdentifier = this.nextState();
         if (tailledec){
@@ -852,7 +853,7 @@ public class TdsVisitor implements AstVisitor<String> {
         String nodeIdentifier = this.nextState();
 
         Expression.checktypeDptEgal(affect, this.tds, this.tdsStack);
-        
+
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -873,7 +874,7 @@ public class TdsVisitor implements AstVisitor<String> {
 
     @Override
     public String visit(AccesVar affect) {
-        tds.setUsed(this.tdsStack, affect.id);
+        tds.setUsed(this.tdsStack, affect.id, "Var");
         String nodeIdentifier = this.nextState();
         Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
         AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);

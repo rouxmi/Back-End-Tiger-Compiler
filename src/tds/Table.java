@@ -1,6 +1,5 @@
 package tds;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 public class Table {
@@ -138,6 +137,9 @@ public class Table {
             
             }
         }
+        else{
+            System.err.println("\u001B[91mDoubleDeclarationException dans "+this.nom+": "+var.getNature()+" "+var.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
+        }
     }
 
     public VarType getVar(String varName) {
@@ -186,6 +188,9 @@ public class Table {
             this.fonctions.add(fct);
             fct.setTableID(this.id);
 		}
+        else{
+            System.err.println("\u001B[91mDoubleDeclarationException dans "+this.nom+": "+fct.getNature()+" "+fct.identifiant+" deja déclarée dans le même bloc\u001B[0m\n");
+        }
 	}
 	
 	public void addFils(Table fils){
@@ -245,10 +250,20 @@ public class Table {
         while(id != -1) {
             Table tds = searchTDS(pile, id);
             for (VarType var : tds.variables) {
-                newTDS.addVarType(var);
+                if(!checkAlreadyExist(var)){
+                    newTDS.variables.add(var);
+                    var.setTableID(this.id);
+                    if (var.getDeplacement() == 0 && var.isLocal()) { // Si own, on a deja la variable ailleurs pas besoin de la mettre dans la pile
+                        var.setDeplacement(var_depl);
+                        var_depl++;
+                    }
+                }
             }
             for (ProcFonc proc : tds.fonctions) {
-                newTDS.addProcFonc(proc);
+                if(!checkAlreadyExist(proc)){
+                    newTDS.fonctions.add(proc);
+                    proc.setTableID(this.id);
+                }
             }
             id=tds.getIdpere();
 
@@ -256,20 +271,34 @@ public class Table {
         return newTDS;
     }
 
-    public void setUsed(Stack<Table> pile, String varName) {
-        for (Table tds : pile) {
+    public void setUsed(Stack<Table> pile, String varName, String nature) {
+        //inverse the Stack
+        Stack<Table> temp = new Stack<>();
+        while(!pile.isEmpty()){
+            temp.push(pile.pop());
+        }
+        for (Table tds : temp) {
             VarType var = tds.getVarType(varName);
-            if (var != null) {
+            if (var != null && var.getNature().equals(nature)) {
                 var.setUsed(true);
+                while(!temp.isEmpty()){
+                    pile.push(temp.pop());
+                }
                 return;
             }else{
                 ProcFonc proc = tds.getProcFonc(varName);
                 if (proc != null) {
                     proc.setUsed();
+                    while(!temp.isEmpty()){
+                        pile.push(temp.pop());
+                    }
                     return;
                 }
             }
             
+        }
+        while(!temp.isEmpty()){
+            pile.push(temp.pop());
         }
     }
 
