@@ -9,10 +9,11 @@ public class Division {
     public static boolean checkDiviseur(Stack<Table> pile, Table tds, Ast tree){
         /*Table tdsactuel = new Table(tds.getId());
         tdsactuel = tdsactuel.joinTDS(pile); */
-        String name =tree.getClass().getName().replace('\n', '\0');
-        if(name.equals("ast.Div")){
-            String diviseur = ((Div)tree).right.toString();
-            if(diviseur!="0"){
+        //String name =tree.getClass().getName().replace('\n', '\0');
+        //System.out.println(name);
+        if(tree instanceof In){
+            int div = ((In)tree).in;
+            if(div==0){
                 return true;
             }
         }
