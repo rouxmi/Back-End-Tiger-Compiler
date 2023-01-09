@@ -70,22 +70,36 @@ public class TdsVisitor implements AstVisitor<String> {
     public Stack<Exception> exceptions = new Stack<Exception>();
     private int state;
     private boolean varDec;
-    private String varid;
     private boolean typedec;
     private boolean funcdec;
     private boolean typefuncdec;
-    private String funcid;
     private boolean Dec;
+    private boolean elementtypedec;
+    private boolean tailledec;
+    private boolean inutile;
+
+
+    public void printallbool(){
+        System.out.println("varDec : "+varDec);
+        System.out.println("typedec : "+typedec);
+        System.out.println("funcdec : "+funcdec);
+        System.out.println("typefuncdec : "+typefuncdec);
+        System.out.println("Dec : "+Dec);
+        System.out.println("elementtypedec : "+elementtypedec);
+        System.out.println("tailledec : "+tailledec);
+        System.out.println("inutile : "+inutile);
+    }
+    private String varid;
+    private String funcid;
     private String decvalue;
     private String functype;
     private ArrayList<VarType> args;
     private String Typetype; 
     private ArrayList<String> elementtype;
-    private boolean elementtypedec;
+    
     private String tailletype;
     private int cmptailletype;
-    private boolean tailledec;
-    private boolean inutile;
+    
 
 
     public TdsVisitor() {
@@ -162,7 +176,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Strin affect) {
         String nodeIdentifier = this.nextState();
-        if (varDec && !typedec){
+        if (varDec && !typedec && !typefuncdec){
             VarType var = new VarType(varid, "String", "Var",affect.getLigne(),affect.getColonne());
             this.addVarType(var, affect);
             varDec=false;
@@ -177,7 +191,7 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(In affect) {
         String nodeIdentifier = this.nextState();
-        if (varDec && !tailledec){
+        if (varDec && !tailledec && !typedec && !typefuncdec){
             VarType var = new VarType(varid, "int", "Var",affect.getLigne(),affect.getColonne());
             this.addVarType(var, affect);
             varDec=false;
@@ -366,9 +380,9 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Field affect) {
         String nodeIdentifier = this.nextState();
-
-        
-
+        Table tableActuelle = new Table(tds.getId());
+        tableActuelle = tableActuelle.joinTDS(tdsStack);
+        //Expression.checktype(affect.expr, tableActuelle.getVarType(affect.id).getType() , this.tdsStack, this.tds);
         affect.expr.accept(this);
 
         return nodeIdentifier;
@@ -492,19 +506,18 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typepredefined affect) {
         String nodeIdentifier = this.nextState();
-        if (varDec  && !funcdec && !Dec ){
+        if (varDec  && !funcdec && !Dec && !typefuncdec){
             VarType var ;
             if (tailletype==null){
                 var = new VarType(varid, affect.type, "Var",affect.getLigne(),affect.getColonne());
             }else{
-
                 var = new VarType(varid, affect.type, "Var",tailletype,affect.getLigne(),affect.getColonne());
                 tailletype=null;
             }
             this.addVarType(var,affect);
             varDec=false;
         }
-        if (varDec  && !funcdec && Dec){
+        if (varDec  && !funcdec && Dec && !typefuncdec){
             VarType var ;
             if (tailletype==null){
                 var = new VarType(decvalue, affect.type, "Var",affect.getLigne(),affect.getColonne());
@@ -516,8 +529,9 @@ public class TdsVisitor implements AstVisitor<String> {
             this.addVarType(var,affect);
             varDec=false;
         }
-        if (funcdec && !tailledec && !elementtypedec){
+        if (funcdec && !tailledec && !elementtypedec && !typefuncdec){
             args.add(new VarType(varid, affect.type, "Var",affect.getLigne(),affect.getColonne()));
+            varDec=false;
         }
         if (typefuncdec && !tailledec && !elementtypedec){
             functype=affect.type;
@@ -538,19 +552,18 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Typeidid affect) {
         String nodeIdentifier = this.nextState();
-        if (varDec && !Dec && !funcdec  ){
+        if (varDec && !Dec && !funcdec && !typefuncdec ){
             VarType var ;
             if (tailletype==null){
                 var = new VarType(varid, affect.id, "Var",affect.getLigne(),affect.getColonne());
             }else{
-
                 var = new VarType(varid, affect.id, "Var",tailletype,affect.getLigne(),affect.getColonne());
                 tailletype=null;
             }
             this.addVarType(var,affect);
             varDec=false;
         }
-        if (varDec && !funcdec && Dec  ){ 
+        if (varDec && !funcdec && Dec && !typefuncdec){  
             VarType var ;
             if (tailletype==null){
                 var = new VarType(decvalue, affect.id, "Var",affect.getLigne(),affect.getColonne());
@@ -561,11 +574,12 @@ public class TdsVisitor implements AstVisitor<String> {
             this.addVarType(var,affect);
             varDec=false;
         }
-        if (funcdec && !elementtypedec && !tailledec){
+        if (funcdec && !elementtypedec && !tailledec && !typefuncdec){
             if(args==null){
                 args= new ArrayList<VarType>();
             }
             args.add(new VarType(varid, affect.id, "Var",affect.getLigne(),affect.getColonne()));
+            varDec=false;
         }
         if (typefuncdec && !elementtypedec && !tailledec){
             functype=affect.id;
@@ -827,6 +841,7 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Typeswithfieldlist affect) {
         String nodeIdentifier = this.nextState();
         affect.typeid.accept(this);
+        
         tds.setUsed(tdsStack,((Typeidid)affect.typeid).id, "Type");
         Table tableActuelle = new Table(this.tds.getId());
         tableActuelle=tableActuelle.joinTDS(tdsStack);

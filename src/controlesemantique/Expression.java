@@ -75,7 +75,9 @@ public class Expression {
             tdsactuel=tdsactuel.joinTDS(pile);
             String type = tdsactuel.getVarType(((AccesVar)tree).id).getType();
             if(tdsactuel.getVarType(type)!=null){
-                type = tdsactuel.getVarType(type).getElementtype().get(0).replace(',',' ').trim();
+                if (Declaration.checkVardeclared(type,pile,tds,tree)){
+                    type = tdsactuel.getType(type).getElementtype().get(0).replace(',',' ').trim();
+                }
             }
             if (type.equals(typeAttendu)){
                 return true;
@@ -286,6 +288,7 @@ public class Expression {
             Field field =(Field) tree.field.get(i);
             if(name.equals("ast.Fieldlist")){
                 if (Declaration.checkVardeclared(nametype+"."+field.id, pile, tds,tree)) {
+                    tableactuel.getVarType(nametype+"."+field.id).setUsed(true);
                     if(checktype(field.expr,tableactuel.getVarType(nametype+"."+field.id).getType(),pile,tds)){
                         j++;
                     }
