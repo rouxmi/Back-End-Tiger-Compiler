@@ -408,6 +408,7 @@ public class TdsVisitor implements AstVisitor<String> {
             id = affect.id;
         }
         else{
+            affect.left.accept(this);
             id = Expression.getType(affect.left, tds, tdsStack);
         }
         String type = id + point + fils;
@@ -879,8 +880,15 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(AccesVar affect) {
         tds.setUsed(this.tdsStack, affect.id, "Var");
         String nodeIdentifier = this.nextState();
-        Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds);
-        AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);
+        if (affect.id != null){
+            if (Declaration.checkVardeclared(affect.id, this.tdsStack, this.tds)){
+                AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);
+            }
+        }
+        else{
+            affect.left.accept(this);
+            AccesListe.warningAccesListe(affect,this.tdsStack, this.tds);
+        }
         if (tailledec){
             tailletype=affect.id;
         }

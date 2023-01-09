@@ -12,7 +12,7 @@ public class BreakCodeInutile {
        String name = tree.getClass().getName().replace('\n', '\0');
        //System.out.println(name);
        if(name.equals("ast.Break")){
-        System.err.println("\u001B[33m"+info+"CodeInutileWarning dans break: la boucle n'exécute pas le code \u001B[0m\n");
+        System.err.println("\u001B[33m"+info+"CodeInutileWarning avec break: la boucle n'exécute pas le code \u001B[0m\n");
         
        }
        if(name.equals("ast.Exprseq")){
@@ -31,7 +31,6 @@ public class BreakCodeInutile {
     }
 
     public static void checkBreakIf(Ast tree, String info){
-        String name = tree.getClass().getName().replace('\n', '\0');
         //System.out.println(name);
         checkBreak(((IfThen)tree).center, info);
         if(((IfThen)tree).right!=null){
@@ -41,7 +40,6 @@ public class BreakCodeInutile {
     }
 
     public static void checkBreakLet(Ast tree, String info){
-        String name = tree.getClass().getName().replace('\n', '\0');
         ArrayList<Ast> seqExpr =( (Exprseq)((Let)tree).right).expr;
         boolean isBreak=false;
             for(int i=0; i< seqExpr.size();i++){
