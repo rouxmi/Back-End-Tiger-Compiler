@@ -725,7 +725,6 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Plus affect) {
         String nodeIdentifier = this.nextState();
-        //SimplificationCalcul.warningSimplification(affect);
         affect.left.accept(this);
         if (tailledec){
             tailletype+="+";
