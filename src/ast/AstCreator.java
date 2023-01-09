@@ -590,8 +590,12 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 			else if (list.get(0).charAt(0)=='['){
 				return new AccesVar(id, ctx.getChild(1).accept(this),ctx2.start.getLine(),ctx2.start.getCharPositionInLine());
 			}
-			else{
-				return new AccesVar(id, ctx.getChild(1).accept(this),ctx2.start.getLine(),ctx2.start.getCharPositionInLine());
+			else if (list.get(0).charAt(0)=='.'){
+				return new Pointid(id, ctx.getChild(1).getText(),ctx2.start.getLine(),ctx2.start.getCharPositionInLine());
+			}
+			else {
+				System.out.println("erreur");
+				return new Idcall2(id,ctx2.start.getLine(),ctx2.start.getCharPositionInLine());
 			}
 		}
 		else {
@@ -623,7 +627,7 @@ public class AstCreator extends ParsertigerBaseVisitor<Ast>{
 	 */
 	@Override public Ast visitPointid(Parsertiger.PointidContext ctx) { 
 		String id = ctx.getChild(1).getText();
-		return new Pointid(id, null,ctx.start.getLine(),ctx.start.getCharPositionInLine());
+		return new Pointid(id, id,ctx.start.getLine(),ctx.start.getCharPositionInLine());
 	}
 	/**
 	 * {@inheritDoc}
