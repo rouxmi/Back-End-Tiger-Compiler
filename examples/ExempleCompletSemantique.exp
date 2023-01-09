@@ -1,41 +1,54 @@
 let
+
     type rec = { val : int }
     type rec_arr = array of rec
-    var  table := rec_arr[2] of nil
-    var i := 0 /* Variable inutilisée */
     type i = array of int 
     type i = int /*Double Déclaration de type */
+    var  table := rec_arr[2] of nil
+    var i := 0 /* Variable inutilisée */
+
     function printboard() =
         (for i := 5 to 5  /* Borne Min == Borne Max */
             do 25/0)  /* Division par 0 */
+
     function joli(d : int) = /* Fonction inutilisée */
         (for i := 7 to 6 /* Borne Min > Borne Max */
             do print(0))
+
     function joli(c:int) = /*Double Déclaration*/
         (for i := 5 to 6
             do print(c))
+
 in
+
     break; /* Break hors boucle */
     for i := 0 to 1 do
         table[0] := (rec{val = 42}) ;
+
     table[0].val := 51*10+3/7-9; /* Simplification Calcul */
     table[1].val := "toto"; /* Erreur de type */
     table[0].valeur := 48; /* Erreur champ structure inexistant */
-    table.val := 45; /* Erreur type de structure inexistant */
-    tresjoli(); /* Fonction non déclarée */
     table[0].val := N; /* Variable non déclarée */
     table[2].val := 49; /* Erreur de débordement accés liste*/
+
+    table.val := 45; /* Erreur type de structure inexistant */
+    tresjoli(); /* Fonction non déclarée */
+
     if "a" = "a" | 3>1  & 1=1   then /* If toujours vrai */
         print(1);
+
     printboard();
     printboard(2,3); /* Fonction avec mauvais nombre d'arguments */
     joli("toto"); /* Fonction avec mauvais type d'arguments */
+
     if -"lol" then /* Mauvais type opération unaire */
         print(1);
+
     if 1+2*3 | 1<2 then /* Mauvais type opération booléenne */
         print(1);
-    while  3=3 | 1<2  do /* Mauvais type opération booléenne */
+        
+    while  3<>3 | "ab"="cd"  do /* while toujours vrai */
         break; 
-        print(1); /* Code inaccessible 
+        print(1) /* Code inaccessible 
         print(3) */
 end
