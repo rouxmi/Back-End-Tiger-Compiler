@@ -17,10 +17,13 @@ public class AccesListe {
                 tableactuel.joinTDS(pile);
                 VarType varactu= tableactuel.getVar(nomListe);
                 String borneMax = varactu.getTaille();
-                int borneMaxbis= Integer.parseInt(borneMax);
-                if(borneMaxbis<valeurbis){
-                    return true;
+                if(isInteger(borneMax)){
+                    int borneMaxbis= Integer.parseInt(borneMax);
+                    if(borneMaxbis<valeurbis){
+                        return true;
+                    } 
                 }
+                
             }
         }
         return false;
@@ -31,5 +34,28 @@ public class AccesListe {
             System.err.println("\u001B[91mOutOfRangeError dans " +tds.nom+ " : le rang demandé dépasse la taille de la liste à laquelle on veut accéder \u001B[0m\n");
      
         }
+    }
+    public static boolean isInteger(String str) {
+        if (str == null) {
+            return false;
+        }
+        int length = str.length();
+        if (length == 0) {
+            return false;
+        }
+        int i = 0;
+        if (str.charAt(0) == '-') {
+            if (length == 1) {
+                return false;
+            }
+            i = 1;
+        }
+        for (; i < length; i++) {
+            char c = str.charAt(i);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
     }
 }

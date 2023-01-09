@@ -20,6 +20,7 @@ import ast.While ;
 import controlesemantique.Fonction;
 import controlesemantique.AccesListe;
 import controlesemantique.BoucleFor;
+import controlesemantique.BreakCodeInutile;
 import controlesemantique.Declaration;
 import controlesemantique.Expression;
 import controlesemantique.Division;
@@ -84,6 +85,7 @@ public class TdsVisitor implements AstVisitor<String> {
     private String tailletype;
     private int cmptailletype;
     private boolean tailledec;
+    private boolean inutile;
 
 
     public TdsVisitor() {
@@ -212,6 +214,10 @@ public class TdsVisitor implements AstVisitor<String> {
 
         this.addFils("While block "+i);
         affect.right.accept(this);
+        if(this.inutile){
+            BreakCodeInutile.checkBreakDo(affect.right,"While");
+        }
+        this.inutile=false;
         this.closeFils();
 
         return nodeIdentifier;
@@ -248,6 +254,10 @@ public class TdsVisitor implements AstVisitor<String> {
         affect.min.accept(this);
         affect.max.accept(this);
         affect.regle.accept(this);
+        if(this.inutile){
+            BreakCodeInutile.checkBreakDo(affect.regle,"For");
+        }
+        this.inutile=false;
         this.closeFils();
 
         return nodeIdentifier;
@@ -256,6 +266,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Break affect) {
         String nodeIdentifier = this.nextState();
+        Table tdsActuelle = new Table(tds.getId());
+        tdsActuelle= tdsActuelle.joinTDS(tdsStack);
+        BreakCodeInutile.checkBreakWellPlaced(tdsActuelle,tds.nom);
+        this.inutile=true;
         return nodeIdentifier;
     }
 
@@ -621,6 +635,8 @@ public class TdsVisitor implements AstVisitor<String> {
         this.addProcFonc(then);
         this.addFils("Then block "+i);
         affect.center.accept(this);
+    
+        this.inutile=false;
         this.closeFils();
         if(affect.right != null){
             int k=1;
