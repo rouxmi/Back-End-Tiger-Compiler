@@ -59,7 +59,7 @@ public class Fonction {
         //des paramètres
         int nbrparametre = listarg.size();
         for(int i=0;i<nbrparametre;i++){
-            if(!Expression.checktype(((Exprlist)tree.right).expr.get(i),(listarg.get(i).getType()),pile,tds)){
+            if(!Expression.checktypesansPrint(((Exprlist)tree.right).expr.get(i),(listarg.get(i).getType()),pile,tds)){
                 if(i==0){
                     System.err.println("\u001B[31m"+"Ligne "+tree.getLigne()+":"+tree.getColonne()+" : "+"FonctionException : Type du "+(i+1)+"er paramètre incorrect (attendu : "+listarg.get(i).getType()+")\u001B[0m\n");
                 }else{

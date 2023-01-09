@@ -324,13 +324,14 @@ public class Expression {
                 else{
                     return "";
             }
+            }
             if (Declaration.checkVardeclared(leftType+"."+fils, pile, tds,tree)){
                 return tdsActuelle.getVarType(leftType+"."+fils).getType();
             }
             else{
                 return "";
             }
-        }
+    
         }
         else if(name=="ast.Idcall2"){
             if (Declaration.checkVardeclared(((Idcall2)tree).id, pile, tds,tree)){
@@ -339,8 +340,7 @@ public class Expression {
             
         }
         else if(name=="ast.AccesVar"){
-            if(Declaration.checkVardeclared(((AccesVar)tree).id, pile, tds,tree)){
-                
+           if(Declaration.checkVardeclared(((AccesVar)tree).id, pile, tds,tree)){
                 String type = tdsActuelle.getVarType(((AccesVar)tree).id).getType();
                 if(tdsActuelle.getVarType(type)!=null){
                     type = tdsActuelle.getVarType(type).getElementtype().get(0).replace(',',' ').trim();
