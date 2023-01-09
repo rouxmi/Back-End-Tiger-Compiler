@@ -16,7 +16,7 @@ let
             do print(0))
 
     function joli(c:int) = /*Double Déclaration*/
-        (for i := 5 to 6
+        (for i := 5 to 6*"a" /* Mauvais type opération */
             do print(c))
 
 in
