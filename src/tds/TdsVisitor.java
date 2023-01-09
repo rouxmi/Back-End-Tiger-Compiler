@@ -682,8 +682,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Dif affect) {
         String nodeIdentifier = this.nextState();
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole différent",affect.left);
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole différent",affect.right);
+        if (Expression.checktype(affect, "int", tdsStack, tds)){
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole différent",affect.left);
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole différent",affect.right);
+        }
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -693,8 +695,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Inf affect) {
         String nodeIdentifier = this.nextState();
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole inférieur",affect.left);
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole inférieur",affect.right);
+        if (Expression.checktype(affect, "int", tdsStack, tds)){
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole inférieur",affect.left);
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole inférieur",affect.right);
+        }
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -704,8 +708,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Sup affect) {
         String nodeIdentifier = this.nextState();
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole supérieur",affect.left);
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole supérieur",affect.right);
+        if (Expression.checktype(affect, "int", tdsStack, tds)){
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole supérieur",affect.left);
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole supérieur",affect.right);
+        }
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -715,8 +721,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Infeg affect) {
         String nodeIdentifier = this.nextState();
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole inférieur ou égal",affect.left);
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole inférier égal",affect.right);
+        if (Expression.checktype(affect, "int", tdsStack, tds)){
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole inférieur ou égal",affect.left);
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole inférier égal",affect.right);
+        }
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -727,8 +735,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Supeg affect) {
         String nodeIdentifier = this.nextState();
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole supérieur ou égal ",affect.left);
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole supérieur ou égal",affect.right);
+        if (Expression.checktype(affect, "int", tdsStack, tds)){
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole supérieur ou égal",affect.left);
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole supérieur ou égal",affect.right);
+        }
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -752,7 +762,6 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Minus affect) {
         String nodeIdentifier = this.nextState();
-
         affect.left.accept(this);
         if (tailledec){
             tailletype+="-";
@@ -780,7 +789,6 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Div affect) {
         String nodeIdentifier = this.nextState();
-        
         
         affect.left.accept(this);
         if (tailledec){
@@ -814,8 +822,10 @@ public class TdsVisitor implements AstVisitor<String> {
     @Override
     public String visit(Egal2 affect) {
         String nodeIdentifier = this.nextState();
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole égal",affect.left);
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole égal",affect.right);
+        if (Expression.checktypeEgal(affect, tdsStack, tds)){
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole égal",affect.left);
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole égal",affect.right);
+        }
         affect.left.accept(this);
         affect.right.accept(this);
 
@@ -870,9 +880,10 @@ public class TdsVisitor implements AstVisitor<String> {
     public String visit(Dptegal affect) {
         String nodeIdentifier = this.nextState();
 
-        Expression.checktypeDptEgal(affect, this.tds, this.tdsStack);
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole :=",affect.left);
-        SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole :=",affect.right);
+        if (Expression.checktypeDptEgal(affect, this.tds, this.tdsStack)){
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote gauche du symbole :=",affect.left);
+            SimplificationCalcul.warningSimplification(this.tds.nom,"cote droit du symbole :=",affect.right);
+        }
         affect.left.accept(this);
         affect.right.accept(this);
 
