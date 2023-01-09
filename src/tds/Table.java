@@ -203,7 +203,7 @@ public class Table {
 		if(var instanceof  VarType){
 			for(VarType el : variables){
                 if(el.getIdentifiant().equals(((VarType) var).getIdentifiant()) && el.getNature().equals(((VarType) var).getNature())){
-					return true;
+                    return true;
 				}
 			}
 			return false;
@@ -229,6 +229,8 @@ public class Table {
         }
         return null;
     }
+
+   
 
     public ProcFonc getProcFonc(String funcName) {
         for (ProcFonc myFunc : fonctions) {
